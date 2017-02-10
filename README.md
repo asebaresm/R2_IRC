@@ -2,8 +2,8 @@
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
+* Repositorio para la asignatura redes2
+* 0.1
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
