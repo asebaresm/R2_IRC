@@ -1,8 +1,4 @@
-/*char o void?
-De donde viene los LOG?
-
-*/
-void daemonizar (char * servicio){
+void daemonizar (char * servicio) {
 
 	pid_t pid;
 	int tam=0;
@@ -16,7 +12,10 @@ void daemonizar (char * servicio){
 		exit (EXIT_SUCCESS);
 	}
 
-	
+	/* 6. Abrir el log del sistema para su uso posterior */
+	setlogmask (LOG_UPTO (LOG_INFO));
+	openlog (servicio, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL3);
+
 	/* 2. Crear una nueva sesión de tal forma que el proceso pase a ser lider de sesión */
 	if (setsid() < 0) {
 		syslog (LOG_ERR, "Error creando un SID para el hijo del proceso");
@@ -36,17 +35,14 @@ void daemonizar (char * servicio){
 	/* 5. Cerrar todos los descriptores de fichero que pueda haber abiertos */
 	syslog(LOG_INFO, "Cerrando los ficheros");
 	
-	tam = getdtablesize();
-	for (i=0; i < tam;i++) {
-		/* close();*/
-	}
-	/* close(STDIN_FILENO);  ????*/
+	close(STDIN_FILENO); 
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
 
-	/* 6. Abrir el log del sistema para su uso posterior ??????*/
-	/* "server system messages = nombre de servicio"?*/
-	setlogmask (LOG_UPTO (LOG_INFO));
-	openlog (servicio, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL3);
-	syslog (LOG_ERR, "Initiating new server");
+	/* Mandar a dev/null STDIN/STDOUT/STDERR*/
+
+	/* close(STDIN_FILENO);  ????*/
+	syslog (LOG_INFO, "Initiating new server");
 }
 
 int ini_server(void){
