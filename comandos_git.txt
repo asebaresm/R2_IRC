@@ -1,0 +1,56 @@
+#Ver los cambios que has realizado en tu copia local:
+#(NO te mostrará los cambios quehaya hecho yo en la nube)
+git status
+
+#Añadir cambios (si no ha borrado archivos):
+git add .
+
+#Añadir cambios (si has borrado archivos):
+git add . -A
+
+#Commit de cambios:
+git commit -m "mensaje del commit"
+
+#Subir cambios:
+git push origin master
+
+#Descargar versión más actualizada:
+git pull origin master
+
+#si yo he añadido cambios cuando no estabas, te pedirá que:
+#	- hagas un pull
+#	- puedes cambiar el mensaje por dejecto del merge en el editor
+#	- guardar con Ctrl+X
+#	- push de nuevo
+
+#Te pedirá tu mail de la UAM cuando hagas el primer commit en el PC 
+#del lab. Copia el comando tal cual cambiando tu email y au.
+
+#hacer que tu branch local sea un clone del remoto 
+(después de haber descartado cambios):
+git fetch origin
+git reset --hard origin/master
+
+#Si quieres guardar tus cambios locales en remoto antes de hacer lo de arriba:
+git commit -m "Saving my work, just in case"
+git branch my-saved-work
+
+#discard de TODOS los cambios en local (si has estado guarreando y no quieres auto-mergearlo con el pull):
+#PARA: untracked files/unstaged changes
+git clean -df
+git checkout -- .
+
+#Revertir cambios en repo local y dejarlo como el ultimo commit de remoto, BORRANDO LOS ARCHIVOS/CAMBIOS
+git reset --hard
+
+#Ignorar cambios en un archivo local QUE YA ESTÁ EN EL REPO
+#	Some files in a repository change often but are rarely committed. Usually, these are various local
+#	configuration files that are edited, but should never be committed upstream. Git lets you ignore 
+#	those filesby assuming they are unchanged.
+git update-index --assume-unchanged path/to/file.txt
+
+#	To make Git track the file again, simply run:
+git update-index --no-assume-unchanged path/to/file.txt
+
+#Ignorar new untracked file QUE NO ESTABA EN EL REPO
+#	https://git-scm.com/docs/gitignore#_examples 
