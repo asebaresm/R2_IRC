@@ -22,6 +22,13 @@
 * Other guidelines
 
 ### Who do I talk to? ###
-
+* HAY QUE APRENDER A HABLAR...
 * Repo owner or admin
-* Other community or team contact
+* Other community of cats or team contact
+
+
+
+
+
+
+A LOS GATOS WIIIIIIIIIIIIIIIIIIII
