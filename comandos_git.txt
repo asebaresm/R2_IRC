@@ -18,14 +18,18 @@ git push origin master
 git pull origin master
 
 #si yo he añadido cambios cuando no estabas, te pedirá que:
-#	- hagas un pull
-#	- puedes cambiar el mensaje por dejecto del merge en el editor
-#	- guardar con Ctrl+X
-#	- push de nuevo
+#	- git pull origin master
+#	- Escribes el comentario del 'merge'
+#	- guardar con Ctrl+X, S, Enter
+#	- git push origin mnaster
 
 #Te pedirá tu mail de la UAM cuando hagas el primer commit en el PC 
 #del lab. Copia el comando tal cual cambiando tu email y au.
 
+
+###########################################################################################################
+# COMANDOS ALGO MÁS AAVANZADOS
+###########################################################################################################
 #hacer que tu branch local sea un clone del remoto 
 (después de haber descartado cambios):
 git fetch origin
@@ -35,7 +39,7 @@ git reset --hard origin/master
 git commit -m "Saving my work, just in case"
 git branch my-saved-work
 
-#discard de TODOS los cambios en local (si has estado guarreando y no quieres auto-mergearlo con el pull):
+#Descartar TODOS los cambios en local (si has estado guarreando y no quieres auto-mergearlo con el pull):
 #PARA: untracked files/unstaged changes
 git clean -df
 git checkout -- .
