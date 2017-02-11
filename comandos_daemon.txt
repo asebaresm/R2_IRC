@@ -1,0 +1,9 @@
+Ejecutar:
+>> ./servidor <nombre>
+
+Ver proceso:
+>> htop 
+	- pulsar F4 -> escribir servidor. 
+
+Ver comentarios del syslog:
+>> grep servidor /var/log/syslog
