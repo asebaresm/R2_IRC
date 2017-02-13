@@ -5,10 +5,11 @@
 
 # Compilador
 CC = gcc
-
-# Ejecutable
-EXE = servidor info
-
+# Flags compilacion
+CFLAGS = -Wall -g
+# Ejecutables
+EXE = servidor
+DIR_NAME = G-2361-06-P1
 .PHONY: clean all
 
 all: $(EXE)
@@ -18,14 +19,14 @@ all: $(EXE)
 #===================================
 # Ejecutable
 servidor: src/servidor.c src/daemon.c
-	$(CC) -o servidor src/servidor.c src/daemon.c
+	$(CC) $(CFLAGS) -o servidor src/servidor.c src/daemon.c
 
 	
 #===========================
 # Limpia fichero temporales
 #===========================
 clean:
-	rm -f servidor G-2361-06-P1.tar.gz
+	rm -f *.o *.a $(EXE) $(DIR_NAME).tar.gz
 
 #================================
 # Autores/ayuda de la práctica
@@ -55,4 +56,4 @@ kill:
 #====================================	
 empaquetar:
 	@make clean
-	@tar -czvf G-2361-06-P1.tar.gz ../G-2361-06-P1
+	@tar -czvf $(DIR_NAME).tar.gz ../$(DIR_NAME)

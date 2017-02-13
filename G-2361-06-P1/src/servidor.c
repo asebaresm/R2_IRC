@@ -1,10 +1,12 @@
-/** 
- * @brief Controla el manejo del servidor
- * 
+/**
  * @file servidor.c
- * @author Alfonso Sebares y Beatriz de Pablo
- * 
+ * @author Albert Soler y Beatriz de Pablo
+ * @date 13/02/17
+ * @brief Controla el manejo del servidor
+ *
  */
+
+ /* -- Includes -- */
 #include "../includes/servidor.h"
 
 /** 
