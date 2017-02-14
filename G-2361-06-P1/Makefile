@@ -6,27 +6,35 @@
 # Compilador
 CC = gcc
 # Flags compilacion
-CFLAGS = -Wall -g
+CFLAGS = -g -Wall
 # Ejecutables
 EXE = servidor
+EXE_LEARN = echo_server echo_client
 DIR_NAME = G-2361-06-P1
 .PHONY: clean all
 
 all: $(EXE)
 
+echo: $(EXE_LEARN)
+
 #===================================
 # Construccion de los ejecutables
 #===================================
-# Ejecutable
+# Ejecutables
 servidor: src/servidor.c src/daemon.c
 	$(CC) $(CFLAGS) -o servidor src/servidor.c src/daemon.c
 
-	
+echo_server: src/echo_server2.c
+	$(CC) $(CFLAGS) -o echo_server src/echo_server2.c
+
+echo_client: src/echo_client.c
+	$(CC) $(CFLAGS) -o echo_client src/echo_client.c
+
 #===========================
 # Limpia fichero temporales
 #===========================
 clean:
-	rm -f *.o *.a $(EXE) $(DIR_NAME).tar.gz
+	rm -f *.o *.a $(EXE) $(EXE_LEARN) $(DIR_NAME).tar.gz
 
 #================================
 # Autores/ayuda de la práctica
@@ -39,9 +47,9 @@ info:
 	@echo "--------------------------------------------"
 	
 help:
-	@echo "Para crear el ejecutable: make"
-	@echo "Para borrar el ejecutable: make clean"
-	@echo "Para eliminar el demonio: make killall"
+	@echo "Crear el ejecutable de la practica:\t\tmake"
+	@echo "Borrar todo lo generado:\t\tmake clean"
+	@echo "Para eliminar el demonio:\t\tmake killall"
 	
 #==================
 # Destruir servidor 
