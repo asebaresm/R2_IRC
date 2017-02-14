@@ -24,8 +24,8 @@ echo: $(EXE_LEARN)
 servidor: src/servidor.c src/daemon.c
 	$(CC) $(CFLAGS) -o servidor src/servidor.c src/daemon.c
 
-echo_server: src/echo_server2.c
-	$(CC) $(CFLAGS) -o echo_server src/echo_server2.c
+echo_server: src/echo_server.c
+	$(CC) $(CFLAGS) -o echo_server src/echo_server.c
 
 echo_client: src/echo_client.c
 	$(CC) $(CFLAGS) -o echo_client src/echo_client.c

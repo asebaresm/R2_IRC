@@ -102,38 +102,39 @@ int main(int argc, char **argv) {
 	puts("Bind succesful...");
 
 	/* listen: make it a listening socket ready to accept connection requests */
+	/*printf("Listening for connections on port %d...", portno);*/
 	if (listen(listenfd, 5) < 0) /* allow 5 requests to queue up */ 
 		error("ERROR on listen");
-	printf("Listening for connections on port %d...", portno);
 
 	/* main loop: wait for a connection request, echo input line, 
 		 then close connection. */
 	clientlen = sizeof(clientaddr);
-	while (1) {
 
-		/* accept: wait for a connection request */
-		connfd = accept(listenfd, (struct sockaddr *) &clientaddr, &clientlen);
-		if (connfd < 0) 
-			error("ERROR on accept");
-		
-		/* gethostbyaddr: determine who sent the message */
-		hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, sizeof(clientaddr.sin_addr.s_addr), AF_INET);
-		if (hostp == NULL)
-			error("ERROR on gethostbyaddr");
 
-		hostaddrp = inet_ntoa(clientaddr.sin_addr);
+	/* accept: wait for a connection request */
+	connfd = accept(listenfd, (struct sockaddr *) &clientaddr, &clientlen);
+	if (connfd < 0) 
+		error("ERROR on accept");
+	
+	/* gethostbyaddr: determine who sent the message */
+	hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, sizeof(clientaddr.sin_addr.s_addr), AF_INET);
+	if (hostp == NULL)
+		error("ERROR on gethostbyaddr");
 
-		if (hostaddrp == NULL)
-			error("ERROR on inet_ntoa\n");
-		printf("\nserver established connection with %s (%s)\n", hostp->h_name, hostaddrp);
-		
+	hostaddrp = inet_ntoa(clientaddr.sin_addr);
 
-		/* read: read input string from the client */
+	if (hostaddrp == NULL)
+		error("ERROR on inet_ntoa\n");
+	printf("\nserver established connection with %s (%s)\n", hostp->h_name, hostaddrp);
+	
+
+	/* read: read input string from the client */
+	while (strcmp(buf, "_STOP_") != 0){
 		bzero(buf, BUFSIZE);
 		n = read(connfd, buf, BUFSIZE);
 		if (n < 0) 
 			error("ERROR reading from socket");
-		printf("server received %d bytes: %s", n, buf);
+		printf("\nserver received %d bytes: %s", n, buf);
 		
 		/* write: echo the input string back to the client */
 		n = write(connfd, buf, strlen(buf));
@@ -141,10 +142,11 @@ int main(int argc, char **argv) {
 			error("ERROR writing to socket");
 
 		if (strcmp(buf, "_STOP_") == 0){
-			puts("\"Stop server\" received")
+			puts("\"_STOP_\" received");
 			close(connfd);
 			break;
 		}
 	}
+
 	return (EXIT_SUCCESS);
 }
