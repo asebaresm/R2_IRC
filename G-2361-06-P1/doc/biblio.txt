@@ -1,0 +1,7 @@
+Sobre sockets:
+	https://vcansimplify.wordpress.com/2013/03/14/c-socket-tutorial-echo-server/
+	http://www.binarytides.com/server-client-example-c-sockets-linux/
+	https://www.softlab.ntua.gr/facilities/documentation/unix/unix-socket-faq/unix-socket-faq-2.html
+
+Referencia más general sobre network programming:
+	http://beej.us/guide/bgnet/output/html/multipage/index.html

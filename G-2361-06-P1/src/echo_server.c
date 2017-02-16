@@ -3,16 +3,19 @@
 */
 
 #include <stdio.h>
-#include <unistd.h> //write
+#include <unistd.h> /*write*/
 #include <stdlib.h>
-#include <string.h> //strlen
+#include <string.h> /*strlen*/
 #include <netdb.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h> //inet_addr
+#include <arpa/inet.h> /*inet_addr*/
+#include <pthread.h>   /*for threading , link with lpthread*/
+#include <errno.h>	   /*for strerror() use*/
 
 #define BUFSIZE 1024
+#define MAX_CON_REQ 10 /*Max of active connection requests (e.g. 11th fails if set to 10)*/
 
 void error(char *msg) {
 	perror(msg);
@@ -23,6 +26,7 @@ int main(int argc , char *argv[])
 {
 	int socket_desc , client_sock , c , read_size;
 	int portno;
+	int optval; /* flag value for setsockopt */
 	struct sockaddr_in server , client;
 	struct hostent *hostp; /* client host info */
 	char client_message[BUFSIZE];
@@ -41,9 +45,12 @@ int main(int argc , char *argv[])
 		printf("Could not create socket");
 	}
 	puts("Socket created");
-	 
+	
+	optval = 1;
+	setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
+
 	//Prepare the sockaddr_in structure
-	bzero((char *) &server, sizeof(server));
+	memset((char *) &server, 0, sizeof(server));
 	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = INADDR_ANY;
 	server.sin_port = htons((unsigned short)portno );
@@ -52,13 +59,14 @@ int main(int argc , char *argv[])
 	if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
 	{
 		//print the error message
+		//printf("\nstrerror: %s\n", strerror(errno));
 		perror("bind failed. Error");
 		return 1;
 	}
 	puts("bind done");
 	 
 	//Listen
-	listen(socket_desc , 3);
+	listen(socket_desc , MAX_CON_REQ);
 	 
 	//Accept and incoming connection
 	puts("Waiting for incoming connections...");
@@ -81,25 +89,24 @@ int main(int argc , char *argv[])
 	if (hostaddrp == NULL)
 		error("ERROR on inet_ntoa\n");
 	printf("\nserver established connection with %s (%s)\n", hostp->h_name, hostaddrp);
-
-	puts("Connection accepted");
 	 
 	//Receive a message from client
-	while( (read_size = recv(client_sock , client_message , BUFSIZE , 0)) > 0 )
+	while( strcmp(client_message, "_STOP_") != 0 )
 	{
+		read_size = recv(client_sock , client_message , BUFSIZE , 0);
+		printf("\nRecibido: %s", client_message);
+		if (read_size < 0){
+			perror("recv failed");
+		}
 		//Send the message back to client
-		write(client_sock , client_message , strlen(client_message));
+		//write(client_sock , client_message , read_size);
+		/*afinar un poco mas que mandar siempre BUFSIZE:*/
+		write(client_sock , client_message , strlen(client_message)+1); 
 	}
-	 
-	if(read_size == 0)
-	{
-		puts("Client disconnected");
-		fflush(stdout);
-	}
-	else if(read_size == -1)
-	{
-		perror("recv failed");
-	}
+	
+	puts("Client disconnected");
+	fflush(stdout);
+	close(client_sock);
 	 
 	return 0;
 }

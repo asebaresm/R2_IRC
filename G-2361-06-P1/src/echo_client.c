@@ -37,20 +37,20 @@ int main(int argc , char *argv[])
     puts("Connected\n");
      
     //keep communicating with server
-    while(1)
+    while((strcmp(message, "_STOP_") != 0))
     {
         printf("Enter message : ");
         scanf("%s" , message);
-         
+
         //Send some data
-        if( send(sock , message , strlen(message) , 0) < 0)
+        if( send(sock , message , sizeof(message) , 0) < 0)
         {
             puts("Send failed");
             return 1;
         }
          
         //Receive a reply from the server
-        if( recv(sock , server_reply , 2000 , 0) < 0)
+        if( recv(sock , server_reply , BUFSIZE , 0) < 0)
         {
             puts("recv failed");
             break;
@@ -60,6 +60,7 @@ int main(int argc , char *argv[])
         puts(server_reply);
     }
      
+    puts("_STOP_ enviado, cerrar conexion");
     close(sock);
     return 0;
 }

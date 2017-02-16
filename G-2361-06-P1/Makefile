@@ -9,7 +9,7 @@ CC = gcc
 CFLAGS = -g -Wall
 # Ejecutables
 EXE = servidor
-EXE_LEARN = echo_server echo_client
+EXE_LEARN = echo_server echo_client log_test
 DIR_NAME = G-2361-06-P1
 .PHONY: clean all
 
@@ -30,6 +30,8 @@ echo_server: src/echo_server.c
 echo_client: src/echo_client.c
 	$(CC) $(CFLAGS) -o echo_client src/echo_client.c
 
+log_test: src/log_test.c
+	$(CC) $(CFLAGS) -o log_test src/log_test.c
 #===========================
 # Limpia fichero temporales
 #===========================
