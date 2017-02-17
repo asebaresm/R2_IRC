@@ -1,14 +1,18 @@
 /** 
- * @brief Funciones para controlar el manejo del servidor
- * 
  * @file servidor.h
- * @author Alfonso Sebares y Beatriz de Pablo
+ * @brief Prototipos de funciones que implementan el servidor IRC.
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
  * 
  */
+
 #ifndef _SERVIDOR_H_
 #define _SERVIDOR_H_
 
 #include "../includes/daemon.h"
+#include "../includes/conexion_tcp.h"
+
+#define PORT_LIMIT_FLOOR 1024 /**< Por debajo de 1024 requiere 'sudo' */
 
 /** 
  * @name main

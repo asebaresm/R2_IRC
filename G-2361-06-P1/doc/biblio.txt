@@ -1,0 +1,33 @@
+Sobre sockets:
+	https://vcansimplify.wordpress.com/2013/03/14/c-socket-tutorial-echo-server/
+	http://www.binarytides.com/server-client-example-c-sockets-linux/
+	https://www.softlab.ntua.gr/facilities/documentation/unix/unix-socket-faq/unix-socket-faq-2.html
+
+Referencia más general sobre network programming:
+	http://beej.us/guide/bgnet/output/html/multipage/index.html
+
+Sobre librerías estáticas:
+	http://stackoverflow.com/questions/11344547/how-do-i-compile-a-static-library/11345669#11345669
+
+Sobre odxygen:
+	http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
+	https://www.cs.cmu.edu/~410/doc/doxygen.html
+
+	http://stackoverflow.com/questions/51667/best-tips-for-documenting-code-using-doxygen/22836702#22836702
+
+Sobre `clock_gettime()`:
+	http://stackoverflow.com/questions/6749621/how-to-create-a-high-resolution-timer-in-linux-to-measure-program-performance
+
+Sobre el manual de linux:
+	http://www.refining-linux.org/archives/18/11-Understanding-Linux-man-pages/
+	
+	"Manual pages on Linux are divided into eight categories:
+
+	1 - User commands that everyone can execute
+	2 - System calls (syscalls) provided by the kernel
+	3 - C library functions
+	4 - Devices and special files (e.g. device files in /dev)
+	5 - File formats and conventions (e.g. syntax of /etc/fstab)
+	6 - Games and other fun stuff
+	7 - Miscellaneous (e.g. macro packages)
+	8 - System administration tools and daemons that only root can execute"

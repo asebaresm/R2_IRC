@@ -1,18 +1,15 @@
 /** 
- * @brief Contiene las funcion para poder demonizar un servidor
- * 
  * @file daemon.c
- * @author Alfonso Sebares y Beatriz de Pablo
+ * @brief Implementacion de las funciones para daemonizar el servidor.
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
  * 
  */
 #include "../includes/daemon.h"
 
 /** 
  * @brief Funcion para demonizar a un servicio
- * 
  * @param char * servicio: Nombre del servidor para dejarlo en segundo plano
- *  
- *
  * @return OK si todo ha salido bien, ERROR si hay algun fallo
  *
  */
