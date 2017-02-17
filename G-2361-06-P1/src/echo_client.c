@@ -1,6 +1,11 @@
-/*
-    C ECHO client example using sockets
-*/
+/** 
+ * @file echo_client.c
+ * @brief Cliente echo utilizado para comprender y desarrollar el servidor IRC.
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * 
+ */
+
 #include <stdio.h> //printf
 #include <string.h>    //strlen
 #include <sys/socket.h>    //socket

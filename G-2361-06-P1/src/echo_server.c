@@ -1,6 +1,10 @@
-/*
-	C socket server example
-*/
+/** 
+ * @file echo_server.c
+ * @brief Servidor echo utilizado para comprender y desarrollar el servidor IRC.
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * 
+ */
 
 #include <stdio.h>
 #include <unistd.h> /*write*/
@@ -14,8 +18,8 @@
 #include <pthread.h>   /*for threading , link with lpthread*/
 #include <errno.h>	   /*for strerror() use*/
 
-#define BUFSIZE 1024
-#define MAX_CON_REQ 10 /*Max of active connection requests (e.g. 11th fails if set to 10)*/
+#define BUFSIZE 1024   /**< Tam. max. del buffer que se lee*/
+#define MAX_CON_REQ 10 /**< Max. de peticiones de conexion activas (e.g. la 11 falla si puesto a 10)*/
 
 void error(char *msg) {
 	perror(msg);

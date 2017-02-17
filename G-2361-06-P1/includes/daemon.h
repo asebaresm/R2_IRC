@@ -1,8 +1,9 @@
 /** 
- * @brief Funcion para poder demonizar un servidor
- * 
  * @file daemon.h
- * @author Alfonso Sebares y Beatriz de Pablo
+ * @brief Prototipo de funciones para daemonizar el servidor IRC.
+ * 
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
  * 
  */
 #ifndef _DAEMON_H_
