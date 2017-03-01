@@ -58,18 +58,17 @@ int recvDatos(int client_sock, char* client_message, int cm_size, char *hostaddr
 	read_size = recv(client_sock , client_message , cm_size , 0);
 
 	if (read_size == 0){
-		logEvent("recv() ha leido un tam 0 bytes");
+		sprintf(buf,"recv() ha leido un tam 0 bytes de %s", hostaddrp);
+		logEvent(buf);
 		return 0;
 
 	}else if(read_size < 0){
-		logERR("recv() ha leido un tam -1 bytes, error");
+		sprintf(buf,"recv() ha leido un tam -1 bytes de %s, error", hostaddrp);
+		logERR(buf);
 		return ERR;
 
 	}else{
-		if (hostaddrp != NULL)
-			sprintf(buf, "recv() un tam %d bytes de %s", read_size, hostaddrp);
-		else
-			sprintf(buf, "recv() un tam %d bytes", read_size);
+		sprintf(buf, "recv() un tam %d bytes de %s", read_size, hostaddrp);
 		logEvent(buf);
 	}
 
@@ -111,9 +110,9 @@ int cerrarConexion(int client_sock, char* hostaddrp){
 
     }else{
     	if (hostaddrp != NULL)
-			sprintf(buf, "cerrada conexion con %s", hostaddrp);
+			sprintf(buf, "conexion_tcp.c: conexion cerrada con %s", hostaddrp);
 		else
-			sprintf(buf, "conexion cerrada");
+			sprintf(buf, "conexion_tcp.c: conexion cerrada");
 		logEvent(buf);
     }
 

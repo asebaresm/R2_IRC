@@ -7,6 +7,7 @@
 CC = gcc
 # Flags compilacion
 CFLAGS = -g -Wall
+LIBS = -lircinterface -lircredes -lirctad
 # Ejecutables
 EXE = servidor
 EXE_LEARN = echo_server echo_client log_test conexion_tcp_test
@@ -21,8 +22,8 @@ echo: $(EXE_LEARN)
 # Construccion de los ejecutables
 #===================================
 # Ejecutables
-servidor: src/servidor.c src/daemon.c
-	$(CC) $(CFLAGS) -o servidor src/servidor.c src/daemon.c
+servidor: src/servidor.c src/daemon.c srclib/lib-logger.a srclib/lib-conexion_tcp.a
+	$(CC) $(CFLAGS) -o servidor src/servidor.c src/daemon.c srclib/lib-logger.a srclib/lib-conexion_tcp.a -lpthread ${LIBS}
 
 echo_server: src/echo_server.c
 	$(CC) $(CFLAGS) -o echo_server src/echo_server.c

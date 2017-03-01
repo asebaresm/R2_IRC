@@ -10,6 +10,9 @@ Sobre librerías estáticas:
 	http://stackoverflow.com/questions/11344547/how-do-i-compile-a-static-library/11345669#11345669
 
 Sobre odxygen:
+	http://fnch.users.sourceforge.net/doxygen_c.html
+	> Y su output: http://fnch.users.sourceforge.net/data/doxygen_c/html/doxygen__c_8h.html
+
 	http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html
 	https://www.cs.cmu.edu/~410/doc/doxygen.html
 
@@ -31,3 +34,33 @@ Sobre el manual de linux:
 	6 - Games and other fun stuff
 	7 - Miscellaneous (e.g. macro packages)
 	8 - System administration tools and daemons that only root can execute"
+
+Sobre `errno`:
+	http://beej.us/guide/bgnet/output/html/multipage/errnoman.html
+
+Sobre hilos:
+	https://computing.llnl.gov/tutorials/pthreads/#Thread
+	
+	"Context switching between threads is fast as compared to context switching between processes."
+	http://softpixel.com/~cwright/programming/threads/threads.c.php
+
+	"both the original thread and the new thread share the same code base and the same memory – it’s just like 
+	making two function calls at the same time"
+	http://timmurphy.org/2010/05/04/pthreads-in-c-a-minimal-working-example/
+
+	Sobre sincronización de hilos con 'mutex':
+		http://www.thegeekstuff.com/2012/05/c-mutex-examples/
+
+	Sobre qué se comparte entre hilos:
+		http://stackoverflow.com/questions/1665419/do-threads-have-a-distinct-heap
+
+	Sobre pthread_detach:
+		http://stackoverflow.com/questions/6042970/pthread-detach-question/6043018#6043018
+
+	Ejemplo sobre mutex:
+		http://www.thegeekstuff.com/2012/05/c-mutex-examples/
+
+Sobre variables extern y declaracion_vs_definicion:
+	http://stackoverflow.com/questions/1433204/how-do-i-use-extern-to-share-variables-between-source-files-in-c
+
+* http://metis.ii.uam.es/redes2/group__IRCMessageOptional.html

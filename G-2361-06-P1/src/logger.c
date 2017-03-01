@@ -1,8 +1,8 @@
 /**
  * @file logger.c
  * @brief Implementacion de la liberia de log de errores complementaria a /var/log/syslog.
+ * Se ha implementado teniendo en cuenta al concurrencia entre hilos.
  * @author Alfonso Sebares
- * @author Beatriz de Pablo
  * @date 13/02/17
  *
  */
@@ -10,6 +10,7 @@
 #include "../includes/logger.h"
 
 char glog_dir[LEN]; /**< Global con la ruta del .log para esta ejecucion */
+
 
 char* snapTime(char* buf, int len){
 	time_t curtime;
@@ -31,6 +32,8 @@ char* snapClockTime(char* buf, int len){
 	return buf;
 }
 
+//No es necesario hacerla thread-safe ya que no tiene sentido inicializar la carpeta
+//de logs a nivel de hilo.
 FILE* initLog(){
 	char buf[LEN];
 	char log_dir[LEN];
@@ -76,11 +79,6 @@ int logWrite(char* log_msg, char* type){
 		return ERR;
 	}
 
-	if ((fp = fopen(glog_dir, "a")) == NULL){
-		perror("Error al abrir log para escritura de evento");
-		return ERR;
-	}
-
 	strcpy(bbuf, "[");
 	strcat(bbuf, snapTime(buf,LEN));
 	strcat(bbuf, "] ");
@@ -97,11 +95,19 @@ int logWrite(char* log_msg, char* type){
 		strcat(bbuf, buf_err);
 	}
 
+	pthread_mutex_lock(&loglock);
+	if ((fp = fopen(glog_dir, "a")) == NULL){
+		perror("Error al abrir log para escritura de evento");
+		return ERR;
+	}
+
 	if (fprintf(fp, "%s\n", bbuf) < 0){
 		perror("Error de escritura en el log");
 		return ERR;
 	}
 	fclose(fp);
+	pthread_mutex_unlock(&loglock);
+
 	return OK;
 }
 

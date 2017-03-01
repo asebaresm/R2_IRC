@@ -20,10 +20,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h> /*inet_addr*/
-#include <pthread.h>   /*for threading , link with lpthread*/
 
 #define BUFSIZE 1024   /**< Tam. max. del buffer que se lee */
-#define AUX_SBUF 128   /**< Tam. max. del buffer auxiliar para logeo de eventos */
+#define AUX_SBUF 256   /**< Tam. max. del buffer auxiliar para logeo de eventos */
 #define MAX_CON_REQ 10 /**< Max. de peticiones de conexion activas (e.g. la 11 falla si puesto a 10) */
 
 
@@ -32,4 +31,6 @@ int crearConexion(int portno, struct sockaddr_in* server);
 int recvDatos(int client_sock, char* client_message, int cm_size, char *hostaddrp);
 
 int enviarDatos(int client_sock, char* message, int message_size);
+
+int cerrarConexion(int client_sock, char* hostaddrp);
 #endif

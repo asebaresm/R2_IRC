@@ -9,10 +9,21 @@
 
 #include "../includes/logger.h"
 
+/**
+* @brief Definicion del Mutex para el descriptor de fichero del log
+*/
+pthread_mutex_t loglock;
+
 int main ()
 {
    FILE* fp = NULL;
    fp = initLog();
+
+   if (pthread_mutex_init(&loglock, NULL) != OK){
+      perror("\n mutex init ha devuelto error\n");
+      return EXIT_FAILURE;
+   }
+
    if (fp == NULL){
       perror("ERR abriendo fichero");
       return (EXIT_FAILURE);
@@ -28,5 +39,6 @@ int main ()
       logERR("Error de fopen detectado");
    }
 
+   pthread_mutex_destroy(&loglock);
    return (EXIT_SUCCESS);
 }

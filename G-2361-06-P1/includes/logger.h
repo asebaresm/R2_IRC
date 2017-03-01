@@ -1,10 +1,10 @@
 /**
  * @file logger.c
  * @brief Descripcion de la liberia de log de errores complementaria a /var/log/syslog
+ * 
+ * @note La libreríá asume que el mutex se inicializa y destruye en el source principal.
  * @author Alfonso Sebares
- * @author Beatriz de Pablo
  * @date 13/02/17
- *
  */
 
 #ifndef logger_h
@@ -17,9 +17,16 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
+#include <pthread.h>
 
 #define LEN 64 		/**< tam de buffer para snaps de tiempo */
-#define BIGLEN 256	/**< tam de buffer para mensajes grabados en .log */
+#define BIGLEN 512	/**< tam de buffer para mensajes grabados en .log */
+
+/**
+*  @brief Declaracion del Mutex para el descriptor de fichero del log.
+*  Siempre tiene que ser definida en el source princpal.
+*/
+extern pthread_mutex_t loglock; 
 
 //No se usa de momento
 struct val{
