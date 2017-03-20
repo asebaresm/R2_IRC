@@ -9,9 +9,9 @@ CC = gcc
 CFLAGS = -g -Wall
 LIBS = -lircinterface -lircredes -lirctad
 # Ejecutables
-EXE = servidor
+EXE = xchat2
 EXE_LEARN = echo_server echo_client log_test conexion_tcp_test
-DIR_NAME = G-2361-06-P2
+DIR_NAME = G-2361-06-P1
 .PHONY: clean all
 
 all: $(EXE)
@@ -22,8 +22,8 @@ echo: $(EXE_LEARN)
 # Construccion de los ejecutables
 #===================================
 # Ejecutables
-cliente: src/cliente.c srclib/lib-logger.a srclib/lib-conexion_tcp.a
-	$(CC) $(CFLAGS) -o cliente src/cliente.c srclib/lib-logger.a srclib/lib-conexion_tcp.a -lpthread ${LIBS}
+xchat2: xchat2.c src/daemon.c srclib/lib-logger.a srclib/lib-conexion_tcp.a
+	$(CC) $(CFLAGS) xchat2.c -o xchat2 -lircinterface `pkg-config --cflags gtk+-3.0 --libs gtk+-3.0` -rdynamic srclib/lib-logger.a srclib/lib-conexion_tcp.a -pthread ${LIBS}
 
 echo_server: src/echo_server.c
 	$(CC) $(CFLAGS) -o echo_server src/echo_server.c
@@ -54,7 +54,6 @@ conexion_tcp_test: src/conexion_tcp_test.c srclib/lib-logger.a srclib/lib-conexi
 #===========================
 clean:
 	rm -f obj/*.o srclib/*.a $(EXE) $(EXE_LEARN) $(DIR_NAME).tar.gz
-	rm -f logs/*.log
 
 #================================
 # Autores/ayuda de la práctica

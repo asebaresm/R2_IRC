@@ -40,7 +40,7 @@ Sobre `errno`:
 
 Sobre hilos:
 	https://computing.llnl.gov/tutorials/pthreads/#Thread
-	
+
 	"Context switching between threads is fast as compared to context switching between processes."
 	http://softpixel.com/~cwright/programming/threads/threads.c.php
 
@@ -62,5 +62,8 @@ Sobre hilos:
 
 Sobre variables extern y declaracion_vs_definicion:
 	http://stackoverflow.com/questions/1433204/how-do-i-use-extern-to-share-variables-between-source-files-in-c
+
+Sobre CAP:
+	https://github.com/ircv3/ircv3-specifications/blob/master/extensions/sasl-3.2.md
 
 * http://metis.ii.uam.es/redes2/group__IRCMessageOptional.html
