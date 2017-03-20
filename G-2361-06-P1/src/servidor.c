@@ -218,12 +218,12 @@ int procesar_conexion (void * ptr){
 		}/*fin caso: leído 0 bytes*/
 		if (procesar_mensaje(data.new_fd, message, &data, usrs) == ERR){
 			logERR("EN procesar conexion: procesar_mensaje() devolvio error"); //(!)
-			remove_entry(usrs, data.nick);
+			//remove_entry(usrs, data.nick);
 			break;
 		}
 	} /*fin while(1)*/
 	
-	if (cerrarConexion(data.new_fd, data.hostname) == ERR) { 
+	if (cerrarConexion(data.new_fd, data.hostname) == ERR){ 
 		return ERR; 
 	}
 
