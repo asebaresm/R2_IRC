@@ -6,7 +6,7 @@
 # Compilador
 CC = gcc
 # Flags compilacion
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -Wno-unused-variable
 LIBS = -lircinterface -lircredes -lirctad
 # Ejecutables
 EXE = xchat2

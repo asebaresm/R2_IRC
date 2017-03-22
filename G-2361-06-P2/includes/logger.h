@@ -2,7 +2,7 @@
  * @file logger.c
  * @brief Descripcion de la liberia de log de errores complementaria a /var/log/syslog
  * 
- * @note La libreríá asume que el mutex se inicializa y destruye en el source principal.
+ * @note La librería asume que el mutex se inicializa y destruye en el source principal.
  * @author Alfonso Sebares
  * @date 13/02/17
  */
