@@ -70,6 +70,7 @@ int recvDatos(int client_sock, char* client_message, int cm_size, char *hostaddr
 	}else{
 		//if(client_message[strlen(client_message) - 2] == 13) //check si es CR,LF
 		//	client_message[strlen(client_message) - 2] = '\0';
+		client_message[cm_size] = '\0';
 		sprintf(buf, "recv(): \"%s\" (%d Bytes) de %s", client_message, read_size, hostaddrp);
 		logEvent(buf);
 	}

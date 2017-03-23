@@ -3,12 +3,10 @@
 # 	Escuela Politecnica Superior - UAM 
 #=========================================
 
-#Evitar el warning 'accesibility bus': export NO_AT_BRIDGE=1
-
 # Compilador
 CC = gcc
 # Flags compilacion
-CFLAGS = -g -Wall -Wno-unused-variable -Wno-unused-but-set-variable
+CFLAGS = -g -Wall -Wno-unused-variable
 LIBS = -lircinterface -lircredes -lirctad
 # Ejecutables
 EXE = xchat2
