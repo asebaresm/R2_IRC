@@ -22,7 +22,7 @@ git pull origin master
 #	- Escribes el comentario del 'merge'
 #	- guardar con Ctrl+X, S, Enter
 #	- git push origin mnaster
-
+#alfonso
 #Te pedirá tu mail de la UAM cuando hagas el primer commit en el PC 
 #del lab. Copia el comando tal cual cambiando tu email y au.
 
