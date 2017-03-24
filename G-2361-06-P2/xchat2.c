@@ -420,6 +420,7 @@ int command_query(char *message){
 
 		default:
 			g_print(YEL "WARN - In command_query: Alcanzado default del switch()(TO_DO):\n\t %s\n" RESET, message);
+			//sprintf(aux,"[%s] %s",gmtime(time(NULL)), nick)
 			IRCInterface_WriteSystemThread("*",message);
 			return OK;
 	}
