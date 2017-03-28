@@ -13,10 +13,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 /*Standard return types*/
 #define ERR -1
 #define OK 0
+
+#define MAXDATA 1024
+#define MAX_IRC_COMMAND 1000 /*https://www.alien.net.au/irc/irc2numerics.html*/
 
 /*Color definitions*/
 #define RED   "\x1B[31m"

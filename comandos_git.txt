@@ -2,16 +2,16 @@
 #(NO te mostrará los cambios quehaya hecho yo en la nube)
 git status
 
-#Añadir cambios (si no ha borrado archivos):
+#Paso1 - Añadir cambios (si no ha borrado archivos):
 git add .
 
-#Añadir cambios (si has borrado archivos):
+#Paso 1 (si has borrado algo) - Añadir cambios (si has borrado archivos):
 git add . -A
 
-#Commit de cambios:
+#Paso 2 - Commit de cambios:
 git commit -m "mensaje del commit"
 
-#Subir cambios:
+#Paso 3 - Subir cambios:
 git push origin master
 
 #Descargar versión más actualizada:

@@ -1,19 +1,14 @@
-#include <redes2/ircxchat.h>
-#include <redes2/irc.h>
+/**
+ * @file xchat2.c
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 20/03/17
+ * @brief Fichero con principalmente la implementación de los callbacks de xchat2.
+ *
+ */
 
-#include <netdb.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
-#include <net/if.h>
-
-#include "includes/types.h"
-#include "includes/conexion_tcp.h"
-#include "includes/logger.h"
-
-#define MAXDATA 1024
+#include "includes/xchat2.h"
 
 pthread_mutex_t loglock;
 
@@ -28,216 +23,6 @@ char* stream;
 
 char host_name[128]; //aux, uso en libreria TCP
 
-/*Funciones auxiliares generales*/
-//void interface_mostrar_nicks(char* channel, char* list);
-int command_query(char *message);
-void unpipe(char* message);
-void receive_messages(void* no_arg);
-
-/*Funciones aux. de utilidades*/
-void mfree(int n, ...);
-
-/*Funciones de comandos de usuario */
-/*======================================================(BEGIN)=====================================================*/
-int punotice(char* command);
-int pucycle(char* command);
-int pumotd(char* command);
-int pulusers(char* command);
-int pumode(char* command);
-int pupartall(char* command);
-int puback(char* command);
-int puunaway(char* command);
-int puoper(char* command);
-int puban(char* command);
-int pufsend(char* command);
-int pufaccept(char* command);
-int pufclose(char* command);
-int putopic(char* command);
-int pukick(char* command);
-int puinvite(char* command);
-int puwhois(char* command);
-int puaway(char* command);
-int punick(char* command);
-int puquit(char* command);
-int puleave(char* command);
-int pupart(char* command);
-int pujoin(char* command);
-int puwho(char* command);
-int punames(char* command);
-int pumsg(char* command);
-int pulist(char* command);
-int puhelp(char* command);
-int pdefault(char* command);
-int puquery(char* command);
-
-/**
-* Array de punteros a funcion para comandos de usuarios
-* http://metis.ii.uam.es/redes2/group__IRCParseUser.html#IRCUser_CommandQuery
-*/
-int (*p_array_funciones[])(char* ) = {
-	pdefault, punames, puhelp, pulist, pujoin, pupart, puleave, puquit,
-	punick, puaway, puwhois, puinvite, pukick, putopic, pdefault, pumsg, puquery,
-	punotice, pdefault, pdefault, pdefault, puwho, pdefault, pdefault,
-	pucycle, pumotd, pdefault, pulusers, pdefault, pdefault, pdefault,
-	pdefault, pdefault, pumode, pdefault, pdefault, pdefault, pdefault,
-	pdefault, pdefault, pdefault, pdefault, pdefault, pdefault, pdefault,
-	pdefault, pdefault, pupartall, pdefault, puback, puunaway, pdefault,
-	puoper, puban, pufsend, pufaccept, pufclose
-};
-
-/*Funciones no necesarias para el cliente*/
-int pumode(char* command){ return -1; } // ya se envia con los botones
-int pupartall(char* command){ return -1; }
-int puback(char* command){ return -1; }
-int puunaway(char* command){ return -1; } //existe UNAWAY??
-int puoper(char* command){ return -1; }
-int puban(char* command){ return -1; } // ya se envia con los botones
-int pufsend(char* command){ return -1; } //se envia con los ficheros
-int pufaccept(char* command){ return -1; } //se envia con los ficheros
-int pufclose(char* command){ return -1; } //se envia con los ficheros
-int putopic(char* command){ return -1; } // se envia con la barra de topic
-int pukick(char* command){ return -1; } //se envia con los botones
-int puleave(char* command){ return -1; }
-
-//TO-DO: por implementar
-int pdefault(char* command){ return -1; }
-int puhelp(char* command){ return -1; }
-int pulist(char* command){ return -1; }
-int pupart(char* command){ return -1; }
-int puquit(char* command){ return -1; }
-int punick(char* command){ return -1; }
-int puaway(char* command){ return -1; }
-int puwhois(char* command){ return -1; }
-int puinvite(char* command){ return -1; }
-int pumsg(char* command){ return -1; }
-int puquery(char* command){ return -1; }
-int punotice(char* command){ return -1; }
-int puwho(char* command){ return -1; }
-int pucycle(char* command){ return -1; }
-int pumotd(char* command){ return -1; }
-int pulusers(char* command){ return -1; }
-/**
-* @brief Comando de usuario NAMES
-* @param command cadena introducida por el usuario en el campo de texto
-* @return OK si todo es correcto, ERR si se produce un error
-*/
-int punames(char* command){ 
-	//<< NAMES #redes2
-	//>> :irc.eps.net 353 gomupo = #redes2 :flowey cgs gomupo Mamo_1 qwerttyue asdfgh alpeh ArcaFacts BotGram
-	char* channels;
-	char* passwords;
-	char* command_enviar;
-	char* prefix = NULL;
-	char* target = NULL;
-	char channels_passwords [MAXDATA] = {0};
-	int ret;
-
-	g_print(MAG "\n<< [user command] NOTICE - command = %s\n" RESET, command);
-	/*Comprobar si es un comando names sin argumentos, en caso afirmativo no utilizar la función de Eloy ya que
-	parece que falla, y mandarlo tal cual*/
-	//Usamos strcasecmp para que den igual minusculas
-	if((0 == strcasecmp(command,"/names")) && (strlen(command) == strlen("/names"))){
-		g_print("\t Command names sin argumentos: %s \n",command);
-		ret = IRCMsg_Names (&command_enviar, prefix, channels_passwords, target);
-		if(ret != IRC_OK){
-			g_print(RED "ERROR - In punames: IRCMsg_Names no devolvio IRC_OK\n" RESET);
-			return ERR;
-		}
-		g_print("\t command_enviar names sin argumentos: %s \n",command_enviar);
-		ret = enviarDatos(sockfd_user,command_enviar, strlen(command_enviar));
-		if(ret == ERR){
-			g_print(RED "ERROR - In punames: enviarDatos() devolvio error (ver .log)\n\t\tEl cliente se cerrará.\n" RESET);
-			exit(1);
-		}
-		if(ret == 0){ //timeout seguramente
-			g_print(RED "ERROR - In punames: enviarDatos() mandó 0 Bytes(ver .log)\n\t\t(Timeout)El cliente se cerrará.\n" RESET);
-			exit(1);
-		}
-		IRCInterface_PlaneRegisterOutMessage(command);
-		free(command_enviar);
-		return OK;
-	}
-
-	ret = IRCUserParse_Names(command, &channels, &passwords);
-	if(ret != IRC_OK){
-		g_print(RED "ERROR - In punames: IRCUserParse_Names no devolvio IRC_OK\n" RESET);
-		return ERR;
-	}
-	g_print("\t command: %s \n",command);
-	g_print("\t channels : %s \n",channels);
-	g_print("\t passwords : %s \n",passwords);
-
-	sprintf(channels_passwords,"%s %s",channels,passwords?passwords:"");
-
-	ret = IRCMsg_Names (&command_enviar, prefix, channels_passwords, target);
-	if(ret != IRC_OK){
-		g_print(RED "ERROR - In punames: IRCMsg_Names no devolvio IRC_OK\n" RESET);
-		return ERR;
-	}
-	g_print("\t Mensaje a enviar command_enviar: %s \n",command_enviar);
-
-	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
-
-	IRCInterface_PlaneRegisterOutMessage(command_enviar);
-	mfree(5, command_enviar, channels, passwords, prefix, target);
-	return OK;
-}
-
-/**
-* @brief Comando de usuario JOIN
-* @param command cadena introducida por el usuario en el campo de texto
-* @return OK si todo es correcto, ERR si se produce un error
-*/
-int pujoin(char* command){ 
-
-	long ret = -1;
-	int retorno = -1;
-
-	char* key = NULL;
-	char* msg = NULL;
-	char* channels = NULL;
-	char* passwords = NULL;
-	char* command_enviar = NULL;
-	char* prefix = NULL;
-	char canales_y_passwords [MAXDATA] = {0};
-
-	g_print(MAG "\n<< [user command] UJOIN - command = %s\n" RESET, command);
-
-	ret = IRCUserParse_Join(command, &channels, &passwords);
-	if(ret != IRC_OK){
-		g_print(RED "ERROR - In pujoin: IRCUserParse_Join no devolvio IRC_OK\n" RESET);
-		return -1;
-	}
-	g_print("\t command: %s \n",command);
-	g_print("\t channels : %s \n",channels);
-	g_print("\t passwords : %s \n",passwords);
-
-	sprintf(canales_y_passwords,"%s %s",channels,passwords?passwords:"");
-
-	//enviar varios canales
-	ret = IRCMsg_Join (&command_enviar, prefix, canales_y_passwords, key, msg);
-	if(ret != IRC_OK){
-		g_print(RED "ERROR - In pujoin: IRCMsg_Join no devolvio IRC_OK\n" RESET);
-		return -1;
-	}
-	g_print("\t Mensaje a enviar command_enviar: %s \n",command_enviar);
-	
-	retorno = enviarDatos(sockfd_user,command_enviar, strlen(command_enviar));
-	if(retorno < 0){
-		g_print(RED "ERROR - In pujoin: enviarDatos() devolvio error (ver secuencia en .log)\n\t\tEl cliente se cerrará.\n" RESET);
-		exit(1);
-	}
-	if(retorno == 0){ //timeout 
-		g_print(RED "ERROR - In pujoin: enviarDatos() envió 0 Bytes(ver secuencia en .log)\n\t\t(Timeout de conexión probablemente)\n" RESET);
-		exit(1);
-	}
-
-	IRCInterface_PlaneRegisterOutMessage(command_enviar);	
-	mfree(6, command_enviar, channels, passwords, prefix, key, msg);
-	return OK; 
-}
-
-/*=============================================(FIN FUNCIONES DE COMANDOS DE USUARIO)===================================*/
 /**
 * @brief Parsea los mensajes y respuestas que recibe del servidor
 * @param massage mensaje recibido para procesar
@@ -273,6 +58,8 @@ int command_query(char *message){
 	//char **parameters = NULL;
 	//int numparameters = 0;
 
+	//265
+	char *substring = NULL;
 	//322
 	char *visible = NULL;
 	//332
@@ -324,6 +111,13 @@ int command_query(char *message){
 	int i;
 	//char* realname, *host;
 
+	//GENERAL
+	char **params;
+	int n_params;
+	int unknw_type;
+	const char space_delim[2] = " ";
+	char *message_cp = NULL;
+
 	g_print("Mesaje recibido en command_query: %s", message);
 
 	/*
@@ -336,6 +130,303 @@ int command_query(char *message){
 	IRCInterface_PlaneRegisterInMessage(message);
 
 	switch(IRC_CommandQuery(message)){
+		case RPL_WELCOME: //001
+			ret = IRCParse_RplWelcome(message, &prefix, &nick2, &msg);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplWelcome\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("Comandos recibidos en el IRCParse_RplWelcome: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick2: %s \n",nick2);
+			g_print("\t msg: %s \n\n",msg);
+			//obtenemos el hostname, util para el envio de ficheros
+			hostname = strtok(msg, " ");
+			while (((hostname = strtok(NULL, " ")) != NULL) && (counter < 5)){
+				counter++;
+			}
+			hostname = strtok(NULL, " ");
+			g_print("\t hostname: %s \n\n", hostname);
+			IRCInterface_WriteSystemThread_Pretty("*", msg);
+			break;
+
+		case RPL_YOURHOST:	//002
+			//long IRCParse_RplYourHost (char *strin, char **prefix, char **nick, char **msg, char **servername, char **versionname)
+			ret = IRCParse_RplYourHost(message, &prefix, &nick2, &msg, &servername, &versionname);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplYourHost\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("Comandos recibidos en el IRCParse_RplYourHost: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick2: %s \n",nick2);
+			g_print("\t servername: %s \n",servername);
+			g_print("\t versionname: %s \n",versionname);		
+			g_print("\t msg: %s \n\n",msg);
+			IRCInterface_WriteSystemThread_Pretty("*",msg);
+			break;
+
+		case RPL_CREATED://003			
+			//long IRCParse_RplCreated (char *strin, char **prefix, char **nick,char **timedate, char **msg)
+			ret = IRCParse_RplCreated(message, &prefix, &nick2, &timedate, &msg);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplCreated\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("Comandos recibidos en el IRCParse_RplCreated: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick2: %s \n",nick2);
+			g_print("\t timedate: %s \n",timedate);	
+			g_print("\t msg: %s \n\n",msg);
+			IRCInterface_WriteSystemThread_Pretty("*",msg);
+			break;
+
+		case RPL_MYINFO: //004
+			//long IRCParse_RplMyInfo (char *strin, char **prefix, char **nick, char **servername, char **version, char **availableusermodes, char **availablechannelmodes, char **addedg)
+			ret = IRCParse_RplMyInfo(message, &prefix, &nick2, &servername, &version, &availableusermodes, &availablechannelmodes, &addedg);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplMyInfo\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("Comandos recibidos en el IRCParse_RplMyInfo: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick2: %s \n",nick2);
+			g_print("\t servername: %s \n",servername);
+			g_print("\t version: %s \n",version);
+			g_print("\t availableusermodes: %s \n",availableusermodes);	
+			g_print("\t availablechannelmodes: %s \n",availablechannelmodes);
+			g_print("\t addedg: %s \n\n",addedg);
+			n = snprintf(mensaje, sizeof mensaje,"%s %s %s %s %s ",servername,version,availableusermodes,availablechannelmodes,addedg);
+
+			if ( n < 0 || n >= sizeof mensaje ){
+				g_print("Error en sprintf \n");
+    			return ERR;    // or other error handling
+			}
+			IRCInterface_WriteSystemThread_Pretty("*",mensaje);		
+			break;
+
+		case RPL_BOUNCE: //005
+			//   long IRCParse_RplISupport (char *strin, char **prefix, char **nick, char **msg)						
+			ret = IRCParse_RplISupport(message, &prefix, &nick2, &msg);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplISupport\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("Comandos recibidos en el IRCParse_RplISupport: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick2: %s \n",nick2);
+			g_print("\t msg: %s \n\n",msg);
+			IRCInterface_WriteSystemThread_Pretty("*",msg);		
+			break;
+
+		case RPL_LUSERCLIENT: //251
+			//long IRCParse_RplLuserClient (char *strin, char **prefix, char **nick, char **msg, int *nusers, int *ninvisibles, int *nservers)
+			
+			ret = IRCParse_RplLuserClient(message, &prefix, &nick2, &msg, &nusers, &ninvisibles, &nservers);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplLuserClient\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick2: %s \n",nick2);
+			g_print("\t msg: %s \n",msg);
+			g_print("\t nusers: %d \n",nusers);
+			g_print("\t ninvisibles: %d \n",ninvisibles);
+			g_print("\t nservers: %d \n\n",nservers); 
+
+			/*ret_strstr = strstr(mensaje,"nicknick");
+			IRCInterface_WriteSystem("*",ret_strstr);*/ 
+
+			sprintf(mensaje,"There are %d users and %d invisibles on %d servers ",nusers,ninvisibles,nservers);
+			//sprintf(mensaje,"There are 13 users and 0 services on 1 servers");
+
+			IRCInterface_WriteSystemThread_Pretty("*",mensaje);													
+			break;
+			
+		case RPL_LUSERCHANNELS: //254
+			g_print("\t message: %s \n",message);
+			/*Coger el primer token*/
+			token = strtok(message,s);
+			/*Ir por el resto*/
+			if(token != NULL){
+				token = strtok(NULL,s);	
+			}
+			IRCInterface_WriteSystemThread_Pretty("*",token);
+
+			token = NULL;
+			//IRCInterface_WriteSystem("*",message);	
+			break;
+
+		case RPL_LUSERME : //255
+			g_print("\t message: %s \n",message);
+			/*Coger el primer token*/
+			token = strtok(message,s);
+			/*Ir por el resto*/
+			if(token != NULL){
+				token = strtok(NULL,s);	
+			}
+			IRCInterface_WriteSystemThread_Pretty("*",token);
+
+			token = NULL;
+			//IRCInterface_WriteSystem("*",message);	
+			break;
+
+		case RPL_LOCALUSERS: //265
+			substring = strnext(message, ':');
+			if (substring){
+				substring = strnext(substring, ':');
+			}
+			IRCInterface_WriteSystemThread_Pretty("*",substring);
+
+			substring = NULL;
+			break;
+
+		case RPL_GLOBALUSERS: //266
+			g_print(GRN "\n>> [server command] RPL_GLOBALUSERS - message = %s\n" RESET, message);
+			substring = strnext(message, ':');
+			if (substring){
+				substring = strnext(substring, ':');
+			}
+			IRCInterface_WriteSystemThread("*",substring);
+
+			substring = NULL;		
+			break;
+
+		case RPL_LISTEND: //323
+			g_print("\t message: %s \n",message);
+			/*Coger el primer token*/
+			token = strtok(message,s);
+			/*Ir por el resto*/
+			if(token != NULL){
+				token = strtok(NULL,s);	
+			}
+			IRCInterface_WriteSystemThread("*",token);
+
+			token = NULL;
+			//IRCInterface_WriteSystem("*",message);			
+			break;
+
+		case RPL_MOTDSTART: //375
+			g_print("\t message: %s \n",message);
+			/*Coger el primer token*/
+			token = strtok(message,s);
+			/*Ir por el resto*/
+			if(token != NULL){
+				token = strtok(NULL,s);	
+			}
+			IRCInterface_WriteSystemThread("*",token);
+
+			token = NULL;
+			//IRCInterface_WriteSystem("*",message);			
+			break;
+
+		case RPL_MOTD: //372
+			g_print("\t message: %s \n",message);
+			/*Coger el primer token*/
+			token = strtok(message,s);
+			/*Ir por el resto*/
+			if(token != NULL){
+				token = strtok(NULL,s);	
+			}
+			IRCInterface_WriteSystemThread("*",token);
+
+			token = NULL;
+			//IRCInterface_WriteSystem("*",message);		
+			break;
+
+		case RPL_ENDOFMOTD: //376
+			g_print("\t message: %s \n",message);
+			/*Coger el primer token*/
+			token = strtok(message,s);
+			/*Ir por el resto*/
+			if(token != NULL){
+				token = strtok(NULL,s);	
+			}
+			IRCInterface_WriteSystemThread("*",token);
+
+			token = NULL;
+			//IRCInterface_WriteSystem("*",message);	
+			return 19;//cambiar por un define
+			break;
+
+		case PRIVMSG:
+			g_print(GRN "\n>> [server command] PRIVMSG - message = %s\n" RESET, message);
+			ret = IRCParse_Privmsg(message, &prefix, &msgtarget, &msg);
+			if(ret != IRC_OK){
+				g_print(RED "ERROR - In command_query: IRCParse_Privmsg devolvio != IRC_OK" RESET);
+				return ERR;
+			}
+			//>> :gomupo!~gonzalo@119.181.218.87.dynamic.jazztel.es PRIVMSG gon :hola
+			if ((origin_nick = strtok(prefix, "!")) != NULL){
+				strcpy(nick_privmsg, origin_nick);
+			}
+			g_print("\t nick_privmsg: %s \n",nick_privmsg);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t msgtarget: %s \n",msgtarget);
+			g_print("\t msg: %s \n\n",msg);
+
+			if(msg[0] == 1 || (msg[0] == ':' || msg[1] == 1)) { //envio de ficheros
+				g_print("alguien quiere enviarme un fichero\n");
+				//char *msg = "\001FSEND gato.jpg ~cgs@cliente168.wlan.uam.es 1234 24422";
+				
+				filename = strtok(msg, " ");
+				filename = strtok(NULL, " ");
+				hostname_destino = strtok(NULL, " ");
+				port = (unsigned long) atol(strtok(NULL, " "));
+				length = (unsigned long) atol(strtok(NULL, " "));
+				g_print("filename: %s \n",filename);
+				g_print("hostname_destino: %s \n",hostname_destino);
+				g_print("length: %ld \n",length);
+				g_print("port: %ld \n",port);
+
+				if(IRCInterface_RecibirDialogThread(nick_user, filename) == TRUE){
+					g_print("Lanzamos el hilo que guarda el archivo\n");
+					pthread_t tid;
+
+					File_args args;
+					args.hostname = hostname_destino;
+					args.filename = filename;
+					args.port = port;
+					args.length = length;
+
+					if(pthread_create( &tid, NULL, (void*) save_file, (void*) &args) < 0){
+				    	g_print("Error en la llamada a save_file\n");
+						return ERR;
+					}
+					break;
+				}
+				/*
+				if (sscanf(msg, "\001AUDIOCHAT %ms %li", &hostname_destino, &port) > 0) {
+					g_print("host=%s, port=%li\n", hostname_destino, port);
+				} else{
+					g_print("Formato incorrecto en envio de fichero\n");
+				}*/
+				ret = enviarDatos(sockfd_user, command, strlen(command));
+				if(ret < 0){
+					g_print(RED "ERROR - In command_query: enviarDatos() devolvio error (ver secuencia en .log)\n\t\tEl cliente se cerrará.\n" RESET);
+					exit(1);
+				}
+				if(ret == 0){ //timeout 
+					g_print(RED "ERROR - In command_query: enviarDatos() mandó 0 Bytes(ver secuencia en .log)\n\t\t(Timeout de conexión probablemente)\n" RESET);
+					exit(1);
+				}
+			}
+
+			if(msgtarget[0] != '#'){//no grupo
+				IRCInterface_AddNewChannelThread(nick_privmsg, 0);				
+				IRCInterface_WriteChannelThread(nick_privmsg, nick_privmsg, msg);
+				return OK;
+			}
+
+			IRCInterface_WriteChannelThread(msgtarget, nick_privmsg, msg);
+			break;
+
 		case NOTICE:
 			//g_print("\n=======CASE NOTICE=======\n");
 			g_print(GRN "\n>> [server command] NOTICE - message = %s\n" RESET, message);
@@ -414,6 +505,31 @@ int command_query(char *message){
 			return ERR;
 
 		case IRCERR_UNKNOWNCOMMAND:
+			//g_print(MAG"\n>>>>>>>>>>>>>>>>>>>>>>>>>>\n"RESET);
+			//ret =  IRCParse_GeneralCommand (message, &prefix, &type, &params, &n_params, &msg);
+			/*Intenta hacer un parseo apra un type no soportado por IRC_CommandQuery()*/
+			unknw_type = parse_type(message);
+			if(unknw_type != ERR){
+				switch(unknw_type){ //Intentar tratar un mensaje no reconocido por IRC_CommandQuery() 
+					case 250:
+						g_print(GRN "\n>> [server command] unknw_type = 250 - message = %s\n" RESET, message);
+						substring = strnext(message, ':');
+						if (substring){
+							substring = strnext(substring, ':');
+						}
+						IRCInterface_WriteSystemThread_Pretty("*",substring);
+
+						substring = NULL;
+					break;
+
+					default:
+					g_print(YEL "WARN - In command_query: case IRCERR_UNKNOWNCOMMAND:\n\tNo se ha definido un tratamiento para un mensaje desconocido con type = %d\n" RESET, unknw_type);
+					IRCInterface_WriteSystemThread("*",message);
+					break;
+				}
+				return OK;
+			}
+
 			g_print(YEL "WARN - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_UNKNOWNCOMMAND -  l comando que contiene no es reconocido por esta función.\n" RESET);
 			IRCInterface_WriteSystemThread("*",message);
 			return OK;
@@ -542,7 +658,7 @@ void receive_messages(void* no_arg){
  
 void IRCInterface_ActivateChannelKey(char *channel, char *key)
 {
-	g_print(YEL "\nIRCInterface_ActivateChannelKey(char *channel, char *key) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivateChannelKey(char *channel, char *key) call\n" RESET);
 }
 
 /**
@@ -577,7 +693,7 @@ void IRCInterface_ActivateChannelKey(char *channel, char *key)
  
 void IRCInterface_ActivateExternalMessages(char *channel)
 {
-	g_print(YEL "\nIRCInterface_ActivateExternalMessages(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivateExternalMessages(char *channel) call\n" RESET);
 }
 
 /**
@@ -612,7 +728,7 @@ void IRCInterface_ActivateExternalMessages(char *channel)
  
 void IRCInterface_ActivateInvite(char *channel)
 {
-	g_print(YEL "\nIRCInterface_ActivateInvite(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivateInvite(char *channel) call\n" RESET);
 }
 
 /**
@@ -647,7 +763,7 @@ void IRCInterface_ActivateInvite(char *channel)
  
 void IRCInterface_ActivateModerated(char *channel)
 {
-	g_print(YEL "\nIRCInterface_ActivateModerated(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivateModerated(char *channel) call\n" RESET);
 }
 
 /**
@@ -685,7 +801,7 @@ void IRCInterface_ActivateModerated(char *channel)
  
 void IRCInterface_ActivateNicksLimit(char *channel, int limit)
 {
-	g_print(YEL "\nIRCInterface_ActivateNicksLimit(char *channel, int limit) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivateNicksLimit(char *channel, int limit) call\n" RESET);
 }
 
 /**
@@ -720,7 +836,7 @@ void IRCInterface_ActivateNicksLimit(char *channel, int limit)
  
 void IRCInterface_ActivatePrivate(char *channel)
 {
-	g_print(YEL "\nIRCInterface_ActivatePrivate(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivatePrivate(char *channel) call\n" RESET);
 }
 
 /**
@@ -755,7 +871,7 @@ void IRCInterface_ActivatePrivate(char *channel)
 
 void IRCInterface_ActivateProtectTopic(char *channel)
 {
-	g_print(YEL "\nIRCInterface_ActivateProtectTopic(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivateProtectTopic(char *channel) call\n" RESET);
 }
 
 /**
@@ -790,7 +906,7 @@ void IRCInterface_ActivateProtectTopic(char *channel)
  
 void IRCInterface_ActivateSecret(char *channel)
 {
-	g_print(YEL "\nIRCInterface_ActivateSecret(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ActivateSecret(char *channel) call\n" RESET);
 }
 
 /**
@@ -827,7 +943,7 @@ void IRCInterface_ActivateSecret(char *channel)
  
 void IRCInterface_BanNick(char *channel, char *nick)
 {
-	g_print(YEL "\nIRCInterface_BanNick(char *channel, char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_BanNick(char *channel, char *nick) call\n" RESET);
 }
 
 /**
@@ -1082,7 +1198,7 @@ long IRCInterface_Connect(char *nick, char *user, char *realname, char *password
  
 void IRCInterface_DeactivateChannelKey(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivateChannelKey(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivateChannelKey(char *channel) call\n" RESET);
 }
 
 /**
@@ -1117,7 +1233,7 @@ void IRCInterface_DeactivateChannelKey(char *channel)
  
 void IRCInterface_DeactivateExternalMessages(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivateExternalMessages(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivateExternalMessages(char *channel) call\n" RESET);
 }
 
 /**
@@ -1152,7 +1268,7 @@ void IRCInterface_DeactivateExternalMessages(char *channel)
  
 void IRCInterface_DeactivateInvite(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivateInvite(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivateInvite(char *channel) call\n" RESET);
 }
 
 /**
@@ -1187,7 +1303,7 @@ void IRCInterface_DeactivateInvite(char *channel)
  
 void IRCInterface_DeactivateModerated(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivateModerated(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivateModerated(char *channel) call\n" RESET);
 }
 
 /**
@@ -1222,7 +1338,7 @@ void IRCInterface_DeactivateModerated(char *channel)
  
 void IRCInterface_DeactivateNicksLimit(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivateNicksLimit(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivateNicksLimit(char *channel) call\n" RESET);
 }
 
 /**
@@ -1259,7 +1375,7 @@ void IRCInterface_DeactivateNicksLimit(char *channel)
  
 void IRCInterface_DeactivatePrivate(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivatePrivate(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivatePrivate(char *channel) call\n" RESET);
 }
 
 /**
@@ -1294,7 +1410,7 @@ void IRCInterface_DeactivatePrivate(char *channel)
 
 void IRCInterface_DeactivateProtectTopic(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivateProtectTopic(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivateProtectTopic(char *channel) call\n" RESET);
 }
 
 /**
@@ -1329,7 +1445,7 @@ void IRCInterface_DeactivateProtectTopic(char *channel)
  
 void IRCInterface_DeactivateSecret(char *channel)
 {
-	g_print(YEL "\nIRCInterface_DeactivateSecret(char *channel) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DeactivateSecret(char *channel) call\n" RESET);
 }
 
 /**
@@ -1368,7 +1484,7 @@ void IRCInterface_DeactivateSecret(char *channel)
  
 boolean IRCInterface_DisconnectServer(char *server, int port)
 {
-	g_print(YEL "\nIRCInterface_DisconnectServer(char *server, int port) call\n" RESET);
+	g_print(BLU "\nIRCInterface_DisconnectServer(char *server, int port) call\n" RESET);
 	return TRUE;
 }
 
@@ -1409,7 +1525,7 @@ boolean IRCInterface_DisconnectServer(char *server, int port)
  
 boolean IRCInterface_ExitAudioChat(char *nick)
 {
-	g_print(YEL "\nIRCInterface_ExitAudioChat(char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_ExitAudioChat(char *nick) call\n" RESET);
 	return TRUE;
 }
 
@@ -1447,7 +1563,7 @@ boolean IRCInterface_ExitAudioChat(char *nick)
  
 void IRCInterface_GiveOp(char *channel, char *nick)
 {
-	g_print(YEL "\nIRCInterface_GiveOp(char *channel, char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_GiveOp(char *channel, char *nick) call\n" RESET);
 }
 
 /**
@@ -1484,7 +1600,7 @@ void IRCInterface_GiveOp(char *channel, char *nick)
  
 void IRCInterface_GiveVoice(char *channel, char *nick)
 {
-	g_print(YEL "\nIRCInterface_GiveVoice(char *channel, char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_GiveVoice(char *channel, char *nick) call\n" RESET);
 }
 
 /**
@@ -1521,7 +1637,7 @@ void IRCInterface_GiveVoice(char *channel, char *nick)
  
 void IRCInterface_KickNick(char *channel, char *nick)
 {
-	g_print(YEL "\nIRCInterface_KickNick(char *channel, char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_KickNick(char *channel, char *nick) call\n" RESET);
 }
 
 /**
@@ -1634,7 +1750,7 @@ void IRCInterface_NewCommandText(char *command)
  
 void IRCInterface_NewTopicEnter(char *topicdata)
 {
-	g_print(YEL "\nIRCInterface_NewTopicEnter(char *topicdata) call\n" RESET);
+	g_print(BLU "\nIRCInterface_NewTopicEnter(char *topicdata) call\n" RESET);
 }
 
 /**
@@ -1678,7 +1794,7 @@ void IRCInterface_NewTopicEnter(char *topicdata)
  
 boolean IRCInterface_SendFile(char *filename, char *nick, char *data, long unsigned int length)
 {
-	g_print(YEL "\nIRCInterface_SendFile(char *filename, char *nick, char *data, long unsigned int length) call\n" RESET);
+	g_print(BLU "\nIRCInterface_SendFile(char *filename, char *nick, char *data, long unsigned int length) call\n" RESET);
 	return TRUE;
 }
 
@@ -1720,7 +1836,7 @@ boolean IRCInterface_SendFile(char *filename, char *nick, char *data, long unsig
  
 boolean IRCInterface_StartAudioChat(char *nick)
 {
-	g_print(YEL "\nIRCInterface_StartAudioChat(char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_StartAudioChat(char *nick) call\n" RESET);
 	return TRUE;
 }
 
@@ -1761,7 +1877,7 @@ boolean IRCInterface_StartAudioChat(char *nick)
  
 boolean IRCInterface_StopAudioChat(char *nick)
 {
-	g_print(YEL "\nIRCInterface_StopAudioChat(char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_StopAudioChat(char *nick) call\n" RESET);
 	return TRUE;
 }
 
@@ -1799,7 +1915,7 @@ boolean IRCInterface_StopAudioChat(char *nick)
  
 void IRCInterface_TakeOp(char *channel, char *nick)
 {
-	g_print(YEL "\nIRCInterface_TakeOp(char *channel, char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_TakeOp(char *channel, char *nick) call\n" RESET);
 }
 
 /**
@@ -1836,7 +1952,7 @@ void IRCInterface_TakeOp(char *channel, char *nick)
  
 void IRCInterface_TakeVoice(char *channel, char *nick)
 {
-	g_print(YEL "\nIRCInterface_TakeVoice(char *channel, char *nick) call\n" RESET);
+	g_print(BLU "\nIRCInterface_TakeVoice(char *channel, char *nick) call\n" RESET);
 }
 
 
@@ -1860,28 +1976,6 @@ void IRCInterface_TakeVoice(char *channel, char *nick)
 /**                                                                                               **/
 /***************************************************************************************************/
 /***************************************************************************************************/
-
-
-/**
-* @brief Libera punteros si estos no estan a NULL
-* Uso
-*
-* mfree(3,a,b,c);
-* mfree(4,a,b,c,d); 
-*/
-void mfree(int n, ...){
-
-	va_list ap;
-	char *p = NULL;
-	register int i;
-	va_start(ap, n);
-	for (i = 0; i < n; ++i)
-	{
-		p = (char *) va_arg(ap, char*);
-		if( p != NULL) free(p);
-	}
-	va_end (ap);
-}
 
 int main (int argc, char *argv[])
 {
