@@ -32,7 +32,7 @@ extern p_funcion p_array_funciones[57];
 /*Funciones auxiliares generales*/
 //void interface_mostrar_nicks(char* channel, char* list);
 int command_query(char *message);
-void unpipe(char* message);
+void unpipe(char* message, int MAXDATA_flag);
 void receive_messages(void* no_arg);
 
 #endif

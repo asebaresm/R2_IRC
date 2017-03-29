@@ -23,6 +23,11 @@ char* stream;
 
 char host_name[128]; //aux, uso en libreria TCP
 
+//int 1024B_flag = 0;
+char last_command[256] = ""; 		//almacena el ultimo 'message' pasado a unpipe()
+int check_next_unpipe = 0;		//0 no check, 1 check
+int last_test = OK; 			//0 OK, -1 ERR
+
 /**
 * @brief Parsea los mensajes y respuestas que recibe del servidor
 * @param massage mensaje recibido para procesar
@@ -282,7 +287,7 @@ int command_query(char *message){
 			if (substring){
 				substring = strnext(substring, ':');
 			}
-			IRCInterface_WriteSystemThread_Pretty("*",substring);
+			IRCInterface_WriteSystemThread("*",substring);
 
 			substring = NULL;
 			break;
@@ -359,7 +364,7 @@ int command_query(char *message){
 			g_print(GRN "\n>> [server command] PRIVMSG - message = %s\n" RESET, message);
 			ret = IRCParse_Privmsg(message, &prefix, &msgtarget, &msg);
 			if(ret != IRC_OK){
-				g_print(RED "ERROR - In command_query: IRCParse_Privmsg devolvio != IRC_OK" RESET);
+				g_print(RED "\nERROR - In command_query: IRCParse_Privmsg devolvio != IRC_OK" RESET);
 				return ERR;
 			}
 			//>> :gomupo!~gonzalo@119.181.218.87.dynamic.jazztel.es PRIVMSG gon :hola
@@ -495,12 +500,12 @@ int command_query(char *message){
 
 		/*TRATAMIENTO DE ERRORES*/
 		case IRCERR_NOCOMMAND:
-			g_print(RED "ERROR - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_NOCOMMAND -  no hay ningún comando en la cadena de caracteres\n" RESET);
+			g_print(RED "\nERROR - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_NOCOMMAND -  no hay ningún comando en la cadena de caracteres\n" RESET);
 			IRCInterface_WriteSystemThread("*",message);
 			return ERR;
 
 		case IRCERR_NOPARAMS:
-			g_print(RED "ERROR - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_NOPARAMS -  se ha introducido una cadena de caracteres nula\n" RESET);
+			g_print(RED "\nERROR - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_NOPARAMS -  se ha introducido una cadena de caracteres nula\n" RESET);
 			IRCInterface_WriteSystemThread("*",message);
 			return ERR;
 
@@ -552,21 +557,153 @@ int command_query(char *message){
 /**
 * @brief Funcion para dividir en comandos la cadena "message"
 * @param message cadena recibida, puede incluir mas de un comando
+* @param MAXDATA_flag flag que marca que se ha leído el maximo del buffer y han podido cortarse comandos
 * @return void
 */
-void unpipe(char* message){
+void unpipe(char* message, int MAXDATA_flag){
 
 	char *q = message, *command;
+	char *glued_command = NULL;
+	int i = 0, test = 0;
 
 	while (q != NULL){
-		//printf(BLU "\nwhile en unpipe\n" RESET);
 		q = IRC_UnPipelineCommands(q, &command);
-		if (command_query(command) == ERR){
-			g_print(RED "ERROR - In unpipe: command_query(command) devolvio ERR\n" RESET);
-			free(command);
-			break;
+		test = testIRC_CommandQuery(command);
+
+		if(MAXDATA_flag == 1){	//caso 1.)riesgo: se ha llamado a unpipe() con un bloque de tam MAXDATA
+			if((i == 0) && (check_next_unpipe == 1)){	//caso 2.1)primera iter unpipe, no MAXDATA PERO 'check...' activado
+				if(test == OK && last_test == ERR){			//caso 2.1.1)además no da error
+					/*
+					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+					strcpy(glued_command, last_command);
+					strcat(glued_command, command);
+
+					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+					command_query(glued_command);
+
+					free(command);
+					free(glued_command);
+					*/
+					glueAndQuery(command, last_command);
+				}else if(test == ERR && last_test == OK){	//caso 2.1.2)o bien es la segunda mitad del comando o bien
+															//           da la casualidad de que es un comando mal formado independiente
+					/*
+					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+					strcpy(glued_command, last_command);
+					strcat(glued_command, command);
+
+					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+					command_query(glued_command);
+
+					free(command);
+					free(glued_command);
+					*/
+					glueAndQuery(command, last_command);
+				}else if(test == ERR && last_test == ERR){	//caso 2.1.3)ambos test petan. Concatenar y rezar
+					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+					strcpy(glued_command, last_command);
+					strcat(glued_command, command);
+
+					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+					if (testIRC_CommandQuery(glued_command) == OK){
+						command_query(glued_command);
+						free(glued_command);
+					}else{
+						command_query(last_command);
+						command_query(command);
+					}
+
+					free(command);
+				}else{										//caso 2.1.4)ambos comandos están bien formados
+					command_query(command);
+					free(command);
+				}
+				//resetear flags:
+				check_next_unpipe = 0;
+				strcpy(last_command, "0");
+
+			}else if(q == NULL){ //q es 'resto', comprobar que sea el último comando parseado del bloque
+				if (test == ERR){							//caso 1.1)error en test con MAXDATA_f
+					g_print(YEL "\nWARN - In unpipe: testIRC_CommandQuery(command) devolvio ERR con MAXDATA_flag activada\n\tSe almacena el trozo de comando=%s\n" RESET, command);
+					last_test = ERR;
+					strcpy(last_command, command);
+					free(command);
+					check_next_unpipe = 1;
+					break; //(!) en principio no tiene sentido seguir iterando, es el último mensaje (trozo) del bloque
+				}else{										//caso 1.2)no error en test con MAXDATA_f, 2 posibilidades:
+															//a)justo ha cogido el comando entero, b)ha cogido parte del comando y lo reconoce como valido
+					g_print(YEL "\nWARN - In unpipe: testIRC_CommandQuery(command) devolvio OK con MAXDATA_flag activada\n\tSe almacena el trozo de comando=%s\n" RESET, command);
+					last_test = OK;
+					strcpy(last_command, command);
+					free(command);
+				}
+				check_next_unpipe = 1;
+			}else{		//si no es el último comando parseado, command_query normal
+				if(command_query(command) == ERR){
+					g_print(RED "ERROR - In unpipe: command_query() devolvio ERR (MAXDATA_flag == 1 pero no es el último comando)\n\tcommand = %s" RESET, command);
+					free(command);
+				}
+			}
+
+		}else{					//caso 2)no se ha llamado a unpipe() con un bloque de tam MAXDATA
+			if((i == 0) && (check_next_unpipe == 1)){	//caso 2.1)primera iter unpipe, no MAXDATA PERO 'check...' activado
+				if(test == OK && last_test == ERR){			//caso 2.1.1)además no da error
+					/*
+					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+					strcpy(glued_command, last_command);
+					strcat(glued_command, command);
+
+					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+					command_query(glued_command);
+
+					free(command);
+					free(glued_command);
+					*/
+					glueAndQuery(command, last_command);
+				}else if(test == ERR && last_test == OK){	//caso 2.1.2)o bien es la segunda mitad del comando o bien
+															//           da la casualidad de que es un comando mal formado independiente
+					/*
+					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+					strcpy(glued_command, last_command);
+					strcat(glued_command, command);
+
+					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+					command_query(glued_command);
+
+					free(command);
+					free(glued_command);
+					*/
+					glueAndQuery(command, last_command);
+				}else if(test == ERR && last_test == ERR){	//caso 2.1.3)ambos test petan. No se puede concatenar
+					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+					strcpy(glued_command, last_command);
+					strcat(glued_command, command);
+					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+					
+					if (testIRC_CommandQuery(glued_command) == OK){
+						command_query(glued_command);
+						free(glued_command);
+					}else{
+						command_query(last_command);
+						command_query(command);
+					}
+
+					free(command);
+				}else{										//caso 2.1.4)ambos comandos están bien formados
+					command_query(command);
+					free(command);
+				}
+				//resetear flags:
+				check_next_unpipe = 0;
+				strcpy(last_command, "0");
+			}else{										//caso 2.2)no MAXDATA, no i=0: command_query normal
+				if(command_query(command) == ERR){
+					g_print(RED "ERROR - In unpipe: command_query() devolvio ERR (i != 0, check_... False, MAXDATA_flag False)\n\tcommand = %s" RESET, command);
+					free(command);
+				}
+			}
 		}
-		free(command);
+		i++;
 	}
 
     if(command == NULL){
@@ -599,7 +736,10 @@ void receive_messages(void* no_arg){
 			g_print(RED "ERROR - In receive_messages: recvDatos() leyó 0 Bytes(ver .log)\n\t\t(Timeout)El cliente se cerrará.\n" RESET);
 			exit(1);
 		}
-		unpipe(message);
+		if(ret == MAXDATA)
+			unpipe(message, 1);
+		else
+			unpipe(message, 0);
 	}
 }
 

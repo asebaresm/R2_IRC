@@ -252,8 +252,32 @@ void IRCInterface_WriteSystemThread_Pretty(char *nick, char *msg){
 	strcat(f_nick, "              *");
 
 	//g_print(MAG"\n>>>>%s\n" RESET, f_nick);
-	if(msg[strlen(msg) - 2] == 13) //check si es CR,LF
+	if(msg[strlen(msg) - 2] == 13) //check si es comienzo de CR,LF
 		msg[strlen(msg) - 2] = '\0';
 
 	IRCInterface_WriteSystemThread(f_nick,msg);
+}
+
+int testIRC_CommandQuery(char* message){
+	switch(IRC_CommandQuery(message)){
+		case IRCERR_NOCOMMAND:
+			return ERR;
+		case IRCERR_UNKNOWNCOMMAND:
+			return ERR;
+		default:
+			return OK;
+	}
+}
+
+void glueAndQuery(char* command, char* last_command){
+	char* glued_command = (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+	
+	strcpy(glued_command, last_command);
+	strcat(glued_command, command);
+
+	g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+	command_query(glued_command);
+
+	free(command);
+	free(glued_command);
 }
