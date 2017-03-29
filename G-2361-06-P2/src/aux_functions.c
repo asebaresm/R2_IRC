@@ -258,6 +258,23 @@ void IRCInterface_WriteSystemThread_Pretty(char *nick, char *msg){
 	IRCInterface_WriteSystemThread(f_nick,msg);
 }
 
+void IRCInterface_WriteChannelThread_Pretty(char *chan, char *nick, char *msg){
+	char snap[SNAP_SIZE];
+	char f_nick[MAX_NICK_FIELD];
+
+	if(strlen(nick) > 9){
+		logERR("En IRCInterface_WriteSystemThread_Pretty: strlen(nick) > 9");
+		return;
+	}
+
+	strcpy(f_nick, "[");
+	strcat(f_nick, snapTime(snap,SNAP_SIZE));
+	strcat(f_nick, "]");
+	strcat(f_nick, nick);
+
+	IRCInterface_WriteChannelThread(chan, f_nick, msg);	
+}
+
 int testIRC_CommandQuery(char* message){
 	switch(IRC_CommandQuery(message)){
 		case IRCERR_NOCOMMAND:
@@ -267,17 +284,4 @@ int testIRC_CommandQuery(char* message){
 		default:
 			return OK;
 	}
-}
-
-void glueAndQuery(char* command, char* last_command){
-	char* glued_command = (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
-	
-	strcpy(glued_command, last_command);
-	strcat(glued_command, command);
-
-	g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
-	command_query(glued_command);
-
-	free(command);
-	free(glued_command);
 }

@@ -123,7 +123,7 @@ int command_query(char *message){
 	const char space_delim[2] = " ";
 	char *message_cp = NULL;
 
-	g_print("Mesaje recibido en command_query: %s", message);
+	//g_print("Mesaje recibido en command_query: %s", message);
 
 	/*
 	if(message == NULL) {
@@ -287,7 +287,7 @@ int command_query(char *message){
 			if (substring){
 				substring = strnext(substring, ':');
 			}
-			IRCInterface_WriteSystemThread("*",substring);
+			IRCInterface_WriteSystemThread_Pretty("*",substring);
 
 			substring = NULL;
 			break;
@@ -298,7 +298,7 @@ int command_query(char *message){
 			if (substring){
 				substring = strnext(substring, ':');
 			}
-			IRCInterface_WriteSystemThread("*",substring);
+			IRCInterface_WriteSystemThread_Pretty("*",substring);
 
 			substring = NULL;		
 			break;
@@ -311,7 +311,7 @@ int command_query(char *message){
 			if(token != NULL){
 				token = strtok(NULL,s);	
 			}
-			IRCInterface_WriteSystemThread("*",token);
+			IRCInterface_WriteSystemThread_Pretty("*",token);
 
 			token = NULL;
 			//IRCInterface_WriteSystem("*",message);			
@@ -325,7 +325,7 @@ int command_query(char *message){
 			if(token != NULL){
 				token = strtok(NULL,s);	
 			}
-			IRCInterface_WriteSystemThread("*",token);
+			IRCInterface_WriteSystemThread_Pretty("*",token);
 
 			token = NULL;
 			//IRCInterface_WriteSystem("*",message);			
@@ -339,7 +339,7 @@ int command_query(char *message){
 			if(token != NULL){
 				token = strtok(NULL,s);	
 			}
-			IRCInterface_WriteSystemThread("*",token);
+			IRCInterface_WriteSystemThread_Pretty("*",token);
 
 			token = NULL;
 			//IRCInterface_WriteSystem("*",message);		
@@ -353,11 +353,84 @@ int command_query(char *message){
 			if(token != NULL){
 				token = strtok(NULL,s);	
 			}
-			IRCInterface_WriteSystemThread("*",token);
+			IRCInterface_WriteSystemThread_Pretty("*",token);
 
 			token = NULL;
 			//IRCInterface_WriteSystem("*",message);	
 			return 19;//cambiar por un define
+			break;
+
+		case RPL_NAMREPLY: //353
+			//long IRCParse_RplNamReply (char *strin, char **prefix, char **nick, char **type, char **channel, char **msg)
+			ret = IRCParse_RplNamReply(message, &prefix, &nick, &type, &channel, &msg);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplNamReply\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick: %s \n",nick);
+			g_print("\t type: %s \n",type);								
+			g_print("\t channel: %s \n",channel);
+			g_print("\t msg: %s \n\n",msg);
+
+			//Ojo, que pasa si es names?? sin join
+			//Añadir los nicks a la ventana de lad erecha. Pillarlos del WHO que se envía 
+			//despues del join.
+			//OJO es una prueba del funcionamineto de IRCInterface_AddNickChannel,
+			//los nicks deberían de ser partidos mediante uso strtok o algo parecido
+			//IRCInterface_AddNickChannel (channel, msg, msg, msg, msg, VOICE);
+			//sprintf(mensaje,"Usuarios en %s: %s",channel,msg);
+			//IRCInterface_WriteChannelThread(channel,"*",mensaje);
+			interface_mostrar_nicks(channel,msg);	
+			break;
+
+		case RPL_ENDOFNAMES: //366
+			g_print("Mensaje recibido en RPL_ENDOFNAMES: \n");
+			//long IRCParse_RplEndOfNames (char *strin, char **prefix, char **nick, char **channel, char **msg)
+			ret = IRCParse_RplEndOfNames(message, &prefix, &nick2, &channel, &msg);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplEndOfNames\n");
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick: %s \n",nick);							
+			g_print("\t channel: %s \n",channel);
+			g_print("\t msg: %s \n\n",msg);
+
+			//IRCInterface_WriteChannelThread(channel,"*",msg);
+			break;
+
+		case JOIN:
+			g_print(GRN "\n>> [server command] JOIN - message = %s\n" RESET, message);
+			ret = IRCParse_Join (message, &prefix, &channel, &key, &msg);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: JOIN - IRCParse_Join devolvio error\n" RESET);
+				return ERR;
+			}
+			g_print("Comandos recibidos en el IRCParse_Join: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t channel: %s \n",channel);
+			g_print("\t key: %s \n",key);
+			g_print("\t msg: %s \n\n",msg);
+
+			IRCInterface_AddNewChannelThread(msg, 0);
+			IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+			sprintf(mensaje, "%s se ha unido al canal", nick_part);
+			if(!strcmp(nick_user, nick_part)){
+				IRCInterface_WriteChannelThread(msg,"*", "Bienvenido al canal");
+			} else {
+				IRCInterface_WriteChannelThread(msg,"*", mensaje);
+			}
+			//Actualizar al lista de usuarios
+			sprintf(mensaje,"/names %s",msg);
+			retorno = punames(mensaje);
+			if(retorno == ERR){
+				g_print("ERROR - JOIN - punames");
+				return ERR;				
+			}
 			break;
 
 		case PRIVMSG:
@@ -429,7 +502,8 @@ int command_query(char *message){
 				return OK;
 			}
 
-			IRCInterface_WriteChannelThread(msgtarget, nick_privmsg, msg);
+			//IRCInterface_WriteChannelThread(msgtarget, nick_privmsg, msg);
+			IRCInterface_WriteChannelThread_Pretty(msgtarget, nick_privmsg, msg);
 			break;
 
 		case NOTICE:
@@ -554,6 +628,19 @@ int command_query(char *message){
 
 }
 
+void glueAndQuery(char* command, char* last_command){
+	char* glued_command = (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+	
+	strcpy(glued_command, last_command);
+	strcat(glued_command, command);
+
+	g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+	command_query(glued_command);
+
+	free(command);
+	free(glued_command);
+}
+
 /**
 * @brief Funcion para dividir en comandos la cadena "message"
 * @param message cadena recibida, puede incluir mas de un comando
@@ -573,31 +660,9 @@ void unpipe(char* message, int MAXDATA_flag){
 		if(MAXDATA_flag == 1){	//caso 1.)riesgo: se ha llamado a unpipe() con un bloque de tam MAXDATA
 			if((i == 0) && (check_next_unpipe == 1)){	//caso 2.1)primera iter unpipe, no MAXDATA PERO 'check...' activado
 				if(test == OK && last_test == ERR){			//caso 2.1.1)además no da error
-					/*
-					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
-					strcpy(glued_command, last_command);
-					strcat(glued_command, command);
-
-					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
-					command_query(glued_command);
-
-					free(command);
-					free(glued_command);
-					*/
 					glueAndQuery(command, last_command);
 				}else if(test == ERR && last_test == OK){	//caso 2.1.2)o bien es la segunda mitad del comando o bien
 															//           da la casualidad de que es un comando mal formado independiente
-					/*
-					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
-					strcpy(glued_command, last_command);
-					strcat(glued_command, command);
-
-					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
-					command_query(glued_command);
-
-					free(command);
-					free(glued_command);
-					*/
 					glueAndQuery(command, last_command);
 				}else if(test == ERR && last_test == ERR){	//caso 2.1.3)ambos test petan. Concatenar y rezar
 					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
@@ -648,38 +713,16 @@ void unpipe(char* message, int MAXDATA_flag){
 		}else{					//caso 2)no se ha llamado a unpipe() con un bloque de tam MAXDATA
 			if((i == 0) && (check_next_unpipe == 1)){	//caso 2.1)primera iter unpipe, no MAXDATA PERO 'check...' activado
 				if(test == OK && last_test == ERR){			//caso 2.1.1)además no da error
-					/*
-					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
-					strcpy(glued_command, last_command);
-					strcat(glued_command, command);
-
-					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
-					command_query(glued_command);
-
-					free(command);
-					free(glued_command);
-					*/
 					glueAndQuery(command, last_command);
 				}else if(test == ERR && last_test == OK){	//caso 2.1.2)o bien es la segunda mitad del comando o bien
 															//           da la casualidad de que es un comando mal formado independiente
-					/*
-					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
-					strcpy(glued_command, last_command);
-					strcat(glued_command, command);
-
-					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
-					command_query(glued_command);
-
-					free(command);
-					free(glued_command);
-					*/
 					glueAndQuery(command, last_command);
 				}else if(test == ERR && last_test == ERR){	//caso 2.1.3)ambos test petan. No se puede concatenar
 					glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
 					strcpy(glued_command, last_command);
 					strcat(glued_command, command);
 					g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
-					
+
 					if (testIRC_CommandQuery(glued_command) == OK){
 						command_query(glued_command);
 						free(glued_command);

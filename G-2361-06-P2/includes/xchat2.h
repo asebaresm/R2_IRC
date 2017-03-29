@@ -34,5 +34,6 @@ extern p_funcion p_array_funciones[57];
 int command_query(char *message);
 void unpipe(char* message, int MAXDATA_flag);
 void receive_messages(void* no_arg);
+void glueAndQuery(char* command, char* last_command);
 
 #endif

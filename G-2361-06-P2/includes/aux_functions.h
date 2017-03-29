@@ -14,7 +14,6 @@
 #include <redes2/irc.h>
 
 #include "conexion_tcp.h"
-#include "xchat2.h"
 
 #define EXTRA 20				/**< espacio extra para pruebas de formato*/
 #define SNAP_SIZE 9				/**< XX:XX:XX\0 */		
@@ -36,6 +35,7 @@ void interface_mostrar_nicks(char* channel, char* list);
 char *strnext(char* haystack, int ch);
 int parse_type(const char* message);
 void IRCInterface_WriteSystemThread_Pretty(char *nick, char *msg);
+void IRCInterface_WriteChannelThread_Pretty(char *chan, char *nick, char *msg);
 int testIRC_CommandQuery(char* message);
-void glueAndQuery(char* command, char* last_command);
+
 #endif
