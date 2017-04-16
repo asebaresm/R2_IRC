@@ -53,7 +53,7 @@ int pdefault(char* command){ return -1; }
 int puhelp(char* command){ return -1; }
 int pulist(char* command){ return -1; }
 int pupart(char* command){ return -1; }
-int puquit(char* command){ return -1; }
+//int puquit(char* command){ return -1; }
 int punick(char* command){ return -1; }
 int puaway(char* command){ return -1; }
 int puwhois(char* command){ return -1; }
@@ -186,4 +186,47 @@ int pujoin(char* command){
 	IRCInterface_PlaneRegisterOutMessage(command_enviar);	
 	mfree(6, command_enviar, channels, passwords, prefix, key, msg);
 	return OK; 
+}
+
+/**
+* @brief Comando de usuario QUIT
+* En principio solo se llama con:
+* - Callback: Boton 'Desconectar'     -> IRCInterface_DisconnectServer(char *server, int port)
+* - Callback: '/QUIT en chat + ENTER' -> IRCInterface_NewCommandText("/QUIT ")
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int puquit(char* command){
+
+	char* command_enviar;
+	char* reason;
+	//char command[] = "QUIT :Leaving";
+
+	char** channelsQuit;
+	int numChannelsQuit;
+	int i, ret;
+
+	//kill hilo 'receive_messages()'
+	ret = pthread_cancel(recv_tid);
+	if (ret != 0){
+		g_print(MAG "\npthread_cancel = %d\n" RESET, ret);
+	}
+
+   	IRCUserParse_Quit (command, &reason);
+   	IRCMsg_Quit (&command_enviar, NULL, reason ? reason : "Desconectando...");
+	g_print("\t Mensaje a enviar command_enviar en QUIT: %s \n",command_enviar);
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	cerrarConexion(sockfd_user, NULL);
+	mfree(2, command_enviar, reason);
+
+	/*IRCInterface_RemoveAllChannels da segmentation fault por alguna razón*/
+	IRCInterface_ListAllChannels(&channelsQuit, &numChannelsQuit);
+	for(i = 0; i<numChannelsQuit; i++){
+		//IRCInterface_WriteChannelThread(channelsQuit[i],"*", "Desconectado.");
+		IRCInterface_RemoveChannel(channelsQuit[i]);
+	}
+	IRCInterface_WriteSystem_Pretty("*", "Desconectado.");
+
+	return OK;
 }

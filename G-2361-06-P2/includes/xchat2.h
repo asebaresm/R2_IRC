@@ -29,6 +29,13 @@
 
 extern p_funcion p_array_funciones[57];
 
+/*
+typedef struct User{
+	char* nick;
+	char* channels;
+} User;
+*/
+
 /*Funciones auxiliares generales*/
 //void interface_mostrar_nicks(char* channel, char* list);
 int command_query(char *message);

@@ -18,6 +18,8 @@
 #define EXTRA 20				/**< espacio extra para pruebas de formato*/
 #define SNAP_SIZE 9				/**< XX:XX:XX\0 */		
 #define MAX_NICK_FIELD 22+EXTRA	/**< maximo del campo 'nick' en el cliente: 11([snap de tiempo]) + 2(espacio y \0) + 9(nick IRC) */
+
+extern int sockfd_user;
 /**
 * Estructura util para el envio de ficheros
 */
@@ -34,8 +36,10 @@ int save_file(void* args);
 void interface_mostrar_nicks(char* channel, char* list);
 char *strnext(char* haystack, int ch);
 int parse_type(const char* message);
+void IRCInterface_WriteSystem_Pretty(char *nick, char *msg);
 void IRCInterface_WriteSystemThread_Pretty(char *nick, char *msg);
 void IRCInterface_WriteChannelThread_Pretty(char *chan, char *nick, char *msg);
 int testIRC_CommandQuery(char* message);
+int changeMode(char *channel, char *nick, char *mode);
 
 #endif

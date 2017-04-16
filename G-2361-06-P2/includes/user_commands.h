@@ -12,6 +12,7 @@
 
 #include <redes2/ircxchat.h>
 #include <redes2/irc.h>
+#include <pthread.h>
 
 #include "conexion_tcp.h"
 #include "aux_functions.h"
@@ -19,6 +20,7 @@
 typedef int (*p_funcion)(char* );
 
 extern int sockfd_user;
+extern pthread_t recv_tid;
 
 int punotice(char* command);
 int pucycle(char* command);
