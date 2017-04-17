@@ -8,7 +8,7 @@
  *
  */
 
-#include "includes/xchat2.h"
+#include "../includes/xchat2.h"
 
 pthread_mutex_t loglock;
 
