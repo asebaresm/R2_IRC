@@ -20,14 +20,13 @@ int main(int argc,char * argv[]){
 	int dm;
 	char *path, buffer[80];
 
-	path = realpath("motd.txt", buffer);
-	/*syslog(LOG_INFO,"DIRECTORIO %s", path);*/
-	
 	dm  = daemonizar (argv[0]);
+
 	if(dm == -1){
 		return -1;
 	}
 
+	path = realpath("motd.txt", buffer);
 	servidor(PUERTO, path);
 
 	return 0;

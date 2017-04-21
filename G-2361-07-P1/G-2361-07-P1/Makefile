@@ -13,11 +13,10 @@ SRCLIBS = $(addprefix $(SRCLIB)/$(PREFIX)-,Sockets.c)
 LIBDIR = lib
 LIBS = $(addprefix $(LIBDIR)/$(PREFIX)-,libServidor.a)
 INCLUDESDIR = includes
-INCLUDES = $(addprefix $(INCLUDESDIR)/$(PREFIX)-,Sockets.h Server.h Daemon.h Functions.h)
+INCLUDES = $(addprefix $(INCLUDESDIR)/$(PREFIX)-,Sockets.h Server.h Daemon.h)
 OBJDIR = obj
 OBJSocket= $(addprefix $(OBJDIR)/$(PREFIX)-,Sockets.o)
 OBJServer=$(addprefix $(OBJDIR)/$(PREFIX)-,Server.o)
-OBJFunctions=$(addprefix $(OBJDIR)/$(PREFIX)-,Functions.o)
 OBJDaemon=$(addprefix $(OBJDIR)/$(PREFIX)-,Daemon.o)
 OBJSMAIN= $(addprefix $(OBJDIR)/$(PREFIX)-,prueba.o)
 MANDIR = man
@@ -35,9 +34,9 @@ all : lib P1 #manual
 lib : libServidor.a
 
 .SECONDEXPANSION:
-P1 : $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(OBJSMAIN)
+P1 : $(OBJSocket) $(OBJServer) $(OBJDaemon) $(OBJSMAIN)
 	@echo "\n\t\033[35m--- Generando server.exe ---\033[00m"
-	$(CC) -o  $(EXECP1) $(OBJDIR)/$(PREFIX)-prueba.o $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(LFLAGS)
+	$(CC) -o  $(EXECP1) $(OBJDIR)/$(PREFIX)-prueba.o $(OBJSocket) $(OBJServer) $(OBJDaemon) $(LFLAGS)
 	@echo "\t\033[32m--- Creado ejecutable server.exe ---\033[00m"  
 
 
@@ -55,10 +54,6 @@ $(OBJServer) : $(SRCLIB)/$(PREFIX)-Server.c $(INCLUDES)
 	$(CC) $(CFLAGS) -c $(SRCLIB)/$(PREFIX)-Server.c -o  $(OBJDIR)/$(PREFIX)-Server.o 
 	@echo "\n\t\033[32m--- Creado objeto Server.o ---\033[00m"
 
-$(OBJFunctions) : $(SRCLIB)/$(PREFIX)-Functions.c $(INCLUDES) 
-	@echo "\t\033[35m--- Generando Functions.o ---\033[00m"
-	$(CC) $(CFLAGS) -c $(SRCLIB)/$(PREFIX)-Functions.c -o  $(OBJDIR)/$(PREFIX)-Functions.o 
-	@echo "\n\t\033[32m--- Creado objeto Functions.o ---\033[00m"
 
 $(OBJDaemon) : $(SRCLIB)/$(PREFIX)-Daemon.c $(INCLUDES) 
 	@echo "\t\033[35m--- Generando Daemon.o ---\033[00m"
@@ -74,9 +69,9 @@ $(OBJSMAIN) : $(SRC)/$(PREFIX)-prueba.c $(INCLUDES)
 #=============================================================
 # Generacion de librerias
 #=============================================================
-libServidor.a: $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon)
+libServidor.a: $(OBJSocket) $(OBJServer) $(OBJDaemon)
 	@echo "\n\t\033[35m--- Generando libreriasServidor ---\033[00m"
-	ar -rv $(LIBDIR)/lib$(PREFIX)-Servidor.a $(OBJSocket) $(OBJServer) $(OBJFunctions)
+	ar -rv $(LIBDIR)/lib$(PREFIX)-Servidor.a $(OBJSocket) $(OBJServer)
 	@echo "\t\033[32m--- Creadas libreriasServidor ---\033[00m"
 
 #=============================================================
@@ -101,7 +96,7 @@ distr: clean
 # Limpia fichero temporales
 #=============================================================
 clean:
-	rm -rf *\.o $(EXECP1) $(OBJServerSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(OBJSMAIN)
+	rm -rf *\.o $(EXECP1) $(OBJServerSocket) $(OBJServer) $(OBJDaemon) $(OBJSMAIN)
 	#rm -rf *\.3 $(MANDIR)/man3/
 
 
