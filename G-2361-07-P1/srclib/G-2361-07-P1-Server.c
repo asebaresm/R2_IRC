@@ -530,6 +530,7 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				/*Obtenemos la lista con los nombres de todos los canales*/
 				IRCTADChan_GetList (&lista, &nChannels, NULL);
 				for(i = 0; i < nChannels; i++){
+					printf("\ncanal %d = \"%s\" y msgtarget = \"%s\"\n", i, lista[i], msgtarget);
 					if(strcmp(lista[i], msgtarget) == 0){
 						flagCanal = 1; /*El canal existe*/
 						can = (char *) malloc (strlen(lista[i])+1);
@@ -782,6 +783,7 @@ void parseCommand(long int query, char* comando, int IDsocket){
 
 
 		case MODE:
+			printf("\nENTRA MODE Y NO SALGO\n");
 			result = IRCParse_Mode (comando, &prefix, &channeluser, &modo, &key);
 			pthread_mutex_lock(&canal_mutex);
 			pthread_mutex_lock(&user_mutex);
@@ -791,10 +793,30 @@ void parseCommand(long int query, char* comando, int IDsocket){
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "MODE: No se encuentran todos los parámetros obligatorios.");
 			}else{
+				char *mode_msj; //*
+				long modeUsuChannel, modeValUsu; //*
+
 				usuario=NULL; nick_name=NULL; real=NULL; id=0;
 				/*Obtenemos datos del usuario*/
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
-				funcionMode(usuario, nick_name, channeluser, modo, key, IDsocket);
+				//funcionMode(usuario, nick_name, channeluser, modo, key, IDsocket);
+				/*Modo usuario en un canal*/
+				modeUsuChannel = IRCTAD_GetUserModeOnChannel(channeluser, nick_name);
+				modeValUsu = modeUsuChannel & IRCUMODE_OPERATOR;
+
+				if(modeValUsu == IRCUMODE_OPERATOR){
+					/*Cambia modo de un canal*/
+					IRCTAD_Mode (channeluser, nick_name, modo);
+					//<- por esta zona peta
+					if(strstr(modo,"k")!=NULL){
+						IRCTADChan_SetPassword (channeluser,key);
+						free(key);
+					}
+					printf("\nCHECKPOINT\n");	
+					IRCMsg_Mode (&mode_msj, PREFIJO, channeluser, modo, usuario);
+					send(IDsocket,mode_msj,strlen(mode_msj),0);
+					free(mode_msj);
+				}
 			}
 			free(prefix); free(channeluser); free(modo);
 			pthread_mutex_unlock(&canal_mutex);
