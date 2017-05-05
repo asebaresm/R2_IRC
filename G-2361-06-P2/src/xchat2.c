@@ -463,6 +463,9 @@ int command_query(char *message){
 
 		case JOIN:
 			g_print(GRN "\n>> [server command] JOIN - message = %s\n" RESET, message);
+			g_print(MAG "\nJOIN es %ld con IRC_CommandQuery\n" RESET, IRC_CommandQuery(message));
+			g_print(MAG "\nJOIN es %ld con IRCUser_CommandQuery\n" RESET, IRCUser_CommandQuery(message));
+
 			ret = IRCParse_Join (message, &prefix, &channel, &key, &msg);
 			if(ret != IRC_OK){
 				g_print(RED "\nERROR - In command_query: JOIN - IRCParse_Join devolvio error\n" RESET);
@@ -2255,7 +2258,7 @@ void IRCInterface_NewCommandText(char *command)
 	}
 
 	num_comando = IRCUser_CommandQuery (command);	
-	g_print("num_comando: %d \n",num_comando);
+	g_print(BLU "\n>>>>>>>>>>num_comando: %d \n" RESET,num_comando);
 	if (p_array_funciones[num_comando](command) == -1){
 		g_print(RED "ERROR - In IRCInterface_NewCommandText: Error en p_array_funciones num: %d \n" RESET,num_comando);
 	}
