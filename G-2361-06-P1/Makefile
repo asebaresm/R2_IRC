@@ -1,86 +1,108 @@
-#=========================================
-#   Redes de comunicaciones 2
-# 	Escuela Politecnica Superior - UAM 
-#=========================================
-
 # Compilador
-CC = gcc
-# Flags compilacion
-CFLAGS = -g -Wall
-LIBS = -lircinterface -lircredes -lirctad
-# Ejecutables
-EXE = servidor
-EXE_LEARN = echo_server echo_client log_test conexion_tcp_test
-DIR_NAME = G-2361-06-P1
-.PHONY: clean all
+CC=gcc
+# Opciones de compilacion
+CFLAGS= -Wall 
+LFLAGS= -lpthread -lircinterface -lircredes -lirctad -Llib -LG-2361-07-P1-libServidor
 
-all: $(EXE)
+GROUP = G-2361-07
+PREFIX = $(GROUP)-P1
+DIR = $(GROUP)
+SRC = src
+SRCLIB = srclib
+SRCLIBS = $(addprefix $(SRCLIB)/$(PREFIX)-,Sockets.c)
+LIBDIR = lib
+LIBS = $(addprefix $(LIBDIR)/$(PREFIX)-,libServidor.a)
+INCLUDESDIR = includes
+INCLUDES = $(addprefix $(INCLUDESDIR)/$(PREFIX)-,Sockets.h Server.h Daemon.h Functions.h)
+OBJDIR = obj
+OBJSocket= $(addprefix $(OBJDIR)/$(PREFIX)-,Sockets.o)
+OBJServer=$(addprefix $(OBJDIR)/$(PREFIX)-,Server.o)
+OBJFunctions=$(addprefix $(OBJDIR)/$(PREFIX)-,Functions.o)
+OBJDaemon=$(addprefix $(OBJDIR)/$(PREFIX)-,Daemon.o)
+OBJSMAIN= $(addprefix $(OBJDIR)/$(PREFIX)-,prueba.o)
+MANDIR = man
+MANS = $(addprefix $(OBJDIR)/$(PREFIX)-,)
 
-echo: $(EXE_LEARN)
+## Nombre de los ejecutables 
+EXECP1 = $(PREFIX)-Server 
 
-#===================================
+#=============================================================
 # Construccion de los ejecutables
-#===================================
-# Ejecutables
-servidor: src/servidor.c src/daemon.c srclib/lib-logger.a srclib/lib-conexion_tcp.a
-	$(CC) $(CFLAGS) -o servidor src/servidor.c src/daemon.c srclib/lib-logger.a srclib/lib-conexion_tcp.a -lpthread ${LIBS}
+#=============================================================
 
-echo_server: src/echo_server.c
-	$(CC) $(CFLAGS) -o echo_server src/echo_server.c
+all : lib P1 #manual
 
-echo_client: src/echo_client.c
-	$(CC) $(CFLAGS) -o echo_client src/echo_client.c
+lib : libServidor.a
 
-log_test: src/log_test.c srclib/lib-logger.a
-	$(CC) $(CFLAGS) -o log_test src/log_test.c srclib/lib-logger.a
+.SECONDEXPANSION:
+P1 : $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(OBJSMAIN)
+	@echo "\n\t\033[35m--- Generando server.exe ---\033[00m"
+	$(CC) -o  $(EXECP1) $(OBJDIR)/$(PREFIX)-prueba.o $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(LFLAGS)
+	@echo "\t\033[32m--- Creado ejecutable server.exe ---\033[00m"  
 
-obj/logger.o: src/logger.c
-	gcc -c src/logger.c -o obj/logger.o
 
-obj/conexion_tcp.o: src/conexion_tcp.c
-	gcc -c src/conexion_tcp.c -o obj/conexion_tcp.o
+#=============================================================
+# Generacion .o
+#=============================================================
 
-srclib/lib-logger.a: obj/logger.o	
-	ar rcs srclib/lib-logger.a obj/logger.o
+$(OBJSocket) : $(SRCLIBS) $(INCLUDES) 
+	@echo "\n\t\033[35m--- Generando Sockets.o ---\033[00m"
+	$(CC) $(CFLAGS) -c $(SRCLIBS) -o  $(OBJDIR)/$(PREFIX)-Sockets.o 
+	@echo "\t\033[32m--- Creado objeto Sockets.o ---\033[00m"
 
-srclib/lib-conexion_tcp.a: obj/conexion_tcp.o
-	ar rcs srclib/lib-conexion_tcp.a obj/conexion_tcp.o
+$(OBJServer) : $(SRCLIB)/$(PREFIX)-Server.c $(INCLUDES) 
+	@echo "\t\033[35m--- Generando Server.o ---\033[00m"
+	$(CC) $(CFLAGS) -c $(SRCLIB)/$(PREFIX)-Server.c -o  $(OBJDIR)/$(PREFIX)-Server.o 
+	@echo "\n\t\033[32m--- Creado objeto Server.o ---\033[00m"
 
-conexion_tcp_test: src/conexion_tcp_test.c srclib/lib-logger.a srclib/lib-conexion_tcp.a
-	$(CC) $(CFLAGS) -o conexion_tcp_test src/conexion_tcp_test.c srclib/lib-conexion_tcp.a srclib/lib-logger.a
+$(OBJFunctions) : $(SRCLIB)/$(PREFIX)-Functions.c $(INCLUDES) 
+	@echo "\t\033[35m--- Generando Functions.o ---\033[00m"
+	$(CC) $(CFLAGS) -c $(SRCLIB)/$(PREFIX)-Functions.c -o  $(OBJDIR)/$(PREFIX)-Functions.o 
+	@echo "\n\t\033[32m--- Creado objeto Functions.o ---\033[00m"
 
-#===========================
+$(OBJDaemon) : $(SRCLIB)/$(PREFIX)-Daemon.c $(INCLUDES) 
+	@echo "\t\033[35m--- Generando Daemon.o ---\033[00m"
+	$(CC) $(CFLAGS) -c $(SRCLIB)/$(PREFIX)-Daemon.c -o  $(OBJDIR)/$(PREFIX)-Daemon.o 
+	@echo "\n\t\033[32m--- Creado objeto Daemon.o ---\033[00m"
+	
+
+	@echo "\n\t\033[35m--- Generando prueba.o ---\033[00m"
+$(OBJSMAIN) : $(SRC)/$(PREFIX)-prueba.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c $(SRC)/$(PREFIX)-prueba.c -o $(OBJDIR)/$(PREFIX)-prueba.o 
+	@echo "\t\033[32m--- Creado objeto prueba.o ---\033[00m"
+	
+#=============================================================
+# Generacion de librerias
+#=============================================================
+libServidor.a: $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon)
+	@echo "\n\t\033[35m--- Generando libreriasServidor ---\033[00m"
+	ar -rv $(LIBDIR)/lib$(PREFIX)-Servidor.a $(OBJSocket) $(OBJServer) $(OBJFunctions)
+	@echo "\t\033[32m--- Creadas libreriasServidor ---\033[00m"
+
+#=============================================================
+# Generacion de manual
+#=============================================================
+#manual:
+#	@echo "\n\t\033[35m--- Generando manual ---\033[00m"
+#	rm -rf *\.3 $(MANDIR)/man3/
+#	doxygen Doxyfile
+#	@echo "\t\033[32m--- Creado manual ---\033[00m"
+
+#=============================================================
+# Crea un archivo tar.gz para distribuir el codigo
+#=============================================================
+
+distr: clean
+	cd .. ; tar -cvzf $(PREFIX).tar.gz $(PREFIX)
+	cd .. ; cp $(PREFIX)/autores.txt .
+
+
+#=============================================================
 # Limpia fichero temporales
-#===========================
+#=============================================================
 clean:
-	rm -f obj/*.o srclib/*.a $(EXE) $(EXE_LEARN) $(DIR_NAME).tar.gz
+	rm -rf *\.o $(EXECP1) $(OBJServerSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(OBJSMAIN)
+	#rm -rf *\.3 $(MANDIR)/man3/
 
-#================================
-# Autores/ayuda de la práctica
-#================================
-info:
-	@echo "--------------------------------------------"
-	@echo "    Practica 1 Redes de comunicaciones 2"
-	@echo "     Alfonso Sebares y Beatriz de Pablo."
-	@echo "            Ayuda: make help" 
-	@echo "--------------------------------------------"
-	
-help:
-	@echo "Crear el ejecutable de la practica:\t\tmake"
-	@echo "Borrar todo lo generado:\t\tmake clean"
-	@echo "Para eliminar el demonio:\t\tmake killall"
-	
-#==================
-# Destruir servidor 
-#==================
-kill:
-	killall servidor
-	@echo "Demonio eliminado"
 
-	
-#====================================
-# Documentación/comprimir la práctica
-#====================================	
-empaquetar:
-	@make clean
-	@tar -czvf $(DIR_NAME).tar.gz ../$(DIR_NAME)
+

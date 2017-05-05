@@ -1,4 +1,0 @@
-condicion de parada del servidor - Demonio y no para, tenemos que matarlo por terminal. 
-Numero de hilos - 20 max,el bot que prueban son mas o menos 5-10 :3
-syslog - no funciona alomejor por permisos en los labis. Intentar syslog + libreria de log.
-
