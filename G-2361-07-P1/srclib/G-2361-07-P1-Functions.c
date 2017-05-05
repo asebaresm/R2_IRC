@@ -42,11 +42,11 @@ void funcionUser(char *user, char *nick, char *realname, char *modehost, int IDs
 	/*Mensaje 001*/
 	IRCMsg_RplWelcome (&welcome_msj, PREFIJO, nick, nick, user, modehost);
 	/*Mensaje 002*/
-	IRCMsg_RplYourHost (&host_msj, PREFIJO, nick, "Practica 1", "1.0");
+	IRCMsg_RplYourHost (&host_msj, PREFIJO, nick, "localhost", "1.0");
 	/*Mensaje 003*/
 	IRCMsg_RplCreated (&create_msj, PREFIJO, nick, 0);
 	/*Mensaje 004*/
-	IRCMsg_RplMyInfo(&info_msj, PREFIJO, nick, "Practica 1", "1.0", "adDcCioqrRswx", "abehiIklmMnoOPqQrRstvVz");
+	IRCMsg_RplMyInfo(&info_msj, PREFIJO, nick, "Practica 1", "1.0", "abBcCioqrRswx", "abehiIklmMnoOPqQrRstvVz");
 
 	/*Juntamos todos los mensajes en uno solo*/
 	IRC_PipelineCommands(&respuesta, welcome_msj, host_msj, create_msj, info_msj, NULL);
@@ -125,6 +125,21 @@ void funcionAway(long id, char *usuario, char *nick_name, char *real, char *away
 	}
 	send(IDsocket,away_msj,strlen(away_msj),0);
 	free(away_msj);
+}
+
+
+void funcionPing(char *server1, char *server2, int IDsocket){
+	char *pong_msj;
+
+	if(!server2){ /*En el caso de que no se especifique el server2*/
+		IRCMsg_Pong (&pong_msj, PREFIJO, PREFIJO, server2, server1);
+		send(IDsocket,pong_msj,strlen(pong_msj),0);
+	}else{
+		IRCMsg_Pong (&pong_msj, PREFIJO, PREFIJO, server1, server2);
+		send(IDsocket,pong_msj,strlen(pong_msj),0);
+	}
+ 	free(pong_msj);
+
 }
 
 
@@ -264,17 +279,17 @@ void funcionList(char *nick, char *target, int IDsocket){
 }
 
 
-void funcionMode(char *usuario, char *nick_name, char *channeluser, char *modo, char *key, int IDsocket){
+/*void funcionMode(char *usuario, char *nick_name, char *channeluser, char *modo, char *key, int IDsocket){
 	char *mode_msj;
 	long modeUsuChannel, modeValUsu;
 
-	/*Modo usuario en un canal*/
-	modeUsuChannel = IRCTAD_GetUserModeOnChannel(channeluser, nick_name);
+	*//*Modo usuario en un canal*/
+	/*modeUsuChannel = IRCTAD_GetUserModeOnChannel(channeluser, nick_name);
 	modeValUsu = modeUsuChannel & IRCUMODE_OPERATOR;
 
 	if(modeValUsu == IRCUMODE_OPERATOR){
-		/*Cambia modo de un canal*/
-		IRCTAD_Mode (channeluser, nick_name, modo);
+		*//*Cambia modo de un canal*/
+		/*IRCTAD_Mode (channeluser, nick_name, modo);
 
 		if(strstr(modo,"k")!=NULL){
 			IRCTADChan_SetPassword (channeluser,key);
@@ -284,7 +299,7 @@ void funcionMode(char *usuario, char *nick_name, char *channeluser, char *modo, 
 		send(IDsocket,mode_msj,strlen(mode_msj),0);
 		free(mode_msj);
 	}
-}
+}*/
 
 
 /**

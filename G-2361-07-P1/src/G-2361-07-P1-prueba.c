@@ -17,18 +17,32 @@
 
 
 int main(int argc,char * argv[]){
-	int dm;
+	int dm, socket;
 	char *path, buffer[80];
 
+	if (argc != 2){
+		printf("\nERROR - Uso ./<ejecutable> <numero_de_puerto>\n");
+		return EXIT_FAILURE;
+	}
+
+	socket = atoi(argv[1]);
+	if(socket < 1024){
+		printf("\nERROR - Numero de puerto en el espacio de puertos del sistema.\n");
+		return EXIT_FAILURE;
+	}
+	
 	path = realpath("motd.txt", buffer);
 	/*syslog(LOG_INFO,"DIRECTORIO %s", path);*/
 	
+	/*
 	dm  = daemonizar (argv[0]);
 	if(dm == -1){
 		return -1;
 	}
+	*/
 
-	servidor(PUERTO, path);
+	//servidor(PUERTO, path);
+	servidor(socket, path);
 
 	return 0;
 

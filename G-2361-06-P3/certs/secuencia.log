@@ -1,0 +1,14 @@
+total 48
+-rw-rw-r-- 1 arave arave 2928 abr 17 07:27 ca.pem
+-rw-rw-r-- 1 arave arave   17 abr 17 07:27 ca.srl
+-rw-rw-r-- 1 arave arave 1139 abr 17 07:27 clientcert.pem
+-rw-rw-r-- 1 arave arave 2814 abr 17 07:27 cliente.pem
+-rw-rw-r-- 1 arave arave 1675 abr 17 07:27 clientkey.pem
+-rw-rw-r-- 1 arave arave 2126 abr 17 07:27 clientpubkey.pem
+-rw-rw-r-- 1 arave arave 1253 abr 17 07:27 rootcert.pem
+-rw-rw-r-- 1 arave arave 1675 abr 17 07:27 rootkey.pem
+-rw-rw-r-- 1 arave arave    0 abr 17 07:28 secuencia.log
+-rw-rw-r-- 1 arave arave 1139 abr 17 07:27 servercert.pem
+-rw-rw-r-- 1 arave arave 1675 abr 17 07:27 serverkey.pem
+-rw-rw-r-- 1 arave arave 2126 abr 17 07:27 serverpubkey.pem
+-rw-rw-r-- 1 arave arave 2814 abr 17 07:27 servidor.pem

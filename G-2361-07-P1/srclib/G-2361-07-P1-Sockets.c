@@ -14,9 +14,10 @@ int abrir_socketTCP(int puerto){
 		/*printf("Error en la creacion del socket \n");*/
 		return EXIT_FAILURE;
 	}
-
+		//setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
 	if (setsockopt(IDsocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
 		syslog(LOG_ERR, "Error - setsockopt (SO_REUSEADDR)");
+		printf("\nError - setsockopt (SO_REUSEADDR)");
 		/*printf("Error - setsockopt (SO_REUSEADDR)");*/
 		close(IDsocket);
 		return EXIT_FAILURE;

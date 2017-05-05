@@ -16,6 +16,7 @@
 
 void funcionNick(long id, char* usuario, char* nick_name, char* real, char* nick, int IDsocket);
 void funcionUser(char *user, char *nick, char *realname, char *modehost, int IDsocket);
+void funcionPing(char *server1, char *server2, int IDsocket);
 void funcionAway(long id, char *usuario, char *nick_name, char *real, char *away, char *msg, int IDsocket);
 void funcionPart(char *channel, char *nick_name, char *msg, int IDsocket);
 void funcionList(char *nick, char *target, int IDsocket);

@@ -8,13 +8,17 @@
  *
  */
 
-#include "includes/xchat2.h"
+#include "../includes/xchat2.h"
 
 pthread_mutex_t loglock;
 
 /**
 * Globales útiles sobre la conexión del cliente con el servidor
 */
+//como global para que el hilo de interfaz pueda matar al hilo de recibir mensajes
+pthread_t recv_tid;
+pthread_t sendf_tid;
+
 int sockfd_user = -1;
 char nick_user[MAXDATA] = {0};
 char* hostname;
@@ -360,11 +364,66 @@ int command_query(char *message){
 			return 19;//cambiar por un define
 			break;
 
-		case RPL_NAMREPLY: //353
+		case RPL_TOPIC: //332
+			g_print(GRN "\n>> [server command] RPL_TOPIC - message = %s\n" RESET, message);
+			//g_print("\n=======CASE RPL_TOPIC=======\n");
+			//IRCParse_RplTopic (char *strin, char **prefix, char **nick, char **nick2, char **channel, char **msg)
+			ret = IRCParse_RplTopic(message, &prefix, &nick, &channel, &topic);
+			if(ret != IRC_OK){
+				g_print(RED "ERROR - In command_query: case RPL_TOPIC - IRCParse_RplTopic devolvio != IRC_OK\n" RESET);
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick: %s \n",nick);
+			g_print("\t channel: %s \n",channel);
+			g_print("\t topic: %s \n\n",topic);
+			sprintf(mensaje,"El topic para %s es %s ",channel,topic);
+			g_print("Mensaje: %s \n",mensaje);
+			g_print("Existe canal: %d \n", IRCInterface_QueryChannelExistThread(channel));
+
+			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);	
+			break;
+
+		case RPL_AWAY: //306
+			g_print(GRN "\n>> [server command] RPL_AWAY - message = %s\n" RESET, message);
+			//>> :irc.eps.net 306 gomupo :You have been marked as being away
+			IRCParse_RplAway (message, &prefix, &nick, &nick2, &msg);
+			IRCInterface_WriteSystemThread_Pretty("*",msg);
+			break;
+
+		case TOPIC: //332
+			g_print(GRN "\n>> [server command] TOPIC - message = %s\n" RESET, message);
+			//   long IRCParse_Topic (char *strin, char **prefix, char **channel, char **topic)
+			ret = IRCParse_Topic (message, &prefix, &channel, &topic);
+			if(ret != IRC_OK){
+				g_print(RED "ERROR - In command_query: case TOPIC - IRCParse_Topic devolvio != IRC_OK\n" RESET);
+				return ERR;
+			}
+
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t channel: %s \n",channel);
+			g_print("\t topic: %s \n\n",topic);
+			sprintf(mensaje,"El topic para %s es %s \n",channel,topic);
+			g_print("Mensaje: %s \n",mensaje);
+			g_print("Existe canal: %d \n", IRCInterface_QueryChannelExistThread(channel));
+
+			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+			break;
+
+		case RPL_NOTOPIC:
+			break;
+
+		case RPL_TOPICWHOTIME: //333
+			break;	
+
+		case RPL_NAMREPLY: //353 - reply del servidor de de punames()
+			g_print(GRN "\n>> [server command] RPL_NAMREPLY - message = %s\n" RESET, message);
 			//long IRCParse_RplNamReply (char *strin, char **prefix, char **nick, char **type, char **channel, char **msg)
 			ret = IRCParse_RplNamReply(message, &prefix, &nick, &type, &channel, &msg);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplNamReply\n");
+				g_print(RED "ERROR - In command_query: case RPL_NAMREPLY - IRCParse_RplNamReply devolvio != IRC_OK\n" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("\t message: %s \n",message);
@@ -390,7 +449,7 @@ int command_query(char *message){
 			//long IRCParse_RplEndOfNames (char *strin, char **prefix, char **nick, char **channel, char **msg)
 			ret = IRCParse_RplEndOfNames(message, &prefix, &nick2, &channel, &msg);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplEndOfNames\n");
+				g_print(RED "ERROR - In command_query: case RPL_ENDOFNAMES - IRCParse_RplEndOfNames devolvio != IRC_OK\n" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("\t message: %s \n",message);
@@ -418,7 +477,7 @@ int command_query(char *message){
 
 			IRCInterface_AddNewChannelThread(msg, 0);
 			IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
-			sprintf(mensaje, "%s se ha unido al canal", nick_part);
+			sprintf(mensaje, "%s (%s) se ha unido al canal", nick_part, prefix);
 			if(!strcmp(nick_user, nick_part)){
 				IRCInterface_WriteChannelThread(msg,"*", "Bienvenido al canal");
 			} else {
@@ -431,6 +490,11 @@ int command_query(char *message){
 				g_print("ERROR - JOIN - punames");
 				return ERR;				
 			}
+			break;
+
+		case NAMES:
+			g_print(GRN "\n>> [server command] NAMES - message = %s\n" RESET, message);
+			g_print(GRN "\nNo hay nada aquí, revisar (?)" RESET);
 			break;
 
 		case PRIVMSG:
@@ -463,9 +527,9 @@ int command_query(char *message){
 				g_print("length: %ld \n",length);
 				g_print("port: %ld \n",port);
 
-				if(IRCInterface_RecibirDialogThread(nick_user, filename) == TRUE){
+				if(IRCInterface_ReceiveDialogThread(nick_user, filename) == TRUE){
 					g_print("Lanzamos el hilo que guarda el archivo\n");
-					pthread_t tid;
+					//pthread_t tid;
 
 					File_args args;
 					args.hostname = hostname_destino;
@@ -473,7 +537,7 @@ int command_query(char *message){
 					args.port = port;
 					args.length = length;
 
-					if(pthread_create( &tid, NULL, (void*) save_file, (void*) &args) < 0){
+					if(pthread_create( &sendf_tid, NULL, (void*) save_file, (void*) &args) < 0){
 				    	g_print("Error en la llamada a save_file\n");
 						return ERR;
 					}
@@ -487,11 +551,11 @@ int command_query(char *message){
 				}*/
 				ret = enviarDatos(sockfd_user, command, strlen(command));
 				if(ret < 0){
-					g_print(RED "ERROR - In command_query: enviarDatos() devolvio error (ver secuencia en .log)\n\t\tEl cliente se cerrará.\n" RESET);
+					g_print(RED "ERROR - In command_query: case PRIVMSG - enviarDatos() devolvio error (ver secuencia en .log)\n\t\tEl cliente se cerrará.\n" RESET);
 					exit(1);
 				}
 				if(ret == 0){ //timeout 
-					g_print(RED "ERROR - In command_query: enviarDatos() mandó 0 Bytes(ver secuencia en .log)\n\t\t(Timeout de conexión probablemente)\n" RESET);
+					g_print(RED "ERROR - In command_query: case PRIVMSG - enviarDatos() mandó 0 Bytes(ver secuencia en .log)\n\t\t(Timeout de conexión probablemente)\n" RESET);
 					exit(1);
 				}
 			}
@@ -504,6 +568,36 @@ int command_query(char *message){
 
 			//IRCInterface_WriteChannelThread(msgtarget, nick_privmsg, msg);
 			IRCInterface_WriteChannelThread_Pretty(msgtarget, nick_privmsg, msg);
+			break;
+
+		case PART:
+			g_print(GRN "\n>> [server command] PART - message = %s\n" RESET, message);
+			ret = IRCParse_Part (message, &prefix, &channel, &msg);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: case PART - IRCParse_Part devolvio != IRC_OK" RESET);
+				return ERR;
+			}
+			g_print("Comandos recibidos en el IRCParse_PART: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t channel: %s \n",channel);
+			g_print("\t msg: %s \n\n",msg);
+
+			IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+			IRCInterface_DeleteNickChannelThread(channel, nick_part);
+			sprintf(mensaje, "El usuario %s ha salido del grupo (%s)",nick_part, msg);
+			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+			if(strcmp(nick_user, nick_part) == 0){
+				IRCInterface_RemoveChannelThread(channel);
+			} else {
+				sprintf(mensaje,"/names %s",channel);
+				retorno = punames(mensaje);
+				if(retorno == ERR){
+					g_print("ERROR - JOIN - punames");
+					return ERR;				
+				}
+			}
+
 			break;
 
 		case NOTICE:
@@ -549,15 +643,159 @@ int command_query(char *message){
 			IRCInterface_PlaneRegisterOutMessageThread(command_pong);
 			break;
 
+		case KICK:
+			g_print(GRN "\n>> [server command] KICK - message = %s\n" RESET, message);
+			//long IRCParse_Kick (char *strin, char **prefix, char **channel, char **user, char **comment)
+
+			ret = IRCParse_Kick(message, &prefix, &channel, &user, &comment);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: case KICK - IRCParse_Kick devolvio != IRC_OK" RESET);
+				return ERR;
+			}
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t channel: %s \n",channel);
+			g_print("\t user: %s \n",user);
+			g_print("\t comment: %s \n\n",comment);
+
+			sprintf(mensaje,"%s Ha sido echado de %s con mensaje/motivo(%s)",user, channel, comment);
+			
+			g_print("Mensaje: %s \n",mensaje);
+			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+
+			//Actualizar al lista de usuarios
+			IRCInterface_DeleteNickChannelThread (channel, user);
+			if(!strcmp(nick_user,user)){
+				IRCInterface_RemoveChannelThread(channel);
+			}
+			/*memset(mensaje,0,MAXDATA);
+			sprintf(mensaje,"/names %s",channel);
+			retorno = punames(mensaje);
+			if(retorno == ERR){
+				g_print("ERROR - MODE - punames");
+				return ERR;				
+			} */
+			break;
+
+		case ERR_UNKNOWNMODE: //472
+			g_print(GRN "\n>> [server command] ERR_UNKNOWNMODE - message = %s\n" RESET, message);
+			//      long IRCParse_ErrUnknownMode (char *strin, char **prefix, char **nick, char **modechar, char **channel, char **msg)
+			ret = IRCParse_ErrUnknownMode(message, &prefix, &nick, &modechar, &channel, &msg);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: case ERR_UNKNOWNMODE - IRCParse_ErrUnknownMode != IRC_OK" RESET);
+				//return -1;
+			}
+			g_print("Comandos recibidos en el IRCParse_ErrUnknownMode: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick: %s \n",nick);
+			g_print("\t modechar: %s \n",nick);						
+			g_print("\t channel: %s \n",channel);
+			g_print("\t msg: %s \n\n",msg);		
+
+			sprintf(mensaje,"%s %s\n",channel,msg);
+			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+			break;
+
+		case MODE: //
+			g_print(GRN "\n>> [server command] MODE - message = %s\n" RESET, message);
+			//    long IRCParse_Mode (char *strin, char **prefix, char **channeluser, char **mode, char **user)
+			ret = IRCParse_Mode(message, &prefix, &channeluser, &mode, &user);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: case MODE - IRCParse_Mode != IRC_OK" RESET);
+				return ERR;
+			}
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t channeluser: %s \n",channeluser);
+			g_print("\t mode: %s \n",mode);
+			g_print("\t user: %s \n\n",user);
+
+			nick = strtok(prefix,"!"); //Coger el usuario que ha mandando el mode
+			if(user != NULL){ //Modo usuario
+				//Comprobar si es k o l 
+				if(strcasecmp(mode,"+k") == 0){
+					sprintf(mensaje,"%s establece contraseña del canal %s como: %s ",nick, channeluser, user);
+					g_print("Mensaje: %s \n",mensaje);
+					IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+					break;		
+				}else if(strcasecmp(mode,"+l") == 0){
+					sprintf(mensaje,"%s establece límite del canal %s a %s usuarios",nick, channeluser, user);
+					g_print("Mensaje: %s \n",mensaje);
+					IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+					break;						
+				}
+
+				sprintf(mensaje,"%s establece el modo %s al usuario %s en el canal %s ",nick, mode, user, channeluser);
+				g_print("Mensaje: %s \n",mensaje);
+				IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+
+				/* No funciona IRCInterface_ChangeNickStateChannel :(
+				if(strcasecmp(mode,"+o") == 0){
+					g_print("modo op\n");
+					IRCInterface_ChangeNickStateChannel (channeluser, nick, OPERATOR);
+				}else if(strcasecmp(mode,"+v") == 0){
+					g_print("modo voice\n");
+					IRCInterface_ChangeNickStateChannel (channeluser, nick, VOICE);
+				}else{
+					g_print("else otro modo\n");*/
+					//Actualizar al lista de usuarios
+					
+					memset(mensaje,0,MAXDATA);
+					sprintf(mensaje,"/names %s",channeluser);
+					retorno = punames(mensaje);
+					if(retorno == ERR){
+						g_print("ERROR - MODE - punames");
+						return ERR;				
+					}					
+				//}				
+			}else{
+				sprintf(mensaje,"%s establece modo %s %s ", nick, channeluser, mode);
+				g_print("Mensaje: %s \n",mensaje);
+				IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+			}			
+			break;
+
+		case INVITE:			
+			g_print(GRN "\n>> [server command] INVITE - message = %s\n" RESET, message);
+			IRCInterface_WriteSystemThread_Pretty("*",message);
+			break;
+
+		case NICK:
+			g_print(GRN "\n>> [server command] NICK - message = %s\n" RESET, message);
+			//<< NICK gomupo2
+			//>> :gomupo!~gonzalo@cliente020.wlan.uam.es NICK :gomupo2
+			IRCParse_Nick (message, &prefix, &nick, &msg);
+			IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick: %s \n",nick); //esta a null
+			g_print("\t msg: %s \n",msg); //el nick viene aqui
+			IRCInterface_ChangeNickThread(nick_part, msg);
+			sprintf(mensaje, "%s ahora es conocido como %s", nick_part, msg);
+			if(!strcmp(nick_part, nick_user)){
+				strcpy(nick_user,msg);			
+			}
+			IRCInterface_WriteSystemThread_Pretty("*",mensaje);	
+			g_print("new nick: %s\n", msg);
+
+			break;
+
 		case QUIT:
-			g_print(GRN "\n>> [server command] QUIT - message = %s\n" RESET, message);
 			/*
+			* Enfoque 1: Cuando alguien sale (QUIT del servidor)
+			*	Obtener la lista de canales abiertos -> '/names' en cada canal -> Capturar reply del servidor:
+			*	353 -> interface_mostrar_nicks(channel,msg); (se actualizan todas las listas de chats abiertos)
+			*
+			*/
+			g_print(GRN "\n>> [server command] QUIT - message = %s\n" RESET, message);
+			
 			IRCParse_Quit (message, &prefix, &msg);
 			IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
 			g_print("\t message: %s \n",message);
 			g_print("\t prefix: %s \n",prefix);
 			g_print("\t msg: %s \n",msg);
-			sprintf(mensaje, "El usuario %s se ha desconectado", nick_part);
+			sprintf(mensaje, "%s se ha desconectado (%s)", nick_part, msg);
 			IRCInterface_WriteSystemThread("*",mensaje);
 
 			IRCInterface_ListAllChannelsThread(&channelsQuit, &numChannelsQuit);
@@ -569,7 +807,48 @@ int command_query(char *message){
 					g_print("ERROR - JOIN - punames");
 					return ERR;				
 				}
-			}*/
+			}
+			break;
+
+		case RPL_CHANNELMODEIS: //324 	
+			g_print(GRN "\n>> [server command] RPL_CHANNELMODEIS - message = %s\n" RESET, message);
+			//long IRCParse_RplChannelModeIs(char *strin, char **prefix, char **nick, char **channel, char **modetxt)
+			/*ret = IRCParse_RplChannelModeIs(message, &prefix, &channeluser, &mode, &user);
+			if(ret != IRC_OK){
+				g_print("ERROR: IRCInterface_Connect - IRCParse_RplTopic\n");
+				return ERR;
+			}
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t channeluser: %s \n",channeluser);
+			g_print("\t mode: %s \n",mode);
+			g_print("\t user: %s \n\n",user);
+
+			sprintf(mensaje,"%s establece modo %s %s ", user, channeluser, mode);
+			
+			g_print("Mensaje: %s \n",mensaje);
+			IRCInterface_WriteChannelThread(channeluser,"*",mensaje);*/
+
+			//Actualizar al lista de usuarios
+			break;	
+
+		case ERR_CHANOPRIVSNEEDED: //482
+			g_print(GRN "\n>> [server command] ERR_CHANOPRIVSNEEDED - message = %s\n" RESET, message);
+			//   long IRCParse_ErrChanOPrivsNeeded (char *strin, char **prefix, char **nick, char **channel, char **msg)
+			ret = IRCParse_ErrChanOPrivsNeeded(message, &prefix, &nick, &channel, &msg);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: case ERR_CHANOPRIVSNEEDED - IRCParse_ErrChanOPrivsNeeded != IRC_OK" RESET);
+				//return ERR;
+			}
+			g_print("Comandos recibidos en el IRCParse_ErrChanOPrivsNeeded: \n");
+			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick: %s \n",nick);			
+			g_print("\t channel: %s \n",channel);
+			g_print("\t msg: %s \n\n",msg);		
+
+			sprintf(mensaje,"%s %s\n",channel,msg);
+			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
 			break;
 
 		/*TRATAMIENTO DE ERRORES*/
@@ -765,6 +1044,13 @@ void receive_messages(void* no_arg){
 	int ret;
 	g_print(GRN "Hilo Preparado para recibir mensajes\n" RESET);
 
+	int oldtype;
+	/*No es necesario el pthread_cancel asíncrono aparentemente
+	* +INFO: https://www.securecoding.cert.org/confluence/display/c/POS44-C.+Do+not+use+signals+to+terminate+threads
+	*		 https://www.securecoding.cert.org/confluence/display/c/POS47-C.+Do+not+use+threads+that+can+be+canceled+asynchronously
+	*/
+	//pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &oldtype);
+	
 	while(1){
 		//printf(BLU "\nwhile en receive_messages\n" RESET);
 		//sem_wait(&recepcionTCP);
@@ -841,7 +1127,13 @@ void receive_messages(void* no_arg){
  
 void IRCInterface_ActivateChannelKey(char *channel, char *key)
 {
+	char modo[MAXDATA] = {0};
+
 	g_print(BLU "\nIRCInterface_ActivateChannelKey(char *channel, char *key) call\n" RESET);
+
+	sprintf(modo,"+k %s",key);
+	if (changeMode(channel, NULL, modo) != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivateChannelKey: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -877,6 +1169,8 @@ void IRCInterface_ActivateChannelKey(char *channel, char *key)
 void IRCInterface_ActivateExternalMessages(char *channel)
 {
 	g_print(BLU "\nIRCInterface_ActivateExternalMessages(char *channel) call\n" RESET);
+	if (changeMode(channel, NULL, "+n") != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivateExternalMessages: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -912,6 +1206,8 @@ void IRCInterface_ActivateExternalMessages(char *channel)
 void IRCInterface_ActivateInvite(char *channel)
 {
 	g_print(BLU "\nIRCInterface_ActivateInvite(char *channel) call\n" RESET);
+	if (changeMode(channel, NULL, "+i") != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivateInvite: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -947,6 +1243,9 @@ void IRCInterface_ActivateInvite(char *channel)
 void IRCInterface_ActivateModerated(char *channel)
 {
 	g_print(BLU "\nIRCInterface_ActivateModerated(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "+m") != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivateModerated: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -984,7 +1283,13 @@ void IRCInterface_ActivateModerated(char *channel)
  
 void IRCInterface_ActivateNicksLimit(char *channel, int limit)
 {
+	char mode[MAXDATA] = {0};
+
 	g_print(BLU "\nIRCInterface_ActivateNicksLimit(char *channel, int limit) call\n" RESET);
+
+	sprintf(mode,"+l %d",limit);
+	if (changeMode(channel, NULL, mode) != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivateNicksLimit: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1020,6 +1325,8 @@ void IRCInterface_ActivateNicksLimit(char *channel, int limit)
 void IRCInterface_ActivatePrivate(char *channel)
 {
 	g_print(BLU "\nIRCInterface_ActivatePrivate(char *channel) call\n" RESET);
+	if (changeMode(channel, NULL, "+p") != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivatePrivate: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1055,6 +1362,8 @@ void IRCInterface_ActivatePrivate(char *channel)
 void IRCInterface_ActivateProtectTopic(char *channel)
 {
 	g_print(BLU "\nIRCInterface_ActivateProtectTopic(char *channel) call\n" RESET);
+	if (changeMode(channel, NULL, "+t") != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivateProtectTopic: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1090,6 +1399,9 @@ void IRCInterface_ActivateProtectTopic(char *channel)
 void IRCInterface_ActivateSecret(char *channel)
 {
 	g_print(BLU "\nIRCInterface_ActivateSecret(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "+s") != OK)
+		g_print(RED "ERROR - In IRCInterface_ActivateSecret: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1127,6 +1439,9 @@ void IRCInterface_ActivateSecret(char *channel)
 void IRCInterface_BanNick(char *channel, char *nick)
 {
 	g_print(BLU "\nIRCInterface_BanNick(char *channel, char *nick) call\n" RESET);
+
+	if (changeMode(channel, nick, "+b") != OK)
+		g_print(RED "ERROR - In IRCInterface_BanNick: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1189,9 +1504,6 @@ long IRCInterface_Connect(char *nick, char *user, char *realname, char *password
 
     char *msgNick = NULL;
     char mode[MAXDATA] = {0};
-
-	//thread
-	pthread_t tid;
 
 	g_print("IRCInterface_Connect - Datos introducidos por el usuario \n");
 	g_print("\t nick: %s \n",nick);
@@ -1259,13 +1571,13 @@ long IRCInterface_Connect(char *nick, char *user, char *realname, char *password
 
 	if(ssl == FALSE){
 		g_print(GRN "Lanzamos el hilo que recibe mensajes\n" RESET);
-		if((ret = pthread_create( &tid, NULL, (void*) receive_messages, (void*) "no_arg")) != 0){
+		if((ret = pthread_create( &recv_tid, NULL, (void*) receive_messages, (void*) "no_arg")) != 0){
 	    	g_print(RED "ERROR - In IRCInterface_Connect: pthread_create() devolvio != 0, error = %d\n" RESET, (int)ret);
 	    	//logERR("pthread_detach() devolvio error");
 			return ERR;
 		}
 
-		if (pthread_detach(tid) != OK){
+		if (pthread_detach(recv_tid) != OK){
 			g_print(RED "ERROR - In IRCInterface_Connect: pthread_detach() devolvio error\n" RESET);
 			 //logERR("pthread_detach() devolvio error");
 			 return ERR;
@@ -1291,7 +1603,6 @@ long IRCInterface_Connect(char *nick, char *user, char *realname, char *password
 			}
 			g_print("IRCMsg_Pass: %s",command);
 			retorno = enviarDatos(sockfd, command, strlen(command));
-			//retorno = clienteEnviarDatosTCP(sockfd,command, strlen(command));
 			if(retorno <= 0){
 				g_print(RED "ERROR - In IRCInterface_Connect: enviarDatos() envió %d Bytes - PASS\n" RESET, retorno);
 				return IRCERR_NOCONNECT;
@@ -1382,6 +1693,9 @@ long IRCInterface_Connect(char *nick, char *user, char *realname, char *password
 void IRCInterface_DeactivateChannelKey(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivateChannelKey(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-k") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivateChannelKey: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1417,6 +1731,9 @@ void IRCInterface_DeactivateChannelKey(char *channel)
 void IRCInterface_DeactivateExternalMessages(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivateExternalMessages(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-n") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivateExternalMessages: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1452,6 +1769,9 @@ void IRCInterface_DeactivateExternalMessages(char *channel)
 void IRCInterface_DeactivateInvite(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivateInvite(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-i") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivateInvite: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1487,6 +1807,9 @@ void IRCInterface_DeactivateInvite(char *channel)
 void IRCInterface_DeactivateModerated(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivateModerated(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-m") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivateModerated: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1522,6 +1845,9 @@ void IRCInterface_DeactivateModerated(char *channel)
 void IRCInterface_DeactivateNicksLimit(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivateNicksLimit(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-l") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivateNicksLimit: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1559,6 +1885,9 @@ void IRCInterface_DeactivateNicksLimit(char *channel)
 void IRCInterface_DeactivatePrivate(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivatePrivate(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-p") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivatePrivate: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1594,6 +1923,9 @@ void IRCInterface_DeactivatePrivate(char *channel)
 void IRCInterface_DeactivateProtectTopic(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivateProtectTopic(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-t") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivateProtectTopic: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1629,6 +1961,9 @@ void IRCInterface_DeactivateProtectTopic(char *channel)
 void IRCInterface_DeactivateSecret(char *channel)
 {
 	g_print(BLU "\nIRCInterface_DeactivateSecret(char *channel) call\n" RESET);
+
+	if (changeMode(channel, NULL, "-s") != OK)
+		g_print(RED "ERROR - In IRCInterface_DeactivateSecret: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1668,6 +2003,9 @@ void IRCInterface_DeactivateSecret(char *channel)
 boolean IRCInterface_DisconnectServer(char *server, int port)
 {
 	g_print(BLU "\nIRCInterface_DisconnectServer(char *server, int port) call\n" RESET);
+
+	puquit(NULL);
+
 	return TRUE;
 }
 
@@ -1747,6 +2085,9 @@ boolean IRCInterface_ExitAudioChat(char *nick)
 void IRCInterface_GiveOp(char *channel, char *nick)
 {
 	g_print(BLU "\nIRCInterface_GiveOp(char *channel, char *nick) call\n" RESET);
+
+	if (changeMode(channel, nick, "+o") != OK)
+		g_print(RED "ERROR - In IRCInterface_GiveOp: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1784,6 +2125,9 @@ void IRCInterface_GiveOp(char *channel, char *nick)
 void IRCInterface_GiveVoice(char *channel, char *nick)
 {
 	g_print(BLU "\nIRCInterface_GiveVoice(char *channel, char *nick) call\n" RESET);
+
+	if (changeMode(channel, nick, "+v") != OK)
+		g_print(RED "ERROR - In IRCInterface_GiveOp: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -1821,6 +2165,23 @@ void IRCInterface_GiveVoice(char *channel, char *nick)
 void IRCInterface_KickNick(char *channel, char *nick)
 {
 	g_print(BLU "\nIRCInterface_KickNick(char *channel, char *nick) call\n" RESET);
+
+	int ret = -1;
+	char *command=NULL;
+
+	//long IRCMsg_Kick (char **command, char *prefix, char * channel, char *user, char *comment)
+	ret = IRCMsg_Kick (&command, NULL, channel, nick, "Has sido kickeado del servidor");
+	if(ret != IRC_OK){
+		g_print(RED "ERROR - In IRCInterface_KickNick : Error en IRCMsg_Kick, no devolvio IRC_OK\n" RESET);
+		return;
+	}
+	ret = enviarDatos(sockfd_user, command, strlen(command));
+	if(ret == ERR){
+		g_print(RED "ERROR - In IRCInterface_KickNick: enviarDatos devolvio ERR\n" RESET);
+		return;
+	}
+	IRCInterface_PlaneRegisterOutMessage(command);
+	free(command);	
 }
 
 /**
@@ -1934,6 +2295,24 @@ void IRCInterface_NewCommandText(char *command)
 void IRCInterface_NewTopicEnter(char *topicdata)
 {
 	g_print(BLU "\nIRCInterface_NewTopicEnter(char *topicdata) call\n" RESET);
+
+	int ret = -1;
+	char *command=NULL;
+
+	//long IRCMsg_Topic (char **command, char *prefix, char * channel, char *topic)
+	active_channel = IRCInterface_ActiveChannelName();
+	ret = IRCMsg_Topic (&command, NULL, active_channel, topicdata);
+	if(ret != IRC_OK){
+		g_print(RED "ERROR - In IRCInterface_NewTopicEnter: IRCMsg_Topic no devolvio IRC_OK\n" RESET);
+		return;
+	}
+	ret = enviarDatos(sockfd_user, command, strlen(command));
+	if(ret == ERR){
+		g_print(RED "ERROR - In IRCInterface_NewTopicEnter: enviarDatos devolvio ERR\n" RESET);
+		return;
+	}
+	IRCInterface_PlaneRegisterOutMessage(command);
+	free(command);	
 }
 
 /**
@@ -2099,6 +2478,9 @@ boolean IRCInterface_StopAudioChat(char *nick)
 void IRCInterface_TakeOp(char *channel, char *nick)
 {
 	g_print(BLU "\nIRCInterface_TakeOp(char *channel, char *nick) call\n" RESET);
+
+	if (changeMode(channel, nick, "-o") != OK)
+		g_print(RED "ERROR - In IRCInterface_TakeOp: Error en changeMode, devolvió ERR\n" RESET);
 }
 
 /**
@@ -2136,6 +2518,9 @@ void IRCInterface_TakeOp(char *channel, char *nick)
 void IRCInterface_TakeVoice(char *channel, char *nick)
 {
 	g_print(BLU "\nIRCInterface_TakeVoice(char *channel, char *nick) call\n" RESET);
+
+	if (changeMode(channel, nick, "-v") != OK)
+		g_print(RED "ERROR - In IRCInterface_TakeVoice: Error en changeMode, devolvió ERR\n" RESET);	
 }
 
 

@@ -192,7 +192,7 @@ void interface_mostrar_nicks(char* channel, char* list){
 }
 
 /**
-* @brief Devuelve una cadena que empieza inmediatamente después de la cadena 'haystack' tras la primera aparaición de 'ch'
+* @brief Devuelve una cadena que empieza inmediatamente después de la cadena 'haystack' tras la primera aparición de 'ch'
 * @param haystack string original donde hacer la busqueda
 * @param ch delimitador
 * @return char* substring con la cadena generada, NULL si no se ha encontrado 'ch'
@@ -235,6 +235,27 @@ int parse_type(const char* message){
 	}
 
 	return ERR;
+}
+
+void IRCInterface_WriteSystem_Pretty(char *nick, char *msg){
+	char snap[SNAP_SIZE];
+	char f_nick[MAX_NICK_FIELD];
+
+	if(strlen(nick) > 9){
+		logERR("En IRCInterface_WriteSystemThread_Pretty: strlen(nick) > 9");
+		return;
+	}
+
+	strcpy(f_nick, "[");
+	strcat(f_nick, snapTime(snap,SNAP_SIZE));
+	strcat(f_nick, "] ");
+	strcat(f_nick, "              *");
+
+	//g_print(MAG"\n>>>>%s\n" RESET, f_nick);
+	if(msg[strlen(msg) - 2] == 13) //check si es comienzo de CR,LF
+		msg[strlen(msg) - 2] = '\0';
+
+	IRCInterface_WriteSystem(f_nick,msg);
 }
 
 void IRCInterface_WriteSystemThread_Pretty(char *nick, char *msg){
@@ -284,4 +305,25 @@ int testIRC_CommandQuery(char* message){
 		default:
 			return OK;
 	}
+}
+
+int changeMode(char *channel, char *nick, char *mode){
+	int ret = -1;
+	char *command = NULL;
+
+	//long IRCMsg_Mode (char **command, char *prefix, char * channeloruser, char *mode, char *user)
+	ret = IRCMsg_Mode (&command, NULL, channel, mode, nick);
+	if(ret != IRC_OK){
+		g_print(RED "ERROR - In changeMode: Error en IRCMsg_Mode, no devolvió IRC_OK\n" RESET);
+		return ERR;
+	}
+	ret = enviarDatos(sockfd_user, command, strlen(command));
+	if(ret == ERR){
+		g_print(RED "ERROR - In changeMode: Error en enviarDatos, devolvió ERR\n" RESET);
+		return ERR;
+	}
+	IRCInterface_PlaneRegisterOutMessage(command);
+	free(command);
+
+	return OK;
 }
