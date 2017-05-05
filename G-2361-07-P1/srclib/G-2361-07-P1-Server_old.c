@@ -277,7 +277,6 @@ void parseCommand(long int query, char* comando, int IDsocket){
 						if(strcmp(lista[i], channel) == 0){
 							flag = 1; /*El canal existe*/
 							IRCTADChan_FreeList (lista, nChannels);
-							break;
 						}
 					}
 
@@ -303,39 +302,30 @@ void parseCommand(long int query, char* comando, int IDsocket){
 
 					sprintf(channel_aux, ":%s", channel);
 					/*syslog(LOG_INFO, "COMPLEX USER /JOIN");*/
-					IRC_ComplexUser(&complex, nick_name, usuario, NULL, NULL);
+					IRC_ComplexUser(&complex, nick_name, usuario, host, NULL);
 					IRCMsg_Join(&join_msj, complex, channel_aux, key, msg);
-					send(IDsocket,join_msj,strlen(join_msj),0);
+
 					/*Listamos usuarios de un canal*/
 					IRCTAD_ListNicksOnChannelArray(channel, &listaUsuarios, &nUsuarios);
-					//IRC_BuildStringsFromList(&uCanales, 512, ' ', &nstrings, listaUsuarios, nUsuarios);
-					//send(IDsocket,join_msj,strlen(join_msj),0);
-
-					if(nUsuarios > 0){
-						for(i = 0; i < nUsuarios; i++){
-							if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) &IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR){
-								char str[20];
-								strcpy(str, "@");
-								strcat(str, listaUsuarios[i]);
-								sprintf(listaUsuarios[i],"%s",str);
-							}
-							else
-								sprintf(listaUsuarios[i],"%s",listaUsuarios[i]);
-
-							IRCMsg_RplNamReply(&nameMsg,PREFIJO, nick_name, "=", channel, listaUsuarios[i]);
-							//IRC_PipelineCommands(&reply,join_msj,nameMsg,NULL);
-							//send(IDsocket,reply,strlen(reply),0);
-							send(IDsocket,nameMsg,strlen(nameMsg),0);
-							free(nameMsg); 
-							//free(reply);
-						}	
-						liberaLista(listaUsuarios,nUsuarios); 			
-					}	
 
 					IRCMsg_RplEndOfNames (&endOfNames_msj, PREFIJO, nick_name, channel);
-					send(IDsocket,endOfNames_msj,strlen(endOfNames_msj),0);
+
+					//IRC_BuildStringsFromList(&uCanales, 512, ' ', &nstrings, listaUsuarios, nUsuarios);
+
+
+					for(i = 0; i < nUsuarios; i++){
+						if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) &IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR)
+							sprintf(listaUsuarios[i],"@%s",nick_name);
+						else
+							sprintf(listaUsuarios[i],"%s",listaUsuarios[i]);
+
+						IRCMsg_RplNamReply(&nameMsg,PREFIJO, nick_name, "=", channel, listaUsuarios[i]);
+						IRC_PipelineCommands(&reply,join_msj,nameMsg,endOfNames_msj,NULL);
+						send(IDsocket,reply,strlen(reply),0);
+					}					
+
 					free(join_msj); free(complex); free(endOfNames_msj);//free(uCanales); 
-					//free(reply);
+					liberaLista(listaUsuarios,nUsuarios); free(reply); free(nameMsg);
 					free(channel);
 				}
 			}
@@ -404,6 +394,8 @@ void parseCommand(long int query, char* comando, int IDsocket){
 					strcpy(listChannel[i],aux);
 				}
 
+
+				
 				IRCMsg_RplWhoIsServer(&serv, PREFIJO, maskarray, maskarray, host, "info who is");
 				send(IDsocket,serv,strlen(serv),0);
 
@@ -473,30 +465,26 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				syslog(LOG_INFO, "NUMERO DE USUARIOS %ld", nUsuarios);
 				/*printf("NUMERO DE USUARIOS %ld\n", nUsuarios);*/
 				if(nUsuarios > 0){ /*Si no hay usuarios*/
-					//IRCMsg_RplEndOfNames(&endOfNames_msj, PREFIJO, nick_name, channel);
+					IRCMsg_RplEndOfNames(&endOfNames_msj, PREFIJO, nick_name, channel);
 
 					for(i = 0; i < nUsuarios; i++){
-						if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) &IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR){
-							char str[20];
-							strcpy(str, "@");
-							strcat(str, listaUsuarios[i]);
-							sprintf(listaUsuarios[i],"%s",str);
-						}
+						if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) &IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR)
+							sprintf(listaUsuarios[i],"@%s",nick_name);
 						else
 							sprintf(listaUsuarios[i],"%s",listaUsuarios[i]);
 
 						IRCMsg_RplNamReply(&nameMsg,PREFIJO, nick_name, "=", channel, listaUsuarios[i]);
-						//IRC_PipelineCommands(&reply,nameMsg,endOfNames_msj,NULL);
-						send(IDsocket,nameMsg,strlen(nameMsg),0);
-						free(nameMsg); //free(reply);
+						IRC_PipelineCommands(&reply,nameMsg,endOfNames_msj,NULL);
+						send(IDsocket,reply,strlen(reply),0);
+						free(reply); free(nameMsg);
 					}					
 
 					liberaLista(listaUsuarios, nUsuarios);
-				}//}else{
+				}else{
 					IRCMsg_RplEndOfNames (&endOfNames_msj, PREFIJO, nick_name, channel);
 					send(IDsocket,endOfNames_msj,strlen(endOfNames_msj),0);
 
-				//}
+				}
 				free(endOfNames_msj);
 			}
 
