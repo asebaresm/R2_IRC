@@ -10,10 +10,10 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <redes2/irc.h>
-#include "../includes/G-2361-07-P1-Sockets.h"
-#include "../includes/G-2361-07-P1-Server.h"
+#include "../includes/G-2361-06-P1-Sockets.h"
+#include "../includes/G-2361-06-P1-Server.h"
 
-
+void liberaLista(char** lista, long nElems);
 void funcionNick(long id, char* usuario, char* nick_name, char* real, char* nick, int IDsocket);
 void funcionUser(char *user, char *nick, char *realname, char *modehost, int IDsocket);
 void funcionPing(char *server1, char *server2, int IDsocket);

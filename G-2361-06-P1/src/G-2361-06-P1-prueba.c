@@ -10,8 +10,8 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <redes2/irc.h>
-#include "../includes/G-2361-07-P1-Daemon.h"
-#include "../includes/G-2361-07-P1-Server.h"
+#include "../includes/G-2361-06-P1-Daemon.h"
+#include "../includes/G-2361-06-P1-Server.h"
 
 
 
@@ -34,12 +34,11 @@ int main(int argc,char * argv[]){
 	path = realpath("motd.txt", buffer);
 	/*syslog(LOG_INFO,"DIRECTORIO %s", path);*/
 	
-	/*
+	
 	dm  = daemonizar (argv[0]);
 	if(dm == -1){
 		return -1;
 	}
-	*/
 
 	//servidor(PUERTO, path);
 	servidor(socket, path);

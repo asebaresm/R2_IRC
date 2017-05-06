@@ -1,5 +1,6 @@
-#ifndef _DAEMON_H
-#define _DAEMON_H
+#ifndef _SOCKET_H
+#define _SOCKET_H
+
 
 #include <stdio.h>
 #include <string.h>
@@ -15,6 +16,12 @@
 #include <redes2/irc.h>
 
 
-int daemonizar (char * servicio );
+#define  NUM_SOCKETS 100
+#define  SIZE 8192
+/*#define PUERTOSERVER 6667*/
+
+int abrir_socketTCP(int puerto);
+int acepta_conexion(int IDsocket);
+
 
 #endif

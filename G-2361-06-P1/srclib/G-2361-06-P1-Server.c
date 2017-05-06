@@ -1,6 +1,9 @@
+#include "../includes/G-2361-06-P1-Server.h"
+#include "../includes/G-2361-06-P1-Functions.h"
 
-#include "../includes/G-2361-07-P1-Server.h"
 
+pthread_mutex_t user_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t canal_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 char *fich, *prefix, *nick, *msg, *user, *modehost, *serverother, *realname, *server1, *server2, *channel, *key, *target;
 char *maskarray, *msgtarget, *topic, *channeluser, *modo;
@@ -10,6 +13,19 @@ long accion = 0, creacion = 0, id = 0;
 int socketAlrm = 0, numeroUsuarios = 0;
 int sockets[NUM_SOCKETS];
 
+
+/**void manejador_alarma(int sig){
+	char *ping_msj = NULL;
+	int i;
+
+	IRCMsg_Ping (&ping_msj, PREFIJO, "localhost", NULL);
+	syslog(LOG_INFO, "Numero de usuarios %d", numeroUsuarios);
+	for(i = 0; i < numeroUsuarios; i++){
+		send(sockets[i], ping_msj, strlen(ping_msj), 0);
+	}
+	free(ping_msj);
+	alarm(30);
+}*/
 
 
 
@@ -39,8 +55,6 @@ void procesar(char* entrada, int IDsocket, fd_set readset){
 		comando = NULL;
 	}
 	free(comando);
-
-
 }
 
 
@@ -59,6 +73,8 @@ void servidor(int puerto, char* path){
 	socketAlrm = IDsocket;
 	fich = path;
 
+	/*signal(SIGALRM, manejador_alarma);
+	alarm(30);*/ /*Cada 30 segundos se muestra*/
 
 	do{
 		memcpy(&tempset, &readset, sizeof(tempset));
@@ -74,9 +90,8 @@ void servidor(int puerto, char* path){
 		         descriptor = acepta_conexion(IDsocket);
 		         syslog(LOG_INFO, "ACEPTAR CONEXION");
 		         if (descriptor < 0) {
-		            //syslog(LOG_INFO,"error in accept ");
-		         }
-		         else {
+
+		         }else {
 		            FD_SET(descriptor, &readset);
 		            maxfd = (maxfd < descriptor)?descriptor:maxfd;
 		         }
@@ -87,9 +102,9 @@ void servidor(int puerto, char* path){
 		            do {
 		               bzero(entrada, sizeof(entrada));
 		               select_estado = read(j,entrada,SIZE);
-		               syslog(LOG_INFO,"LEIDO: %s",entrada);
+		               syslog(LOG_INFO,"LEIDO: %s, %d",entrada, select_estado);
 
-		               if(select_estado==-1){
+		               if(select_estado ==-1){
 		               		close(j);
 		               		FD_CLR(j, &readset);
 		               }
@@ -98,17 +113,27 @@ void servidor(int puerto, char* path){
 		            if (select_estado > 0) {		            	
 			            entrada[select_estado] = 0;
 			            procesar(entrada,j,readset);
-		            }
-		            else if (select_estado == 0 ) {
-		                //syslog(LOG_INFO,"ESTOY EN CLOSEEEEEEEE 1 %s j:%d",buscaUsuPorSocket(j),j);
-		                //IRCTADUser_DeleteByNick (buscaUsuPorSocket(j));
-		            	///////delUsuPorSocket(j);
-		                //syslog(LOG_INFO,"ESTOY EN CLOSEEEEEEEE 2%s j:%d ",buscaUsuPorSocket(j),j);
-		                //close(j);
+		            }else if (select_estado == 0) {
+		            	int z, k;
+						for(z = 0; z < numeroUsuarios; z++){
+							if(sockets[z] == j){
+								id = 0; usuario = NULL; real = NULL;
+								IRCTADUser_Delete (id, usuario, listaNicks[z], real);
+
+								for(k = z; k < numeroUsuarios; k++){
+									strcpy(listaNicks[k], "");
+									sockets[k] = sockets[k+1];
+									strcpy(listaNicks[k], listaNicks[k+1]);
+								}
+								strcpy(listaNicks[numeroUsuarios], "");
+								sockets[numeroUsuarios] = -1;
+								numeroUsuarios--;
+							}
+						}
+						close(j);
 		                FD_CLR(j, &readset);
-		            }
-		            else {
-		               //syslog(LOG_INFO,"error in recv ");
+		            }else { /*Error*/
+
 		            }
 		        }      
 	     	}     
@@ -117,22 +142,15 @@ void servidor(int puerto, char* path){
 }
 
 
-void liberaLista(char** lista, long nElems){
-	int i;
-	for(i=0;i<nElems;i++)
-		free(lista[i]);
-}
-
 void parseCommand(long int query, char* comando, int IDsocket){
-
 	long result;
-	
-
 	switch(query){
-
 		case USER:
 
 			result = IRCParse_User (comando, &prefix, &user, &modehost, &serverother, &realname);
+			syslog(LOG_INFO, "%s, %s, %s, %s, %s", prefix, user, modehost, serverother, realname);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "USER: No se ha introducido ninguna cadena para parsear.");
@@ -140,54 +158,39 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				syslog(LOG_INFO, "USER: No se encuentran todos los parámetros obligatorios.");
 			}else{
 				/*Para ver si existe el usuario*/
+				nick_name = NULL; real = NULL; id = 0;
 				result = IRCTADUser_GetData (&id, &user, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
 
-				if(result!=IRC_OK){ /*Si el usuario no existe*/
-					char *welcome_msj, *host_msj, *create_msj, *info_msj, *respuesta;
-
-					strcpy(listaNicks[numeroUsuarios], user);
+				if(!nick_name){ /*Si el usuario no existe*/
+					/*Annadir un nuevo usuario*/
+					IRCTADUser_New (user, nick, realname, NULL, modehost, serverother, IDsocket);
+					IRCTADUser_SetAway (id, user, nick, realname, NULL);
+					strcpy(listaNicks[numeroUsuarios], "");
+					strcpy(listaNicks[numeroUsuarios], nick);
 					sockets[numeroUsuarios] = IDsocket; /*Numero del socket del usuario*/
 					numeroUsuarios++;
 
+					funcionUser(user, nick, realname, modehost, IDsocket);
 
-					/*Annadir un nuevo usuario*/
-					IRCTADUser_New (user, nick, realname, NULL, modehost, "localhost", IDsocket);
-					/*long nelements;
-					char **nicklist;
-					IRCTADUser_GetUserList(&nicklist, &nelements);
-					syslog(LOG_INFO, "nusus %ld",nelements);*/
-
-					/*Mensaje 001*/
-					IRCMsg_RplWelcome (&welcome_msj, PREFIJO, nick, nick, user, modehost);
-					/*Mensaje 002*/
-					IRCMsg_RplYourHost (&host_msj, PREFIJO, nick, "Practica 1", "1.0");
-					/*Mensaje 003*/
-					IRCMsg_RplCreated (&create_msj, PREFIJO, nick, 0);
-					/*Mensaje 004*/
-					IRCMsg_RplMyInfo(&info_msj, PREFIJO, nick, "Practica 1", "1.0", "adDcCioqrRswx", "abehiIklmMnoOPqQrRstvVz");
-
-					/*Juntamos todos los mensajes en uno solo*/
-					IRC_PipelineCommands(&respuesta, welcome_msj, host_msj, create_msj, info_msj, NULL);
-
-					send(IDsocket, respuesta, strlen(respuesta), 0);
-					syslog(LOG_INFO, "send USER");
-					free(welcome_msj); free(host_msj), free(create_msj); free(info_msj); free(respuesta);
-					
 
 				}else{ /*Si existe, liberamos memoria*/
-					free(user); free(nick_name); free(host); free(prefix);
+					free(user); free(modehost); free(serverother); free(realname);
+					pthread_mutex_unlock(&canal_mutex);
+					pthread_mutex_unlock(&user_mutex);
 					break;
 				}
-
-
 			}
-			free(host);id = 0;free(real);free(ip);free(away);
-			free(prefix); free(user);free(modehost);free(serverother);free(realname);
+
+			free(user);free(modehost);free(serverother);free(realname);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case NICK:
 
 			result = IRCParse_Nick (comando, &prefix, &nick, &msg);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "NICK: No se ha introducido ninguna cadena para parsear.");
@@ -197,64 +200,44 @@ void parseCommand(long int query, char* comando, int IDsocket){
 
 				if(!nick){
 					syslog(LOG_INFO, "NICK: No hay nick.");
-				}else{
-					char *complex = NULL, *msj_nick = NULL;
+				}else if(strlen(nick) < 10){ /*Longitud maxima de entrada para el nick*/
+					usuario=NULL; nick_name=NULL; real=NULL;id=0;
+					IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
+					if(!usuario){
 
-					if(strlen(nick) < 10){ /*Longitud maxima de entrada para el nick*/
-						usuario=NULL; nick_name=NULL; real=NULL;id=0;
-
-						IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
-
-						if(!usuario){
-
-						}else{
-							/*Crea el array por ejemplo : :celia!~celia@66.red-83-63-217.staticip.rima-tde.net*/
-							syslog(LOG_INFO, "COMPLEX USER");
-							IRC_ComplexUser(&complex, nick_name, usuario, host, NULL);
-
-							IRCTADUser_Set(id, usuario, nick_name, NULL, usuario, nick, real);
-
-							/*Mensaje de vuelta del comando NICK*/
-							IRCMsg_Nick(&msj_nick, complex, NULL, nick);
-							send(IDsocket, msj_nick, strlen(msj_nick), 0);
-
-							free(complex); free(msj_nick); 
-							free(nick_name); free(usuario); id = 0; free(real); free(host); 
-						}
-
+					}else{
+						funcionNick(id,usuario, nick_name, real, nick, IDsocket);
+						free(nick);	
 					}
-				}
-
+				}		
 			}
-			free(prefix); free(msg); 	
+			free(prefix); free(msg); 
+			pthread_mutex_unlock(&user_mutex);
+			pthread_mutex_unlock(&canal_mutex);
 
 			break;
 
 		case PING:
 			result = IRCParse_Ping (comando, &prefix, &server1, &server2, &msg);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "PING: No se ha introducido ninguna cadena para parsear.");
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "PING: No se encuentran todos los parámetros obligatorios.");
 			}else{	/*Si todo ha salido bien*/
-				char *pong_msj;
-
-				if(!server2){ /*En el caso de que no se especifique el server2*/
-					IRCMsg_Pong (&pong_msj, PREFIJO, PREFIJO, server2, server1);
-					send(IDsocket,pong_msj,strlen(pong_msj),0);
-				}else{
-					IRCMsg_Pong (&pong_msj, PREFIJO, PREFIJO, server1, server2);
-					send(IDsocket,pong_msj,strlen(pong_msj),0);
-				}
-
-				free(server1); free(server2); free(pong_msj); free(prefix);
+				funcionPing(server1, server2, IDsocket);
+				free(server1); free(server2); free(prefix); free(msg);
 			}
-
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case JOIN:
 			result = IRCParse_Join(comando, &prefix, &channel, &key, &msg);
+	        pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 	        syslog (LOG_INFO, "Llega join para unirse al canal: %s", channel);
 
 	        /*Cogemos la informacion del usuario actual*/
@@ -271,16 +254,18 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				send(IDsocket,paramsErr_msj,strlen(paramsErr_msj),0);
 
 				free(paramsErr_msj);
+				pthread_mutex_unlock(&canal_mutex);
+				pthread_mutex_unlock(&user_mutex);
+				break;
 
 			}else{				
 				if(!channel){
 
 				}else{
-
-					char **lista = NULL, **listaNicksOnChannel = NULL, **listaUsuarios = NULL;
+					char **lista = NULL, **listaUsuarios = NULL;
 					long nChannels = 0, nUsuarios = 0;
-					char *join_msj = NULL, *complex = NULL, *endOfNames_msj = NULL, channel_aux[strlen(channel)+1], **uCanales, *nameMsg, *reply;
-					int i, flag = 0, nstrings;
+					char *join_msj = NULL, *complex = NULL, *endOfNames_msj = NULL, channel_aux[strlen(channel)+1], *nameMsg;//, *reply;//, **uCanales;
+					int i, flag = 0;//, nstrings;
 
 					/*Obtenemos la lista con los nombres de todos los canales*/
 					IRCTADChan_GetList (&lista, &nChannels, NULL);
@@ -288,115 +273,101 @@ void parseCommand(long int query, char* comando, int IDsocket){
 						if(strcmp(lista[i], channel) == 0){
 							flag = 1; /*El canal existe*/
 							IRCTADChan_FreeList (lista, nChannels);
+							break;
 						}
 					}
 
+
 					/*Si no hay canal*/
 					if(flag == 0){
-						syslog(LOG_INFO, "Nuevo canal creado");
+						/*syslog(LOG_INFO, "Nuevo canal creado");*/
 						/*Creamos un canal. Es 'o' de operator. key clave del canal*/
 						result = IRCTAD_Join (channel, nick_name, "o", key);
 					}else{/*Si hay canal*/
-						syslog(LOG_INFO, "Ya existe el canal");
+						/*syslog(LOG_INFO, "Ya existe el canal");*/
 						result = IRCTAD_Join (channel, nick_name, "", key);
 
 						if(result != IRC_OK){ /*Canal protegido con clave*/
 							IRCMsg_ErrBadChannelKey (&join_msj, PREFIJO, nick_name, channel);
 							send(IDsocket,join_msj,strlen(join_msj),0);
 							free(join_msj); free(prefix); free(channel); free(key); free(msg); 
+							pthread_mutex_unlock(&canal_mutex);
+							pthread_mutex_unlock(&user_mutex);
 							break;
 						}
 					}
 
 					sprintf(channel_aux, ":%s", channel);
-					syslog(LOG_INFO, "COMPLEX USER /JOIN");
-					IRC_ComplexUser(&complex, nick_name, usuario, host, NULL);
+					/*syslog(LOG_INFO, "COMPLEX USER /JOIN");*/
+					IRC_ComplexUser(&complex, nick_name, usuario, NULL, NULL);
 					IRCMsg_Join(&join_msj, complex, channel_aux, key, msg);
-
+					send(IDsocket,join_msj,strlen(join_msj),0);
 					/*Listamos usuarios de un canal*/
 					IRCTAD_ListNicksOnChannelArray(channel, &listaUsuarios, &nUsuarios);
-					listaNicksOnChannel = listaUsuarios;
+					//IRC_BuildStringsFromList(&uCanales, 512, ' ', &nstrings, listaUsuarios, nUsuarios);
+					//send(IDsocket,join_msj,strlen(join_msj),0);
+
+					if(nUsuarios > 0){
+						for(i = 0; i < nUsuarios; i++){
+							if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) &IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR){
+								char str[20];
+								strcpy(str, "@");
+								strcat(str, listaUsuarios[i]);
+								sprintf(listaUsuarios[i],"%s",str);
+							}
+							else
+								sprintf(listaUsuarios[i],"%s",listaUsuarios[i]);
+
+							IRCMsg_RplNamReply(&nameMsg,PREFIJO, nick_name, "=", channel, listaUsuarios[i]);
+							//IRC_PipelineCommands(&reply,join_msj,nameMsg,NULL);
+							//send(IDsocket,reply,strlen(reply),0);
+							send(IDsocket,nameMsg,strlen(nameMsg),0);
+							free(nameMsg); 
+							//free(reply);
+						}	
+						liberaLista(listaUsuarios,nUsuarios); 			
+					}	
 
 					IRCMsg_RplEndOfNames (&endOfNames_msj, PREFIJO, nick_name, channel);
-
-					for(i = 0; i < nUsuarios; i++){
-						syslog(LOG_INFO,"EN USUARIOS for %s",listaUsuarios[i]);
-						if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) & IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR)
-							sprintf(listaNicksOnChannel[i],"@%s",listaUsuarios[i]);
-						else
-							sprintf(listaNicksOnChannel[i],"%s",listaUsuarios[i]);
-					}
-
-
-					IRC_BuildStringsFromList(&uCanales, 512, ' ', &nstrings, listaNicksOnChannel, nUsuarios);
-					
-					for(i = 0; i < nstrings; i++){
-						IRCMsg_RplNamReply(&nameMsg,PREFIJO, nick_name, "=", channel, uCanales[i]);
-						IRC_PipelineCommands(&reply,join_msj,nameMsg,endOfNames_msj,NULL);
-						send(IDsocket,reply,strlen(reply),0);
-					}					
-
-					free(join_msj); free(complex); free(endOfNames_msj);free(uCanales); 
-					liberaLista(listaUsuarios,nUsuarios); free(reply); free(nameMsg);
+					send(IDsocket,endOfNames_msj,strlen(endOfNames_msj),0);
+					free(join_msj); free(complex); free(endOfNames_msj);//free(uCanales); 
+					//free(reply);
+					free(channel);
 				}
 			}
-			free(prefix); free(channel); free(key); free(msg); 
-
+			free(prefix); free(msg); free(key);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case LIST:
 
 			result = IRCParse_List(comando, &prefix, &channel, &target);
-	        syslog (LOG_INFO, "List: %s", channel);
+	        pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
+	        /*syslog (LOG_INFO, "List: %s", channel);*/
 
 	        if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "LIST: No se ha introducido ninguna cadena para parsear.");
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "LIST: No se encuentran todos los parámetros obligatorios.");
 			}else{
-				char **listaCanales, *can, *listaEnd;
-				long numCanales, mode, numUsuariosCanal, modeVal;
-				char nUsusCanales[4];
-				int i;
-
-				/*Obtiene una lista con el nombre de los canales existentes*/
-				IRCTADChan_GetList(&listaCanales, &numCanales, target);
-
-				for(i = 0; i < numCanales; i++){
-					/*Modo del canal en formato entero*/
-					mode = IRCTADChan_GetModeInt (listaCanales[i]);
-					modeVal = mode & IRCMODE_SECRET;
-
-					if(modeVal != IRCMODE_SECRET){
-						/*Obtiene numero de usuarios de un canal*/
-						numUsuariosCanal = IRCTADChan_GetNumberOfUsers (listaCanales[i]);
-						sprintf(nUsusCanales,"%ld",numUsuariosCanal);
-
-						usuario=NULL; nick_name=NULL; real=NULL; id=0;
-						/*Obtenemos datos del usuario*/
-						IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
-						/*Mensaje de respuesta*/
-						IRCMsg_RplList(&can, PREFIJO, nick_name, listaCanales[i], nUsusCanales, "");
-						send(IDsocket, can, strlen(can), 0);
-					}
-				}
-
-				if(i > 0){
-					/*Mensaje de respuesta*/
-					IRCMsg_RplListEnd(&listaEnd,PREFIJO,nick);
-					send(IDsocket,listaEnd,strlen(listaEnd),0);
-					free(listaEnd);free(can);
-					IRCTADChan_FreeList (listaCanales, numCanales);
-				}
-				
+				usuario=NULL; nick_name=NULL; real=NULL; id=0;
+				/*Obtenemos datos del usuario*/
+				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
+				funcionList(nick_name, target, IDsocket);
 			}
 
 			free(channel);free(prefix);free(target);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case WHOIS:
 
 			result = IRCParse_Whois (comando, &prefix, &target, &maskarray);
+	        pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 	        syslog (LOG_INFO, "WHOIS");
 
 
@@ -408,44 +379,47 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				IRCMsg_ErrNoNickNameGiven (&nick_no, PREFIJO, nick_name);
 				send(IDsocket,nick_no,strlen(nick_no),0);
 				free(nick_no);
-
 			}else{
 
 				char *who_msj, *serv, *ch, *op, *idl, *end_who;
 				char **listaCh, **listChannel, **uCanales;
 				long numberOfChannels;
-				int nstrings, i;
+				int i, nstrings;
 
-				IRCMsg_RplWhoIsUser (&who_msj, PREFIJO, maskarray, maskarray, usuario, host, maskarray);
+				IRCMsg_RplWhoIsUser (&who_msj, PREFIJO, maskarray, maskarray, nick_name, host, maskarray);
 				send(IDsocket,who_msj,strlen(who_msj),0);
 
 
 				IRCTAD_ListChannelsOfUserArray(maskarray, maskarray, &listaCh, &numberOfChannels);
 				listChannel = listaCh;
 
-				syslog(LOG_INFO, "Numero de canales %ld", numberOfChannels);
+				/*syslog(LOG_INFO, "Numero de canales %ld", numberOfChannels);*/
 				for(i = 0; i < numberOfChannels; i++){
 					char aux[strlen(listaCh[i])+1];
 					sprintf(aux,"@%s",listaCh[i]);
 					strcpy(listChannel[i],aux);
 				}
 
-				IRC_BuildStringsFromList(&uCanales, 512, ' ', &nstrings, listChannel, numberOfChannels);
+				IRCMsg_RplWhoIsServer(&serv, PREFIJO, maskarray, maskarray, host, "info who is");
+				send(IDsocket,serv,strlen(serv),0);
 
-				for(i = 0; i < nstrings; i++){
-					IRCMsg_RplWhoIsServer(&serv, PREFIJO, maskarray, maskarray, host, "info who is");
-					send(IDsocket,serv,strlen(serv),0);
+				if(numberOfChannels > 0){
+					IRC_BuildStringsFromList(&uCanales, 512, ' ', &nstrings, listChannel, numberOfChannels);
 
-					IRCMsg_RplWhoIsChannels(&ch, PREFIJO, maskarray, maskarray, uCanales[i]);
-					send(IDsocket,ch,strlen(ch),0);
+					for(i = 0; i < nstrings; i++){
+						IRCMsg_RplWhoIsChannels(&ch, PREFIJO, maskarray, maskarray, uCanales[i]);
+						send(IDsocket,ch,strlen(ch),0);
+					}
+					free(ch); free(uCanales);
+					IRCTADChan_FreeList (listaCh, numberOfChannels);
+				}
 
-					IRCMsg_RplWhoIsOperator(&op, PREFIJO, maskarray, maskarray);
-					send(IDsocket,op,strlen(op),0);
+				
+				IRCMsg_RplWhoIsOperator(&op, PREFIJO, maskarray, maskarray);
+				send(IDsocket,op,strlen(op),0);
 
-					IRCMsg_RplWhoIsIdle(&idl, PREFIJO, maskarray, maskarray, 0, ":seconds idle, signon time");
-					send(IDsocket,idl,strlen(idl),0);
-				}	
-
+				IRCMsg_RplWhoIsIdle(&idl, PREFIJO, maskarray, maskarray, 0, ":seconds idle, signon time");
+				send(IDsocket,idl,strlen(idl),0);
 
 				if(away != NULL){
 					char *away_msj;
@@ -460,14 +434,19 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				send(IDsocket,end_who,strlen(end_who),0);
 
 
-				free(who_msj); free(uCanales); free(serv); free(ch); 
+				free(who_msj); free(serv); free(maskarray);
 				free(op); free(idl); free(end_who);
-				IRCTADChan_FreeList (listaCh, numberOfChannels);
+				
 			}
+			free(prefix); free(target); 
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case NAMES:
 			result = IRCParse_Names (comando, &prefix, &channel, &target);
+	        pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 	        syslog (LOG_INFO, "NAMES");
 
 	        if(result == IRCERR_NOSTRING){
@@ -475,10 +454,10 @@ void parseCommand(long int query, char* comando, int IDsocket){
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "NAMES: No se encuentran todos los parámetros obligatorios.");
 			}else{
-				char **listaUsuarios = NULL, **listaNicksOnChannel = NULL, **uCanales = NULL;
-				char *endOfNames_msj = NULL, *nameMsg = NULL, *reply = NULL;
+				char **listaUsuarios = NULL;
+				char *endOfNames_msj = NULL, *nameMsg = NULL;//, *reply = NULL;
 				long nUsuarios = 0;
-				int i, nstrings;
+				int i;
 
 				/*Listamos usuarios de un canal*/
 				IRCTAD_ListNicksOnChannelArray(channel, &listaUsuarios, &nUsuarios);
@@ -488,44 +467,44 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
 
 				syslog(LOG_INFO, "NUMERO DE USUARIOS %ld", nUsuarios);
+				/*printf("NUMERO DE USUARIOS %ld\n", nUsuarios);*/
 				if(nUsuarios > 0){ /*Si no hay usuarios*/
-					listaNicksOnChannel = listaUsuarios;
-					IRCMsg_RplEndOfNames(&endOfNames_msj, PREFIJO, nick_name, channel);
+					//IRCMsg_RplEndOfNames(&endOfNames_msj, PREFIJO, nick_name, channel);
 
 					for(i = 0; i < nUsuarios; i++){
-						if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) & IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR)
-							sprintf(listaNicksOnChannel[i],"@%s",listaUsuarios[i]);
+						if((IRCTAD_GetUserModeOnChannel (channel, listaUsuarios[i]) &IRCUMODE_OPERATOR)==IRCUMODE_OPERATOR){
+							char str[20];
+							strcpy(str, "@");
+							strcat(str, listaUsuarios[i]);
+							sprintf(listaUsuarios[i],"%s",str);
+						}
 						else
-							sprintf(listaNicksOnChannel[i],"%s",listaUsuarios[i]);
-					}
+							sprintf(listaUsuarios[i],"%s",listaUsuarios[i]);
 
-
-					IRC_BuildStringsFromList(&uCanales, 512, ' ', &nstrings, listaNicksOnChannel, nUsuarios);
-					
-					for(i = 0; i < nstrings; i++){
-						IRCMsg_RplNamReply(&nameMsg,PREFIJO, nick_name, "=", channel, uCanales[i]);
-						IRC_PipelineCommands(&reply,nameMsg,endOfNames_msj,NULL);
-						send(IDsocket,reply,strlen(reply),0);
+						IRCMsg_RplNamReply(&nameMsg,PREFIJO, nick_name, "=", channel, listaUsuarios[i]);
+						//IRC_PipelineCommands(&reply,nameMsg,endOfNames_msj,NULL);
+						send(IDsocket,nameMsg,strlen(nameMsg),0);
+						free(nameMsg); //free(reply);
 					}					
 
-					free(reply); free(nameMsg); free(uCanales);
-				}else{
+					liberaLista(listaUsuarios, nUsuarios);
+				}//}else{
 					IRCMsg_RplEndOfNames (&endOfNames_msj, PREFIJO, nick_name, channel);
 					send(IDsocket,endOfNames_msj,strlen(endOfNames_msj),0);
 
-				}
-
-				liberaLista(listaUsuarios, nUsuarios);
+				//}
 				free(endOfNames_msj);
-
 			}
 
 			free(channel);free(prefix);free(target);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case PRIVMSG:
-
-		 	result = IRCParse_Privmsg (comando, &prefix, &msgtarget, &msg);
+		 	result = IRCParse_Privmsg (comando, &prefix, &msgtarget, &msg); /*msgtarget = receptor msj*/
+	        pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 	        syslog (LOG_INFO, "PRIVMSG");
 
 	        if(result == IRCERR_NOSTRING){
@@ -533,158 +512,129 @@ void parseCommand(long int query, char* comando, int IDsocket){
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "PRIVMSG: No se encuentran todos los parámetros obligatorios.");
 			}else{
-				char *privmsg_msj, *complex;
-				char **lista;
-				int i, j, socket_aux, flag = 0;
-				long nChannels = 0;
+				char *privmsg_msj, *complex, *can, *away_msj;
+				char **lista, **listaDeNicks;
+				int i, j, socket_aux, flagCanal = 0, flagNicks = 0;
+				long nChannels = 0, nelementsNicks = 0;
 
 				usuario=NULL; nick_name=NULL; real=NULL; id=0;
-				/*Obtenemos datos del usuario*/
+				/*Obtenemos datos del usuario que va a enviar el mensaje*/
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
 
 				/*Obtenemos la lista con los nombres de todos los canales*/
 				IRCTADChan_GetList (&lista, &nChannels, NULL);
+				/*printf("NUMERO CANALES %ld\n", nChannels);*/
 				for(i = 0; i < nChannels; i++){
+					//printf("\ncanal %d = \"%s\" y msgtarget = \"%s\"\n", i, lista[i], msgtarget);
 					if(strcmp(lista[i], msgtarget) == 0){
-						flag = 1; /*El canal existe*/
+						flagCanal = 1; /*El canal existe*/
+						can = (char *) malloc (strlen(lista[i])+1);
+						strcpy(can, lista[i]);
 						IRCTADChan_FreeList (lista, nChannels);
+						break;
 					}
 				}
+				
+				IRCTADUser_GetNickList (&listaDeNicks, &nelementsNicks);
+				for(i = 0; i < nelementsNicks; i++){
+					if(strcmp(listaDeNicks[i], msgtarget) == 0){
+						flagNicks = 1; /*El canal existe*/
+						liberaLista(listaDeNicks, nelementsNicks);
+						break;
+					}
+				}
+				
+				if(flagCanal == 1){ /*Si existe el canal*/
+					char **listaUsus;
+					long nUsuarios = 0;
 
+					/*syslog(LOG_INFO, "HAY CANAL");*/
+					if(can != NULL){
+						/*Listamos usuarios de un canal*/
+						IRCTAD_ListNicksOnChannelArray(can, &listaUsus, &nUsuarios);	
+						if(nUsuarios > 0){
+							for(i = 0; i < nUsuarios; i++){
+								if(strcmp(nick_name,listaUsus[i])!=0){
+									/*syslog(LOG_INFO, "COMPLEX/CANAL");*/
+									IRC_ComplexUser(&complex, nick_name, listaUsus[i], NULL, NULL);
 
-				if(msgtarget != NULL){ /*Si hay usuario*/
-					syslog(LOG_INFO, "COMPLEX USER /PRIVMSG");
+									IRCMsg_Privmsg(&privmsg_msj, complex, can, msg);
+
+									for(j = 0; j < numeroUsuarios; j++){
+										if(strcmp(listaUsus[i], listaNicks[j]) == 0){
+											send(sockets[j], privmsg_msj, strlen(privmsg_msj), 0);
+										}
+									}
+									free(complex); free(privmsg_msj);
+								}
+							}
+
+							if(away != NULL){
+								/*syslog(LOG_INFO, "Dentro AWAY");*/
+								IRCMsg_RplAway (&away_msj, PREFIJO, nick_name, usuario, away);
+								send(IDsocket,away_msj,strlen(away_msj),0);
+								free(away_msj);
+							}
+							liberaLista(listaUsus, nUsuarios); 							
+						}
+						free(can); free(msgtarget); 
+					}
+
+				}else if(flagNicks == 1){ /*Si el receptor existe*/
 					IRC_ComplexUser(&complex, nick_name, usuario, NULL, NULL);
-
 					IRCMsg_Privmsg (&privmsg_msj, complex, msgtarget, msg);
 
 					for(i = 0; i < numeroUsuarios; i++){
-						if(strncmp(msgtarget, listaNicks[i], strlen(listaNicks[i]))){
+						if(strcmp(msgtarget, listaNicks[i]) == 0){
 							socket_aux = sockets[i];
 						}
 					}
 
 					if(away != NULL){
-						char *away_msj;
-						/*syslog(LOG_INFO, "Dentro AWAY");*/
-						IRCMsg_RplAway (&away_msj, PREFIJO, usuario, usuario, away);
+						IRCMsg_RplAway (&away_msj, PREFIJO, nick_name, usuario, away);
 						send(IDsocket,away_msj,strlen(away_msj),0);
 						free(away_msj);
 					}
 
 					send(socket_aux, privmsg_msj, strlen(privmsg_msj), 0);
-					free(privmsg_msj); free(complex);
-				}else if(flag == 1){ /*Si existe el canal*/
-					char *can, **listaUsus, *complex;
-					long nUsuarios = 0;
-					/*Obtenemos la lista con los nombres de todos los canales*/
-					IRCTADChan_GetList (&lista, &nChannels, NULL);
-					for(i = 0; i < nChannels; i++){
-						if(strncmp(lista[i], msgtarget, strlen(msgtarget)) == 0){
-							can = (char *) malloc (strlen(lista[i])+1);
-							strcpy(can, lista[i]);
-						}
-					}
-
-					if(can != NULL){
-						/*Listamos usuarios de un canal*/
-						IRCTAD_ListNicksOnChannelArray(can, &listaUsus, &nUsuarios);	
-						for(i = 0; i < nUsuarios; i++){
-							if(strncmp(nick_name,listaUsus[i],strlen(nick_name))!=0){
-								IRC_ComplexUser(&complex, nick_name, usuario, host, NULL);
-
-								IRCMsg_Privmsg(&privmsg_msj, complex, can, msg);
-
-								for(j = 0; j < numeroUsuarios; j++){
-									if(strncmp(listaUsus[i], listaNicks[j], strlen(listaUsus[i])) == 0){
-										send(sockets[j], privmsg_msj, strlen(privmsg_msj), 0);
-									}
-								}
-
-								free(complex); free(privmsg_msj);
-							}
-
-						}
-
-						if(away != NULL){
-							char *away_msj;
-							/*syslog(LOG_INFO, "Dentro AWAY");*/
-							IRCMsg_RplAway (&away_msj, PREFIJO, usuario, usuario, away);
-							send(IDsocket,away_msj,strlen(away_msj),0);
-							free(away_msj);
-						}
-
-						free(can); free(msgtarget);
-						liberaLista(listaUsus, numeroUsuarios);
-
-					}
-
-
+					free(privmsg_msj); free(complex); free(msgtarget); 
 				}else{
 					char *noDest_msj;
 					IRCMsg_ErrNoSuchNick(&noDest_msj, PREFIJO, nick_name, msgtarget);
 					send(IDsocket,noDest_msj,strlen(noDest_msj),0);
-					free(noDest_msj);
+					free(noDest_msj); 
 				}
-
 			}
-
-			free(msgtarget); free(prefix); free(msg);
-
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case PART: /*Usuario abandona correctamente el canal*/
 			result =  IRCParse_Part (comando, &prefix, &channel, &msg);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "PART: No se ha introducido ninguna cadena para parsear.");
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "PART: No se encuentran todos los parámetros obligatorios.");
 			}else{
-				char *part_msj, **lista = NULL;
-				long nChannels = 0;
-				int i, flag = 0;
-
 				usuario=NULL; nick_name=NULL; real=NULL; id=0;
 				/*Obtenemos datos del usuario*/
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
 
-				/*Obtenemos la lista con los nombres de todos los canales*/
-				IRCTADChan_GetList (&lista, &nChannels, NULL);
-				for(i = 0; i < nChannels; i++){
-					if(strcmp(lista[i], channel) == 0){
-						flag = 1; /*El canal existe*/
-						IRCTADChan_FreeList (lista, nChannels);
-					}
-				}
-
-				if(flag == 0){ /*No existe el canal*/
-					IRCMsg_ErrNoSuchChannel(&part_msj, PREFIJO, nick_name, channel);
-					send(IDsocket,part_msj,strlen(part_msj),0);
-				}else{
-					long nUsus = 0;
-
-					IRCTAD_Part (channel, nick_name);
-					nUsus = IRCTADChan_GetNumberOfUsers(channel); /*Obtenemos el numero de usuarios del canal*/
-
-					if(nUsus <= 0){ /*Si no hay usuarios*/
-						IRCTADChan_Delete(channel); /*Borramos el canal*/
-					}
-
-					IRCMsg_Part (&part_msj, PREFIJO, channel, msg);
-					send(IDsocket,part_msj,strlen(part_msj),0);
-				}
-
-				free(part_msj); 
+				funcionPart(channel, nick_name, msg, IDsocket);
 			}
 
 			free(channel); free(prefix); free(msg);
-
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case TOPIC: /*Cambia el nombre de un canal*/
-
 			result = IRCParse_Topic (comando, &prefix, &channel, &topic);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "TOPIC: No se ha introducido ninguna cadena para parsear.");
@@ -737,10 +687,14 @@ void parseCommand(long int query, char* comando, int IDsocket){
 			}
 
 			free(channel); free(prefix);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case KICK: /*Expulsion de un usuario*/
 			result =  IRCParse_Kick (comando, &prefix, &channel, &user, &msg);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "KICK: No se ha introducido ninguna cadena para parsear.");
@@ -760,7 +714,7 @@ void parseCommand(long int query, char* comando, int IDsocket){
 
 
 						for(i = 0; i < numeroUsuarios; i++){
-							if(strncmp(user, listaNicks[i], strlen(listaNicks[i])) == 0){
+							if(strcmp(user, listaNicks[i]) == 0){
 								socket_aux = sockets[i];
 							}
 						}
@@ -769,9 +723,9 @@ void parseCommand(long int query, char* comando, int IDsocket){
 						modeUsuChannel = IRCTAD_GetUserModeOnChannel(channel, nick_name);
 						modeValUsu = modeUsuChannel & IRCUMODE_OPERATOR;
 
-						IRC_ComplexUser(&complex,nick_name,usuario,NULL,NULL);
+						IRC_ComplexUser(&complex,usuario,usuario,NULL,NULL);
 						if (modeValUsu==IRCUMODE_OPERATOR){
-							IRCTAD_KickUserFromChannel (channel, nick_name);
+							IRCTAD_KickUserFromChannel (channel, user);
 							IRCMsg_Kick (&kick_msj, complex, channel, user, msg);
 							send(socket_aux,kick_msj,strlen(kick_msj),0);
 						}else{
@@ -780,64 +734,56 @@ void parseCommand(long int query, char* comando, int IDsocket){
 							send(IDsocket,kick_msj,strlen(kick_msj),0);
 						}
 						free(kick_msj); free(complex);
-
 					}
-
 				}
-
 			}
-			free(prefix); free(channel); free(msg);
+			free(prefix); free(channel); free(msg);free(user);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case AWAY:
 			result = IRCParse_Away (comando, &prefix, &msg);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "AWAY: No se ha introducido ninguna cadena para parsear.");
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "AWAY: No se encuentran todos los parámetros obligatorios.");
 			}else{
-				char *away_msj;
-
 				usuario = NULL; nick_name = NULL; real = NULL; id = 0;
 				/*Obtenemos datos del usuario*/
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
 
-				if(away == NULL){
-					syslog(LOG_INFO, "AWAY: No hay away");
-					IRCTADUser_SetAway (id, usuario, nick_name, real, msg);
-					IRCMsg_RplNowAway (&away_msj, PREFIJO, nick_name);
-				}else{
-					syslog(LOG_INFO, "AWAY: Hay away");
-					/*Se borra*/
-					IRCTADUser_SetAway (id, usuario, nick_name, real, NULL);
-					IRCMsg_RplUnaway (&away_msj, PREFIJO, nick_name);
-				}
-				send(IDsocket,away_msj,strlen(away_msj),0);
-				free(away_msj);
+				funcionAway(id, usuario, nick_name, real, away, msg, IDsocket);
 
 			}
 
 			free(prefix); free(msg);
-
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 
 		case MODE:
 			result = IRCParse_Mode (comando, &prefix, &channeluser, &modo, &key);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "MODE: No se ha introducido ninguna cadena para parsear.");
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "MODE: No se encuentran todos los parámetros obligatorios.");
-			}else{
-				char *mode_msj;
-				long modeUsuChannel, modeValUsu;
+			}else if(modo == NULL){
+				syslog(LOG_INFO, "MODE: NULL.");
+			}else {
+				char *mode_msj; 
+				long modeUsuChannel, modeValUsu; 
 
 				usuario=NULL; nick_name=NULL; real=NULL; id=0;
 				/*Obtenemos datos del usuario*/
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
-
 				/*Modo usuario en un canal*/
 				modeUsuChannel = IRCTAD_GetUserModeOnChannel(channeluser, nick_name);
 				modeValUsu = modeUsuChannel & IRCUMODE_OPERATOR;
@@ -850,18 +796,21 @@ void parseCommand(long int query, char* comando, int IDsocket){
 						IRCTADChan_SetPassword (channeluser,key);
 						free(key);
 					}
+
 					IRCMsg_Mode (&mode_msj, PREFIJO, channeluser, modo, usuario);
 					send(IDsocket,mode_msj,strlen(mode_msj),0);
 					free(mode_msj);
 				}
-
-
 			}
 			free(prefix); free(channeluser); free(modo);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
-		case QUIT:
+		case QUIT:			
 			result = IRCParse_Quit (comando, &prefix, &msg);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "QUIT: No se ha introducido ninguna cadena para parsear.");
@@ -869,94 +818,78 @@ void parseCommand(long int query, char* comando, int IDsocket){
 				syslog(LOG_INFO, "QUIT: No se encuentran todos los parámetros obligatorios.");
 			}else{
 				char *quit_msj;
+
 				usuario=NULL; nick_name=NULL; real=NULL; id=0;
-				/*Obtenemos datos del usuario*/
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
 
-				IRCTAD_Quit (nick_name);
-				IRCMsg_Quit (&quit_msj, PREFIJO, msg);
+				IRCTAD_Quit(nick_name);
+				IRCMsg_Quit(&quit_msj, PREFIJO, msg);
 				send(IDsocket,quit_msj,strlen(quit_msj),0);
+				
 				free(quit_msj);
 			}
 
-			/**********ELIMINAR USUARIO???*************/
-			free(prefix); free(msg);
+			free(prefix); free(msg);	
 
+			int z, k;
+			for(z = 0; z < numeroUsuarios; z++){
+				if(sockets[z] == IDsocket){
+					for(k = z; k < numeroUsuarios; k++){
+						strcpy(listaNicks[k], "");
+						sockets[k] = sockets[k+1];
+						strcpy(listaNicks[k], listaNicks[k+1]);
+					}
+					strcpy(listaNicks[numeroUsuarios], "");
+					sockets[numeroUsuarios] = -1;
+					numeroUsuarios--;
+				}
+			}		
+
+			shutdown(IDsocket, SHUT_RDWR);
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
 
 		case MOTD:
 			result = IRCParse_Motd (comando, &prefix, &target);
+			pthread_mutex_lock(&canal_mutex);
+			pthread_mutex_lock(&user_mutex);
 
 			if(result == IRCERR_NOSTRING){
 				syslog(LOG_INFO, "MOTD: No se ha introducido ninguna cadena para parsear.");
 			}else if(result == IRCERR_ERRONEUSCOMMAND){
 				syslog(LOG_INFO, "MOTD: No se encuentran todos los parámetros obligatorios.");
 			}else{
-				FILE *f;
-				char lectura[250];
-				char *motdStart_msj, *motd_msj, *motdEnd_msj;
-				f = fopen(fich,"r");
-
-				usuario=NULL; nick_name=NULL; real=NULL; id=0;
-				/*Obtenemos datos del usuario*/
+				usuario = NULL; nick_name=NULL; real=NULL; id=0;
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
-
-				if(!target)
-					IRCMsg_RplMotdStart (&motdStart_msj, PREFIJO, usuario, PREFIJO);
-				else
-					IRCMsg_RplMotdStart (&motdStart_msj, PREFIJO, usuario, target);
-
-				send(IDsocket,motdStart_msj,strlen(motdStart_msj),0);
-
-				while(fgets(lectura, 250, f) != NULL){
-					lectura[strlen(lectura)-1]=0;
-					IRCMsg_RplMotd(&motd_msj, PREFIJO, usuario, lectura);
-					send(IDsocket,motd_msj,strlen(motd_msj),0);
-
-				}
-
-				fclose(f);
-				IRCMsg_RplEndOfMotd (&motdEnd_msj, PREFIJO, usuario);
-				send(IDsocket,motdEnd_msj,strlen(motdEnd_msj),0);
-
-				free(motd_msj); free(motdStart_msj); free(motdEnd_msj);
+				funcionMotd(nick_name, target, IDsocket, fich);
 			}
 			free(prefix); free(target);
-
+			pthread_mutex_unlock(&canal_mutex);
+			pthread_mutex_unlock(&user_mutex);
 			break;
-
 
 		case IRCERR_UNKNOWNCOMMAND: /*Comando desconocido*/
 			if(strstr(comando,"CAP") != NULL){
 
 			}else{
 				char *unk_msj;
+				pthread_mutex_lock(&canal_mutex);
+				pthread_mutex_lock(&user_mutex);
+
 				usuario=NULL; nick_name=NULL; real=NULL; id=0;
 				/*Obtenemos datos del usuario*/
 				IRCTADUser_GetData (&id, &usuario, &nick_name, &real, &host, &ip, &IDsocket, &creacion, &accion, &away);
 
 				IRCMsg_ErrUnKnownCommand (&unk_msj, PREFIJO, nick_name, comando);
-				//syslog(LOG_INFO,"mens:%s",unkCom);
 				send(IDsocket,unk_msj,strlen(unk_msj),0);
 				free(unk_msj);
+				pthread_mutex_unlock(&canal_mutex);
+				pthread_mutex_unlock(&user_mutex);
 			}
-
 			break;
 
 		default:
 			break;
-
-
-
 	}
-
-
-
-
-
 }
-
-
-
-
-

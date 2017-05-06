@@ -11,8 +11,8 @@
 #include <pthread.h>
 #include <redes2/irc.h>
 
-#include "../includes/G-2361-07-P1-Sockets.h"
-#define PREFIJO "celia"
+#include "../includes/G-2361-06-P1-Sockets.h"
+#define PREFIJO "servidor-P6"
 #define SIZE 8192
 #define NUM_SOCKETS 100
 #define PUERTO 6667

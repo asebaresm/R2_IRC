@@ -1,5 +1,42 @@
-#include "../includes/G-2361-07-P1-Functions.h"
+#include "../includes/G-2361-06-P1-Functions.h"
 
+
+/**
+ * @page liberaLista liberaLista
+ *
+ * @synopsis
+ * @code
+ * 	#include <redes2/irc.h>
+ *
+ * @endcode
+ * 
+ * @brief Libera la memoria de una lista.
+ *
+ * @description 
+ * Libera una lista que ha sido reservada.
+ *
+ * @parameters
+ * @param[in] lista: lista que se quiere liberar.
+ * @param[in] nElems: numero de elementos que componen la lista.
+ *
+ * @return
+ * No devuelve nada
+ *
+ * @author
+ * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
+ * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+ *
+ *
+ * @date 13 de abril de 2017
+ *
+ *<hr>
+*/
+void liberaLista(char** lista, long nElems){
+	int i;
+	for(i=0;i<nElems;i++)
+		free(lista[i]);
+}
 
 /**
  * @page funcionUser funcionUser
@@ -14,7 +51,7 @@
  *		  nuevo usuario.
  *
  * @description 
- * Imprime por stdout la string a. Este comentario debería ser mucho más explicativo.
+ * Imprime toda la informacion al conectarse un nuevo usuario.
  *
  * @parameters
  * @param[in] user: nombre del nuevo usuario.
@@ -29,7 +66,7 @@
  * @author
  * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
  * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
- * Alfonso Sebares Mecha ()
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
  *
  *
  * @date 13 de abril de 2017
@@ -46,13 +83,12 @@ void funcionUser(char *user, char *nick, char *realname, char *modehost, int IDs
 	/*Mensaje 003*/
 	IRCMsg_RplCreated (&create_msj, PREFIJO, nick, 0);
 	/*Mensaje 004*/
-	IRCMsg_RplMyInfo(&info_msj, PREFIJO, nick, "Practica 1", "1.0", "abBcCioqrRswx", "abehiIklmMnoOPqQrRstvVz");
+	IRCMsg_RplMyInfo(&info_msj, PREFIJO, nick, "Practica 1", "1.0", "abBcCFiIoqrRswx", "abehiIklmMnoOPqQrRstvVz");
 
-	/*Juntamos todos los mensajes en uno solo*/
+	/*Todos los mensajes en uno solo*/
 	IRC_PipelineCommands(&respuesta, welcome_msj, host_msj, create_msj, info_msj, NULL);
 
 	send(IDsocket, respuesta, strlen(respuesta), 0);
-	/*syslog(LOG_INFO, "SEND USER");*/
 	free(welcome_msj); free(host_msj), free(create_msj); free(info_msj); free(respuesta);
 }
 
@@ -86,7 +122,7 @@ void funcionUser(char *user, char *nick, char *realname, char *modehost, int IDs
  * @author
  * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
  * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
- * Alfonso Sebares Mecha ()
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
  *
  *
  * @date 13 de abril de 2017
@@ -109,16 +145,49 @@ void funcionNick(long id, char* usuario, char* nick_name, char* real, char* nick
 	free(complex); free(msj_nick); 
 }
 
-
+/**
+ * @page funcionAway funcionAway
+ *
+ * @synopsis
+ * @code
+ * 	#include <redes2/irc.h>
+ *
+ * @endcode
+ * 
+ * @brief Realiza toda la funcionalidad correspondiente con el comando away.
+ *
+ * @description 
+ * Esta funcion se encarga de #########################################
+ *
+ * @parameters
+ * @param[in] id: identificador del usuario.
+ * @param[in] usuario: nombre del usuario.
+ * @param[in] nick_name: nick actual del usuario.
+ * @param[in] real: realname del usuario.
+ * @param[in] away: away del usuario.
+ * @param[in] msg: mensaje que se quiere mostrar.  
+ * @param[in] IDsocket: el numero del identificador del socket.
+ *
+ * @return
+ * No devuelve nada
+ *
+ * @author
+ * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
+ * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+ *
+ *
+ * @date 13 de abril de 2017
+ *
+ *<hr>
+*/
 void funcionAway(long id, char *usuario, char *nick_name, char *real, char *away, char *msg, int IDsocket){
 	char *away_msj;
 
-	if(away == NULL){
-		/*syslog(LOG_INFO, "AWAY: No hay away");*/
+	if(away == NULL){ /*No hay away*/
 		IRCTADUser_SetAway (id, usuario, nick_name, real, msg);
 		IRCMsg_RplNowAway (&away_msj, PREFIJO, nick_name);
-	}else{
-		/*syslog(LOG_INFO, "AWAY: Hay away");*/
+	}else{ /*Hay away*/
 		/*Se borra*/
 		IRCTADUser_SetAway (id, usuario, nick_name, real, NULL);
 		IRCMsg_RplUnaway (&away_msj, PREFIJO, nick_name);
@@ -127,7 +196,39 @@ void funcionAway(long id, char *usuario, char *nick_name, char *real, char *away
 	free(away_msj);
 }
 
-
+/**
+ * @page funcionPing funcionPing
+ *
+ * @synopsis
+ * @code
+ * 	#include <redes2/irc.h>
+ *
+ * @endcode
+ * 
+ * @brief Realiza toda la funcionalidad correspondiente con el comando ping.
+ *
+ * @description 
+ * Esta funcion se encarga de cuando se realiza el comando ping, devuelva un pong.
+ * Este mensaje se mostraria cada 30 segundos.
+ *
+ * @parameters
+ * @param[in] server1: .
+ * @param[in] server2: .
+ * @param[in] IDsocket: el numero del identificador del socket.
+ *
+ * @return
+ * No devuelve nada
+ *
+ * @author
+ * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
+ * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+ *
+ *
+ * @date 13 de abril de 2017
+ *
+ *<hr>
+*/
 void funcionPing(char *server1, char *server2, int IDsocket){
 	char *pong_msj;
 
@@ -170,7 +271,7 @@ void funcionPing(char *server1, char *server2, int IDsocket){
  * @author
  * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
  * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
- * Alfonso Sebares Mecha ()
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
  *
  *
  * @date 13 de abril de 2017
@@ -200,7 +301,7 @@ void funcionPart(char *channel, char *nick_name, char *msg, int IDsocket){
 		nUsus = IRCTADChan_GetNumberOfUsers(channel); /*Obtenemos el numero de usuarios del canal*/
 
 		if(nUsus <= 0){ /*Si no hay usuarios*/
-			IRCTADChan_Delete(channel); /*Borramos el canal*/
+			IRCTADChan_Delete(channel); /*Se borra el canal*/
 		}
 
 		IRCMsg_Part (&part_msj, PREFIJO, channel, msg);
@@ -235,7 +336,7 @@ void funcionPart(char *channel, char *nick_name, char *msg, int IDsocket){
  * @author
  * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
  * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
- * Alfonso Sebares Mecha ()
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
  *
  *
  * @date 13 de abril de 2017
@@ -261,7 +362,6 @@ void funcionList(char *nick, char *target, int IDsocket){
 			numUsuariosCanal = IRCTADChan_GetNumberOfUsers (listaCanales[i]);
 			sprintf(nUsusCanales,"%ld",numUsuariosCanal);
 
-			
 			/*Mensaje de respuesta*/
 			IRCMsg_RplList(&can, PREFIJO, nick, listaCanales[i], nUsusCanales, "");
 			send(IDsocket, can, strlen(can), 0);
@@ -277,30 +377,6 @@ void funcionList(char *nick, char *target, int IDsocket){
 	}
 
 }
-
-
-/*void funcionMode(char *usuario, char *nick_name, char *channeluser, char *modo, char *key, int IDsocket){
-	char *mode_msj;
-	long modeUsuChannel, modeValUsu;
-
-	*//*Modo usuario en un canal*/
-	/*modeUsuChannel = IRCTAD_GetUserModeOnChannel(channeluser, nick_name);
-	modeValUsu = modeUsuChannel & IRCUMODE_OPERATOR;
-
-	if(modeValUsu == IRCUMODE_OPERATOR){
-		*//*Cambia modo de un canal*/
-		/*IRCTAD_Mode (channeluser, nick_name, modo);
-
-		if(strstr(modo,"k")!=NULL){
-			IRCTADChan_SetPassword (channeluser,key);
-			free(key);
-		}
-		IRCMsg_Mode (&mode_msj, PREFIJO, channeluser, modo, usuario);
-		send(IDsocket,mode_msj,strlen(mode_msj),0);
-		free(mode_msj);
-	}
-}*/
-
 
 /**
  * @page funcionMotd funcionMotd
@@ -329,7 +405,7 @@ void funcionList(char *nick, char *target, int IDsocket){
  * @author
  * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
  * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
- * Alfonso Sebares Mecha ()
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
  *
  *
  * @date 13 de abril de 2017

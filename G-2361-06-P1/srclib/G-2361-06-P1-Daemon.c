@@ -1,5 +1,5 @@
 
-#include "../includes/G-2361-07-P1-Daemon.h"
+#include "../includes/G-2361-06-P1-Daemon.h"
 
 int daemonizar (char * servicio ){
 	pid_t pid;

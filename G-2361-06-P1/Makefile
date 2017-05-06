@@ -2,9 +2,9 @@
 CC=gcc
 # Opciones de compilacion
 CFLAGS= -Wall 
-LFLAGS= -lpthread -lircinterface -lircredes -lirctad -Llib -LG-2361-07-P1-libServidor
+LFLAGS= -lpthread -lircinterface -lircredes -lirctad -Llib -LG-2361-06-P1-libServidor
 
-GROUP = G-2361-07
+GROUP = G-2361-06
 PREFIX = $(GROUP)-P1
 DIR = $(GROUP)
 SRC = src
