@@ -16,11 +16,12 @@
 #include <redes2/irc.h>
 
 
-#define  NUM_SOCKETS 100
-#define  SIZE 8192
-/*#define PUERTOSERVER 6667*/
+#define  NUM_SOCKETS 100 /**< Numero de sockects maximo*/
+#define  SIZE 8192 /**< Tamanno para la entrada*/
+
 
 int abrir_socketTCP(int puerto);
+
 int acepta_conexion(int IDsocket);
 
 

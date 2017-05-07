@@ -1,0 +1,235 @@
+.TH "srclib/G-2361-06-P1-Functions.c" 3 "Sun May 7 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+srclib/G-2361-06-P1-Functions.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./includes/G-2361-06-P1-Functions\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBliberaLista\fP (char **lista, long nElems)"
+.br
+.ti -1c
+.RI "void \fBfuncionUser\fP (char *\fBuser\fP, char *\fBnick\fP, char *\fBrealname\fP, char *\fBmodehost\fP, int IDsocket)"
+.br
+.ti -1c
+.RI "void \fBfuncionNick\fP (long \fBid\fP, char *\fBusuario\fP, char *\fBnick_name\fP, char *\fBreal\fP, char *\fBnick\fP, int IDsocket)"
+.br
+.ti -1c
+.RI "void \fBfuncionAway\fP (long \fBid\fP, char *\fBusuario\fP, char *\fBnick_name\fP, char *\fBreal\fP, char *\fBaway\fP, char *\fBmsg\fP, int IDsocket)"
+.br
+.ti -1c
+.RI "void \fBfuncionPing\fP (char *\fBserver1\fP, char *\fBserver2\fP, int IDsocket)"
+.br
+.ti -1c
+.RI "void \fBfuncionPart\fP (char *\fBchannel\fP, char *\fBnick_name\fP, char *\fBmsg\fP, int IDsocket)"
+.br
+.ti -1c
+.RI "void \fBfuncionList\fP (char *\fBnick\fP, char *\fBtarget\fP, int IDsocket)"
+.br
+.ti -1c
+.RI "void \fBfuncionMotd\fP (char *\fBnick_name\fP, char *\fBtarget\fP, int IDsocket, char *\fBfich\fP)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "void funcionAway (long id, char * usuario, char * nick_name, char * real, char * away, char * msg, int IDsocket)"
+
+.PP
+.nf
+46                                                                                                           {
+47         char *away_msj;
+48 
+49         if(away == NULL){ /*No hay away*/
+50                 IRCTADUser_SetAway (id, usuario, nick_name, real, msg);
+51                 IRCMsg_RplNowAway (&away_msj, PREFIJO, nick_name);
+52         }else{ /*Hay away*/
+53                 /*Se borra*/
+54                 IRCTADUser_SetAway (id, usuario, nick_name, real, NULL);
+55                 IRCMsg_RplUnaway (&away_msj, PREFIJO, nick_name);
+56         }
+57         send(IDsocket,away_msj,strlen(away_msj),0);
+58         free(away_msj);
+59 }
+.fi
+.SS "void funcionList (char * nick, char * target, int IDsocket)"
+
+.PP
+.nf
+107                                                         {
+108         char **listaCanales, *can, *listaEnd;
+109         long numCanales, mode, numUsuariosCanal, modeVal;
+110         char nUsusCanales[4];
+111         int i;
+112 
+113         /*Obtiene una lista con el nombre de los canales existentes*/
+114         IRCTADChan_GetList(&listaCanales, &numCanales, target);
+115 
+116         for(i = 0; i < numCanales; i++){
+117                 /*Modo del canal en formato entero*/
+118                 mode = IRCTADChan_GetModeInt (listaCanales[i]);
+119                 modeVal = mode & IRCMODE_SECRET;
+120 
+121                 if(modeVal != IRCMODE_SECRET){
+122                         /*Obtiene numero de usuarios de un canal*/
+123                         numUsuariosCanal = IRCTADChan_GetNumberOfUsers (listaCanales[i]);
+124                         sprintf(nUsusCanales,"%ld",numUsuariosCanal);
+125                         /*Mensaje de respuesta*/
+126                         IRCMsg_RplList(&can, PREFIJO, nick, listaCanales[i], nUsusCanales, "");
+127                         send(IDsocket, can, strlen(can), 0);
+128                 }
+129         }
+130 
+131         if(i > 0){
+132                 /*Mensaje de respuesta*/
+133                 IRCMsg_RplListEnd(&listaEnd,PREFIJO,nick);
+134                 send(IDsocket,listaEnd,strlen(listaEnd),0);
+135                 free(listaEnd);free(can);
+136                 IRCTADChan_FreeList (listaCanales, numCanales);
+137         }
+138 }
+.fi
+.SS "void funcionMotd (char * nick_name, char * target, int IDsocket, char * fich)"
+
+.PP
+.nf
+140                                                                          {
+141         char lectura[80];
+142         char *motdStart_msj, *motd_msj, *motdEnd_msj;
+143         FILE *f;
+144         f = fopen(fich,"r");
+145         
+146         if(!target)
+147                 IRCMsg_RplMotdStart (&motdStart_msj, PREFIJO, nick_name, PREFIJO);
+148         else
+149                 IRCMsg_RplMotdStart (&motdStart_msj, PREFIJO, nick_name, target);
+150 
+151         send(IDsocket,motdStart_msj,strlen(motdStart_msj),0);
+152         
+153         while(fgets(lectura, 80, f) != NULL){
+154                 lectura[strlen(lectura)-1] = 0;
+155                 IRCMsg_RplMotd(&motd_msj, PREFIJO, nick_name, lectura);
+156                 send(IDsocket,motd_msj,strlen(motd_msj),0);             
+157         }
+158 
+159         fclose(f);
+160         IRCMsg_RplEndOfMotd (&motdEnd_msj, PREFIJO, nick_name);
+161         send(IDsocket,motdEnd_msj,strlen(motdEnd_msj),0);
+162 
+163         free(motd_msj); free(motdStart_msj); free(motdEnd_msj);
+164 }
+.fi
+.SS "void funcionNick (long id, char * usuario, char * nick_name, char * real, char * nick, int IDsocket)"
+
+.PP
+.nf
+30                                                                                                {
+31         char *complex = NULL, *msj_nick = NULL;
+32         
+33         /*Crea el array por ejemplo : :celia!~celia@66\&.red-83-63-217\&.staticip\&.rima-tde\&.net*/
+34         IRC_ComplexUser(&complex, nick_name, usuario, NULL, NULL);
+35 
+36         IRCTADUser_Set(id, usuario, nick_name, real, usuario, nick, real);
+37 
+38         /*Mensaje de vuelta del comando NICK*/
+39         IRCMsg_Nick(&msj_nick, complex, NULL, nick);
+40         send(IDsocket, msj_nick, strlen(msj_nick), 0);
+41 
+42         free(complex); free(msj_nick); 
+43 }
+.fi
+.SS "void funcionPart (char * channel, char * nick_name, char * msg, int IDsocket)"
+
+.PP
+.nf
+75                                                                          {
+76         char *part_msj, **lista = NULL;
+77         long nChannels = 0, nUsus = 0;
+78         int i, flag = 0;
+79 
+80         /*Obtenemos la lista con los nombres de todos los canales*/
+81         IRCTADChan_GetList (&lista, &nChannels, NULL);
+82         for(i = 0; i < nChannels; i++){
+83                 if(strcmp(lista[i], channel) == 0){
+84                         flag = 1; /*El canal existe*/
+85                 }
+86         }
+87         IRCTADChan_FreeList (lista, nChannels);
+88 
+89         if(flag == 0){ /*No existe el canal*/
+90                 IRCMsg_ErrNoSuchChannel(&part_msj, PREFIJO, nick_name, channel);
+91                 send(IDsocket,part_msj,strlen(part_msj),0);
+92         }else{
+93 
+94                 IRCTAD_Part (channel, nick_name);
+95                 nUsus = IRCTADChan_GetNumberOfUsers(channel); /*Obtenemos el numero de usuarios del canal*/
+96 
+97                 if(nUsus <= 0){ /*Si no hay usuarios*/
+98                         IRCTADChan_Delete(channel); /*Se borra el canal*/
+99                 }
+100 
+101                 IRCMsg_Part (&part_msj, PREFIJO, channel, msg);
+102                 send(IDsocket,part_msj,strlen(part_msj),0);
+103         }
+104         free(part_msj); 
+105 }
+.fi
+.SS "void funcionPing (char * server1, char * server2, int IDsocket)"
+
+.PP
+.nf
+62                                                             {
+63         char *pong_msj;
+64 
+65         if(!server2){ /*En el caso de que no se especifique el server2*/
+66                 IRCMsg_Pong (&pong_msj, PREFIJO, PREFIJO, server2, server1);
+67                 send(IDsocket,pong_msj,strlen(pong_msj),0);
+68         }else{
+69                 IRCMsg_Pong (&pong_msj, PREFIJO, PREFIJO, server1, server2);
+70                 send(IDsocket,pong_msj,strlen(pong_msj),0);
+71         }
+72         free(pong_msj);
+73 }
+.fi
+.SS "void funcionUser (char * user, char * nick, char * realname, char * modehost, int IDsocket)"
+
+.PP
+.nf
+11                                                                                       {
+12         char *welcome_msj, *host_msj, *create_msj, *info_msj, *respuesta;
+13 
+14         /*Mensaje 001*/
+15         IRCMsg_RplWelcome (&welcome_msj, PREFIJO, nick, nick, user, modehost);
+16         /*Mensaje 002*/
+17         IRCMsg_RplYourHost (&host_msj, PREFIJO, nick, "localhost", "1\&.0");
+18         /*Mensaje 003*/
+19         IRCMsg_RplCreated (&create_msj, PREFIJO, nick, 0);
+20         /*Mensaje 004*/
+21         IRCMsg_RplMyInfo(&info_msj, PREFIJO, nick, "Practica 1", "1\&.0", "abBcCFiIoqrRswx", "abehiIklmMnoOPqQrRstvVz");
+22 
+23         /*Todos los mensajes en uno solo*/
+24         IRC_PipelineCommands(&respuesta, welcome_msj, host_msj, create_msj, info_msj, NULL);
+25 
+26         send(IDsocket, respuesta, strlen(respuesta), 0);
+27         free(welcome_msj); free(host_msj), free(create_msj); free(info_msj); free(respuesta);
+28 }
+.fi
+.SS "void liberaLista (char ** lista, long nElems)"
+
+.PP
+.nf
+4                                            {
+5         int i;
+6         for(i=0;i<nElems;i++)
+7                 free(lista[i]);
+8 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.
