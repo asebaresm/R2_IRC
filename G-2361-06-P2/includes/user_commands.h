@@ -20,6 +20,7 @@
 typedef int (*p_funcion)(char* );
 
 extern int sockfd_user;
+extern char nick_user[MAXDATA];
 extern pthread_t recv_tid;
 
 int punotice(char* command);

@@ -49,22 +49,21 @@ int pukick(char* command){ return -1; } //se envia con los botones
 int puleave(char* command){ return -1; }
 
 //TO-DO: por implementar
-int pdefault(char* command){ return -1; }
-int puhelp(char* command){ return -1; }
-int pulist(char* command){ return -1; }
-int pupart(char* command){ return -1; }
+//int pdefault(char* command){ return -1; }
+//int puhelp(char* command){ return -1; }
+//int pulist(char* command){ return -1; }
+//int pupart(char* command){ return -1; }
 //int puquit(char* command){ return -1; }
-int punick(char* command){ return -1; }
-int puaway(char* command){ return -1; }
-int puwhois(char* command){ return -1; }
-int puinvite(char* command){ return -1; }
-int pumsg(char* command){ return -1; }
-int puquery(char* command){ return -1; }
-int punotice(char* command){ return -1; }
-int puwho(char* command){ return -1; }
-int pucycle(char* command){ return -1; }
-int pumotd(char* command){ return -1; }
-int pulusers(char* command){ return -1; }
+//int punick(char* command){ return -1; }
+//int puaway(char* command){ return -1; }
+//int puwhois(char* command){ return -1; }
+//int puinvite(char* command){ return -1; }
+//int pumsg(char* command){ return -1; }
+//int puquery(char* command){ return -1; }
+//int punotice(char* command){ return -1; }
+//int pucycle(char* command){ return -1; }
+//int pumotd(char* command){ return -1; }
+//int pulusers(char* command){ return -1; }
 
 //Implementadas
 /**
@@ -229,4 +228,424 @@ int puquit(char* command){
 	IRCInterface_WriteSystem_Pretty("*", "Desconectado.");
 
 	return OK;
+}
+
+/**
+* @brief Comando de usuario WHO
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int puwho(char* command){
+
+	long ret = -1;
+
+	char* command_enviar=NULL;
+	char* prefix = NULL;
+	char* mask;
+	
+	ret = IRCUserParse_Who (command, &mask);
+	if(ret != IRC_OK){
+		g_print("ERROR - IRCInterface_NewCommandText - UWHO - IRCUserParse_Who");
+		return -1;
+	}
+	g_print("\t command: %s \n",command);
+	g_print("\t mask who: %s \n",mask);
+	
+	ret = IRCMsg_Who (&command_enviar, prefix, mask, NULL);
+	if(ret != IRC_OK){
+		g_print(RED "ERROR - puwho - IRCMsg_Who \n" RESET);
+		return ERR;
+	}
+
+	g_print("\t command_enviar: %s \n",command_enviar);
+
+	if(enviarDatos(sockfd_user,command_enviar, strlen(command_enviar) == ERR)){
+		g_print("ERROR: IRCInterface_NewCommandText - enviarDatos - Who\n");
+		return ERR;
+	}
+
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);	
+	mfree(3, command_enviar, prefix, mask);
+	return OK;
+}
+
+/**
+* @brief Comando de usuario MSG y PRIVMSG
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int pumsg(char* command){
+	char* nickorchannel;
+	char* msg;
+	char *command_enviar = NULL;
+	char *prefix = NULL;
+	int ret;
+
+	//<< privmsg gomupo :probando
+	//>> :gomupo!~gonzalo@119.181.218.87.dynamic.jazztel.es PRIVMSG gomupo :probando
+	ret = IRCUserParse_Msg(command, &nickorchannel, &msg);
+	if(ret != IRC_OK){
+		g_print("ERROR - IRCInterface_NewCommandText - UMSG - IRCUserParse_Msg\n");
+		return ERR;
+	}
+	g_print("\t command: %s \n", command);
+	g_print("\t nickorchannel: %s \n", nickorchannel);
+	g_print("\t msg: %s \n", msg);
+
+	ret = IRCMsg_Privmsg (&command_enviar, prefix, nickorchannel, msg);
+	if(ret == ERR){
+		g_print("ERROR: IRCInterface_NewCommandText - IRCMsg_Privmsg \n");
+		return ERR;
+	}
+
+	g_print("\t Mensaje a enviar command_enviar en pumsg: %s \n",command_enviar);
+	ret = enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	if(ret == ERR){
+		g_print("ERROR: IRCInterface_NewCommandText - enviarDatos - Names\n");
+		return ERR;
+	}
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	//No recibimos nada en este comando, los mensajes de otros usuarios los recibimos por otro hilo
+	IRCInterface_WriteChannel (nickorchannel, nick_user, msg);
+	mfree(4, command_enviar, nickorchannel, prefix, msg);
+	return OK;
+}
+
+/**
+* @brief Comando de usuario LIST
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int pulist(char* command){ 
+	long ret = -1;
+	int retorno = -1;
+	char *channel = NULL;
+	char *searchstring = NULL;
+	char* command_enviar=NULL;
+	char* prefix = NULL;
+
+	ret = IRCUserParse_List (command, &channel, &searchstring);
+	g_print("\t command: %s \n", command);
+	g_print("\t channel: %s \n", channel);
+	g_print("\t searchstring: %s \n", searchstring);
+	if(ret != IRC_OK){
+		g_print("ERROR - pulist - IRCUserParse_List \n");
+		return ERR;
+	}
+
+	ret = IRCMsg_List (&command_enviar, prefix, channel, searchstring);
+	if(ret != IRC_OK){
+		g_print("ERROR - pulist - IRCMsg_List \n");
+		return ERR;
+	}
+
+	g_print("\t Mensaje a enviar command_enviar: %s \n",command_enviar);
+	//sem_wait(&recepcionTCP);
+	retorno = enviarDatos(sockfd_user,command_enviar, strlen(command_enviar));
+	if(retorno == ERR){
+		g_print("ERROR: IRCInterface_NewCommandText - enviarDatos - list\n");
+		return ERR;
+	}
+
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(4, command_enviar, channel, searchstring, prefix);
+	return OK;
+}
+
+
+/**
+* @brief Comando de usuario HELP
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int puhelp(char* command){
+	char* comando;
+	char command_enviar[MAXDATA];
+
+	IRCUserParse_Help (command, &comando);
+	sprintf(command_enviar, "HELP %s\r\n", comando?comando:"");
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));	
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(1, comando);
+	return OK;
+}
+
+
+/**
+* @brief Comando desconocido para el cliente
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int pdefault(char* command){ 
+	IRCInterface_WriteSystem(nick_user, "No se ha podido ejecutar el comando: ");
+	IRCInterface_WriteSystem(nick_user, command);
+	return 0;
+}
+
+
+/**
+* @brief Comando de usuario PART
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int pupart(char* command){
+	char* channel;
+	char command_enviar[MAXDATA];
+
+	IRCUserParse_Part(command, &channel);
+	sprintf(command_enviar, "PART %s :Saliendo\r\n", channel?channel:IRCInterface_ActiveChannelName());
+
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(1, channel);
+	return OK;
+}
+
+/**
+* @brief Comando de usuario AWAY
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int puaway(char* command){
+	char* command_enviar;
+	char *reason;
+
+   	IRCUserParse_Away (command, &reason);
+   	IRCMsg_Away (&command_enviar, NULL, reason);
+	g_print("\t Mensaje a enviar command_enviar en AWAY: %s \n",command_enviar);
+
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(2, command_enviar, reason);
+	return OK;
+}
+
+
+/**
+* @brief Comando de usuario NICK
+* Changes your "Online Identity" on a server. All those in the channel you are in will be alerted of your nickname change.
+* -
+* Syntax:  NICK <new nickname>
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int punick(char* command){
+
+	char* command_enviar;
+	char *newnick;
+
+   	IRCUserParse_Nick (command, &newnick);
+   	IRCMsg_Nick (&command_enviar, NULL, newnick, NULL);
+	g_print("\t Mensaje a enviar command_enviar en NICK: %s \n",command_enviar);
+
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(2, command_enviar, newnick);
+	return OK;
+}
+
+
+/**
+* @brief Comando de usuario INVITE
+* Sends a user an Invitation to join a particular channel. If the channel is +i, you must be an Operator to use this
+* command, otherwise any user may use the command.
+* Invite without parameters lists the channels you have been invited to.
+* -
+* Syntax:  INVITE <user> <channel>
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int puinvite(char* command){
+
+	char* command_enviar = NULL, *prefix = NULL, *nick = NULL, *channel = NULL;
+
+	g_print("\t Mensaje reciido en UINVITE: %s \n",command);
+
+	IRCParse_Invite (command, &prefix, &nick, &channel); //la parseo con esta funcion del server porque no hay del user
+	g_print("\t prefix: %s \n",prefix);
+	g_print("\t nick: %s \n",nick);
+	g_print("\t channel: %s \n",channel);
+
+	IRCMsg_Invite (&command_enviar, prefix, nick, channel);
+	g_print("\t Mensaje a enviar en UINVITE: %s \n", command_enviar);
+
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(4, command_enviar, channel, nick, prefix);
+	return OK;
+}
+
+
+/**
+* @brief Comando de usuario WHOIS
+* Shows information about the user in question, such as their "Name", channels they are currently in, their hostmask, etc.
+* -
+* Syntax:  WHOIS <user>
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int puwhois(char* command){
+
+	char command_enviar[MAXDATA];
+	char* nick = NULL;
+
+	g_print("\t Mensaje recibido en UWHOIS: %s \n", command);
+	IRCUserParse_Whois (command, &nick);
+
+	g_print("\t nick: %s \n", nick);
+	sprintf(command_enviar, "WHOIS %s\n\r", nick );
+	g_print("\t Mensaje a enviar en UWHOIS: %s \n", command_enviar);
+
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(1, nick);
+	return OK;
+}
+ 
+/**
+* @brief Comando de usuario LUSERS
+* Provides Local and Global user information (Such as Current and Maximum user count).
+* -
+* Syntax: LUSERS [server]
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int pulusers(char* command){
+
+	char command_enviar[MAXDATA];
+	char* server;
+
+	g_print("\t Mensaje recibido en ULUSERS: %s \n", command);
+	IRCUserParse_Lusers (command, &server);
+
+	g_print("\t server: %s \n", server);
+	sprintf(command_enviar, "LUSERS %s\n\r", server );
+	g_print("\t Mensaje a enviar en ULUSERS: %s \n", command_enviar);
+
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(1, server);
+	return OK;
+}
+
+
+/**
+* @brief Comando de usuario MOTD
+* Displays the Message Of The Day of the IRC Server you are logged onto.
+* -
+* Syntax: MOTD
+*         MOTD <server>
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int pumotd(char* command){
+
+	char command_enviar[MAXDATA];
+	char* server;
+
+	g_print("\t Mensaje recibido en UMOTD: %s \n", command);
+	IRCUserParse_Motd (command, &server);
+	g_print("\t server: %s \n", server);
+	sprintf(command_enviar, "MOTD %s\n\r", server );
+	g_print("\t Mensaje a enviar en UMOTD: %s \n", command_enviar);
+
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+	mfree(1, server);
+	return OK;
+}
+
+
+/**
+* @brief Comando de usuario NOTICE
+* Send a notice to a user, channel or server.
+* -
+* NOTICE <nick> <text>
+* Send a notice to a user.
+* Ex: /NOTICE Blah hi, how are you?
+* -
+* NOTICE <#channel> <text>
+* Send a notice to a channel.
+* Ex: /NOTICE #room Hi all, this is annoying
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int punotice(char* command){
+
+	char *command_enviar, mensaje[MAXDATA];
+	char* target, *msg;
+
+	g_print("\t Mensaje recibido en UNOTICE: %s \n", command);
+	IRCUserParse_Notice (command, &target, &msg);
+
+	IRCMsg_Notice (&command_enviar, NULL, target, msg);
+
+	g_print("\t Mensaje a enviar en UNOTICE: %s \n", command_enviar);
+	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+
+	if(target[0] == '#'){
+		sprintf(mensaje, ">%s/%s<", nick_user, target);
+		IRCInterface_WriteChannel (target, mensaje, msg);
+	} else {
+		sprintf(mensaje, ">%s<", nick_user);		
+		IRCInterface_AddNewChannel (target, 0);
+		IRCInterface_WriteChannel (target, mensaje, msg);
+	}
+	mfree(3, command_enviar, target, msg);
+	return OK;
+}
+
+
+/**
+* @brief Comando de usuario CYCLE
+* Cycles the given channel(s). This command is equivilent to sending a PART then a JOIN command.
+* -
+* Syntax:  CYCLE <chan1>,<chan2>,<chan3> ...
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int pucycle(char* command){
+
+   	char* respuesta = NULL;
+    char** target;
+    int numchannels=0;
+    int i ;
+
+    IRCUserParse_Cycle (command, &target, &numchannels);
+    for (i = 0; i< numchannels; i++){
+    	IRCMsg_Part (&respuesta, NULL, target[i], "Saliendo");
+		enviarDatos(sockfd_user, respuesta, strlen(respuesta));
+    	IRCInterface_PlaneRegisterOutMessage (respuesta);
+    	free(respuesta);
+    	IRCMsg_Join(&respuesta, NULL, target[i], NULL, NULL);
+		enviarDatos(sockfd_user, respuesta, strlen(respuesta));
+    	IRCInterface_PlaneRegisterOutMessage (respuesta);
+    	free(respuesta);
+    }
+	mfree(1, respuesta);
+    return OK;   
+}
+
+
+/**
+* @brief Comando de usuario QUERY
+* Use the "/query <user>" command to specify that every message you type should be directed to a single user. 
+* @param command cadena introducida por el usuario en el campo de texto
+* @return OK si todo es correcto, ERR si se produce un error
+*/
+int puquery(char* command){
+
+	char* nickorchannel, *msg;
+
+   	IRCUserParse_Query (command, &nickorchannel, &msg);
+	g_print("\t Mensaje recibido en UQUERY: %s \n", command);
+	g_print("\t nickorchannel: %s \n", nickorchannel);
+	g_print("\t msg: %s \n", msg);
+
+	if(nickorchannel != NULL){
+		IRCInterface_AddNewChannel (nickorchannel, 0);
+	}
+	mfree(2, nickorchannel, msg);
+    return OK;
 }
