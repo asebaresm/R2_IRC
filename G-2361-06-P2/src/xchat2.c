@@ -100,7 +100,7 @@ int command_query(char *message){
 	char* command_pong;
 
 	//Strtok
-	const char s[2] = ":";
+	const char s[2] = ":"; /**< delimitador para separar mensajes **/
 	char *token = NULL;
 
 	//472
@@ -142,7 +142,7 @@ int command_query(char *message){
 		case RPL_WELCOME: //001
 			ret = IRCParse_RplWelcome(message, &prefix, &nick2, &msg);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplWelcome\n");
+				g_print(RED "\nERROR - In command_query: case RPL_WELCOME - IRCParse_RplWelcome != IRC_OK" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("Comandos recibidos en el IRCParse_RplWelcome: \n");
@@ -164,7 +164,7 @@ int command_query(char *message){
 			//long IRCParse_RplYourHost (char *strin, char **prefix, char **nick, char **msg, char **servername, char **versionname)
 			ret = IRCParse_RplYourHost(message, &prefix, &nick2, &msg, &servername, &versionname);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplYourHost\n");
+				g_print(RED "\nERROR - In command_query: case RPL_YOURHOST - IRCParse_RplYourHost != IRC_OK" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("Comandos recibidos en el IRCParse_RplYourHost: \n");
@@ -181,7 +181,7 @@ int command_query(char *message){
 			//long IRCParse_RplCreated (char *strin, char **prefix, char **nick,char **timedate, char **msg)
 			ret = IRCParse_RplCreated(message, &prefix, &nick2, &timedate, &msg);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplCreated\n");
+				g_print(RED "\nERROR - In command_query: case RPL_CREATED - IRCParse_RplCreated != IRC_OK" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("Comandos recibidos en el IRCParse_RplCreated: \n");
@@ -197,7 +197,7 @@ int command_query(char *message){
 			//long IRCParse_RplMyInfo (char *strin, char **prefix, char **nick, char **servername, char **version, char **availableusermodes, char **availablechannelmodes, char **addedg)
 			ret = IRCParse_RplMyInfo(message, &prefix, &nick2, &servername, &version, &availableusermodes, &availablechannelmodes, &addedg);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplMyInfo\n");
+				g_print(RED "\nERROR - In command_query: case RPL_MYINFO - IRCParse_RplMyInfo != IRC_OK" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("Comandos recibidos en el IRCParse_RplMyInfo: \n");
@@ -222,7 +222,7 @@ int command_query(char *message){
 			//   long IRCParse_RplISupport (char *strin, char **prefix, char **nick, char **msg)						
 			ret = IRCParse_RplISupport(message, &prefix, &nick2, &msg);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplISupport\n");
+				g_print(RED "\nERROR - In command_query: case RPL_BOUNCE -IRCParse_RplISupport != IRC_OK" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("Comandos recibidos en el IRCParse_RplISupport: \n");
@@ -238,7 +238,7 @@ int command_query(char *message){
 			
 			ret = IRCParse_RplLuserClient(message, &prefix, &nick2, &msg, &nusers, &ninvisibles, &nservers);
 			if(ret != IRC_OK){
-				g_print("ERROR: IRCInterface_Connect - IRCParse_RplLuserClient\n");
+				g_print(RED "\nERROR - In command_query: case RPL_LUSERCLIENT -IRCParse_RplLuserClient != IRC_OK" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("\t message: %s \n",message);
@@ -307,8 +307,41 @@ int command_query(char *message){
 			substring = NULL;		
 			break;
 
-		case RPL_LISTEND: //323
+		case RPL_LISTSTART: //321
+			g_print(GRN "\n>> [server command] RPL_LISTSTART - message = %s\n" RESET, message);
+			token = strtok(message,s);
+			if(token != NULL){
+				token = strtok(NULL,s);	
+			}
+			IRCInterface_WriteSystemThread_Pretty("*",token);
+
+			break;
+
+		case RPL_LIST: //322
+			//   long IRCParse_RplList (char *strin, char **prefix, char **nick, char **channel, char **visible, char **topic)
+			g_print(GRN "\n>> [server command] RPL_LIST - message = %s\n" RESET, message);
+			ret = IRCParse_RplList(message, &prefix, &nick2, &channel, &visible, &topic);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: case RPL_LIST - IRCParse_RplList != IRC_OK" RESET);
+				//return IRCERR_NOCONNECT;
+			}
+			g_print("Comandos recibidos en el IRCParse_RplList: \n");
 			g_print("\t message: %s \n",message);
+			g_print("\t prefix: %s \n",prefix);
+			g_print("\t nick2: %s \n",nick2);
+			g_print("\t channel: %s \n",channel);
+			g_print("\t visible: %s \n",visible);
+			g_print("\t topic: %s \n\n",topic);
+
+			sprintf(mensajeLargo,"%s \t %s \t %s",channel,visible,topic);
+			g_print("Mensaje creado: %s \n\n",mensajeLargo);
+
+			IRCInterface_WriteSystemThread_Pretty("*",mensajeLargo);
+			mfree(5,prefix,nick2,channel,visible,topic);	
+			break;
+
+		case RPL_LISTEND: //323
+			g_print(GRN "\n>> [server command] RPL_LISTEND - message = %s\n" RESET, message);
 			/*Coger el primer token*/
 			token = strtok(message,s);
 			/*Ir por el resto*/
@@ -319,6 +352,10 @@ int command_query(char *message){
 
 			token = NULL;
 			//IRCInterface_WriteSystem("*",message);			
+			break;
+
+		case RPL_WHOREPLY: //352
+			g_print(GRN "\n>> [server command] RPL_WHOREPLY - message = %s\n" RESET, message);
 			break;
 
 		case RPL_MOTDSTART: //375
@@ -565,7 +602,7 @@ int command_query(char *message){
 
 			if(msgtarget[0] != '#'){//no grupo
 				IRCInterface_AddNewChannelThread(nick_privmsg, 0);				
-				IRCInterface_WriteChannelThread(nick_privmsg, nick_privmsg, msg);
+				IRCInterface_WriteChannelThread_Pretty(nick_privmsg, nick_privmsg, msg);
 				return OK;
 			}
 
@@ -2258,7 +2295,7 @@ void IRCInterface_NewCommandText(char *command)
 	}
 
 	num_comando = IRCUser_CommandQuery (command);	
-	g_print(BLU "\n>>>>>>>>>>num_comando: %d \n" RESET,num_comando);
+	//g_print(BLU "\n>>>>>>>>>>num_comando: %d \n" RESET,num_comando);
 	if (p_array_funciones[num_comando](command) == -1){
 		g_print(RED "ERROR - In IRCInterface_NewCommandText: Error en p_array_funciones num: %d \n" RESET,num_comando);
 	}
