@@ -1,0 +1,103 @@
+.TH "src/G-2361-06-P1-prueba.c" 3 "Sun May 7 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/G-2361-06-P1-prueba.c \- Modulo main\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <syslog\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <redes2/irc\&.h>\fP
+.br
+\fC#include '\&.\&./includes/G-2361-06-P1-Daemon\&.h'\fP
+.br
+\fC#include '\&.\&./includes/G-2361-06-P1-Server\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Modulo main\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.PP
+Celia Mateos 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13/02/17 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "int main (int argc, char * argv[])"
+
+.PP
+.nf
+28                                 {
+29         int dm, socket;
+30         char *path, buffer[80];
+31 
+32         if (argc != 2){
+33                 printf("\nERROR - Uso \&./<ejecutable> <numero_de_puerto>\n");
+34                 return EXIT_FAILURE;
+35         }
+36 
+37         socket = atoi(argv[1]);
+38         if(socket < 1024){
+39                 printf("\nERROR - Numero de puerto en el espacio de puertos del sistema\&.\n");
+40                 return EXIT_FAILURE;
+41         }
+42         
+43         path = realpath("motd\&.txt", buffer);     
+44         
+45         dm  = daemonizar (argv[0]);
+46         if(dm == -1){
+47                 return -1;
+48         }
+49 
+50         servidor(socket, path);
+51 
+52         return 0;
+53 
+54 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

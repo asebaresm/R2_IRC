@@ -1,0 +1,128 @@
+.TH "includes/G-2361-06-P1-Sockets.h" 3 "Sun May 7 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+includes/G-2361-06-P1-Sockets.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <syslog\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <redes2/irc\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNUM_SOCKETS\fP   100"
+.br
+.ti -1c
+.RI "#define \fBSIZE\fP   8192"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBabrir_socketTCP\fP (int puerto)"
+.br
+.ti -1c
+.RI "int \fBacepta_conexion\fP (int IDsocket)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define NUM_SOCKETS   100"
+
+.SS "#define SIZE   8192"
+
+.SH "Function Documentation"
+.PP 
+.SS "int abrir_socketTCP (int puerto)"
+
+.PP
+.nf
+5                                {
+6         int IDsocket, opt = 1;
+7         struct sockaddr_in addr;
+8 
+9         printf("Creando socket\&.\&.\&.\&. \n");
+10         IDsocket = socket(AF_INET, SOCK_STREAM, 0);
+11 
+12         if (IDsocket < 0){
+13                 syslog(LOG_ERR, "Error en la creacion del socket");
+14                 /*printf("Error en la creacion del socket \n");*/
+15                 return EXIT_FAILURE;
+16         }
+17                 //setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
+18         if (setsockopt(IDsocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+19                 syslog(LOG_ERR, "Error - setsockopt (SO_REUSEADDR)");
+20                 printf("\nError - setsockopt (SO_REUSEADDR)");
+21                 /*printf("Error - setsockopt (SO_REUSEADDR)");*/
+22                 close(IDsocket);
+23                 return EXIT_FAILURE;
+24         }
+25         memset(&addr, 0, sizeof(struct sockaddr_in));
+26         bzero(&addr, sizeof(addr));
+27 
+28         addr\&.sin_family = AF_INET; /* familia TCP/IP*/
+29         addr\&.sin_port = htons(puerto); /*Asignacion de puerto*/
+30         addr\&.sin_addr\&.s_addr = htonl(INADDR_ANY); /*Aceptacion de todas las direcciones*/
+31 
+32         if (bind (IDsocket, (struct sockaddr *)&addr, sizeof(addr)) < 0){
+33                 syslog(LOG_ERR, "Error al nombrar socket");
+34                 /*printf("Error al nombrar el socket \n");*/
+35                 return EXIT_FAILURE;
+36         }
+37 
+38         printf("Servidor activo escuchando\n");
+39         if (listen (IDsocket, NUM_SOCKETS) < 0){
+40                 syslog(LOG_ERR, "Error al escuchar");
+41                 /*printf("Error al escuchar \n");*/
+42                 return EXIT_FAILURE;
+43         }
+44         return IDsocket;
+45 }
+.fi
+.SS "int acepta_conexion (int IDsocket)"
+
+.PP
+.nf
+48                                  {
+49         int descriptor;
+50         socklen_t  len;
+51         struct sockaddr conexion;
+52 
+53         if ((descriptor = accept(IDsocket, &conexion, &len)) < 0){
+54                 syslog(LOG_ERR, "Error al aceptar conexion");
+55                 
+56                 //printf("Error al aceptar conexion \n");
+57                 return EXIT_FAILURE;
+58         }
+59         return descriptor;
+60 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

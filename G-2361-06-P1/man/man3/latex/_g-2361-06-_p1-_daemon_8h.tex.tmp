@@ -1,0 +1,88 @@
+\hypertarget{_g-2361-06-_p1-_daemon_8h}{}\section{includes/\+G-\/2361-\/06-\/\+P1-\/\+Daemon.h File Reference}
+\label{_g-2361-06-_p1-_daemon_8h}\index{includes/\+G-\/2361-\/06-\/\+P1-\/\+Daemon.\+h@{includes/\+G-\/2361-\/06-\/\+P1-\/\+Daemon.\+h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\+h$>$}\\*
+{\ttfamily \#include $<$netinet/in.\+h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\\*
+{\ttfamily \#include $<$syslog.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include $<$redes2/irc.\+h$>$}\\*
+Include dependency graph for G-\/2361-\/06-\/\+P1-\/\+Daemon.h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{_g-2361-06-_p1-_daemon_8h_ae983f3eb0ff5cebb14c2ae123043df39}{daemonizar} (char $\ast$servicio)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{_g-2361-06-_p1-_daemon_8h_ae983f3eb0ff5cebb14c2ae123043df39}{}\index{G-\/2361-\/06-\/\+P1-\/\+Daemon.\+h@{G-\/2361-\/06-\/\+P1-\/\+Daemon.\+h}!daemonizar@{daemonizar}}
+\index{daemonizar@{daemonizar}!G-\/2361-\/06-\/\+P1-\/\+Daemon.\+h@{G-\/2361-\/06-\/\+P1-\/\+Daemon.\+h}}
+\subsubsection[{daemonizar}]{\setlength{\rightskip}{0pt plus 5cm}int daemonizar (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{servicio}
+\end{DoxyParamCaption}
+)}\label{_g-2361-06-_p1-_daemon_8h_ae983f3eb0ff5cebb14c2ae123043df39}
+
+\begin{DoxyCode}
+4                                  \{
+5         pid\_t pid;
+6         \textcolor{keywordtype}{int} i;
+7         \textcolor{keywordtype}{int} tamanyo = 0;
+8         
+9         \textcolor{comment}{/*En caso de no recibir puntero sin servicio*/}
+10         \textcolor{keywordflow}{if} (servicio == NULL)
+11                 \textcolor{keywordflow}{return} -1;
+12         
+13         \textcolor{comment}{/*1.Crear un proceso hijo y terminar el proceso padre*/}
+14         pid = fork();
+15 
+16         \textcolor{keywordflow}{if}( pid < 0 ) 
+17                 exit(-1);
+18 
+19         \textcolor{keywordflow}{if}( pid > 0 ) 
+20                 exit(0);
+21 
+22         \textcolor{comment}{/*3.Cambiar la máscara de modo de ficheros para que sean accesibles a cualquiera*/}
+23         umask(0);
+24         setlogmask(LOG\_UPTO(LOG\_INFO));
+25         
+26         \textcolor{comment}{/*6.Abrir el log del sistema para su uso posterior para reportar errores y ver si nuestro demonio
+       funciona correctamente se debe generar un fichero de tipo .log}
+27 \textcolor{comment}{        */} 
+28         openlog (servicio, LOG\_CONS | LOG\_PID | LOG\_NDELAY, LOG\_DAEMON);
+29         syslog (LOG\_ERR, \textcolor{stringliteral}{"Initiating new server."});
+30         
+31         \textcolor{comment}{/*2.Crear una nueva sesión de tal forma que el proceso pase a ser el líder de sesión*/}
+32         \textcolor{keywordflow}{if}(setsid() < 0)\{
+33                 syslog (LOG\_ERR,\textcolor{stringliteral}{"Error al crear sesion para el proceso hijo."});
+34                 exit(-1);
+35         \}
+36 
+37         \textcolor{comment}{/*4.Establecer el directorio raíz / como directorio de trabajo*/}
+38         \textcolor{keywordflow}{if}((chdir(\textcolor{stringliteral}{"/"})) != 0)\{
+39                 syslog(LOG\_ERR,\textcolor{stringliteral}{"Error al cambiar el directorio de trabajo = \(\backslash\)"/\(\backslash\)""});
+40                 exit(-1);
+41         \}
+42 
+43         \textcolor{comment}{/*5.Cerrar todos los descriptores de fichero que pueda haber abiertos incluidos stdin,stdout,stderr
+      */}
+44         syslog(LOG\_INFO,\textcolor{stringliteral}{"Cerrando descriptores"});
+45         tamanyo = getdtablesize();
+46         \textcolor{keywordflow}{for}(i = 0;i < tamanyo; i++)\{
+47                 close(i);
+48         \}
+49 
+50         openlog (servicio, LOG\_CONS | LOG\_PID | LOG\_NDELAY, LOG\_DAEMON);
+51 
+52         \textcolor{keywordflow}{return} 0;
+53 \}
+\end{DoxyCode}

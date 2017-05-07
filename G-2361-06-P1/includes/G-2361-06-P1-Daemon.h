@@ -14,7 +14,36 @@
 #include <pthread.h>
 #include <redes2/irc.h>
 
-
+/**
+ * @page daemonizar daemonizar
+ *
+ * @synopsis
+ * @code
+ * 	#include <redes2/irc.h>
+ *
+ * @endcode
+ * 
+ * @brief Funcion que permite que un proceso se ejecute en segundo plano.
+ *
+ * @description 
+ * Esta funcion permite a un proceso estar ejecutandose en segundo plano. 
+ *
+ * @parameters
+ * @param[in] sig: la sennal.
+ *
+ * @return
+ * 0 si se ejecuta sin ningun problema o -1 en caso de error.
+ *
+ * @author
+ * Celia Mateos de Miguel (cel.mateos@estudiante.uam.es)
+ * Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es)
+ * Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+ *
+ *
+ * @date 13 de febrero de 2017
+ *
+ *<hr>
+*/
 int daemonizar (char * servicio );
 
 #endif

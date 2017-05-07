@@ -1,3 +1,13 @@
+/**
+ * @file G-2361-06-P1-prueba.c
+ * @brief Modulo main
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -12,7 +22,6 @@
 #include <redes2/irc.h>
 #include "../includes/G-2361-06-P1-Daemon.h"
 #include "../includes/G-2361-06-P1-Server.h"
-
 
 
 
@@ -31,16 +40,13 @@ int main(int argc,char * argv[]){
 		return EXIT_FAILURE;
 	}
 	
-	path = realpath("motd.txt", buffer);
-	/*syslog(LOG_INFO,"DIRECTORIO %s", path);*/
-	
+	path = realpath("motd.txt", buffer);	
 	
 	dm  = daemonizar (argv[0]);
 	if(dm == -1){
 		return -1;
 	}
 
-	//servidor(PUERTO, path);
 	servidor(socket, path);
 
 	return 0;

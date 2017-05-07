@@ -1,0 +1,100 @@
+.TH "includes/G-2361-06-P1-Daemon.h" 3 "Sun May 7 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+includes/G-2361-06-P1-Daemon.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <syslog\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <redes2/irc\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBdaemonizar\fP (char *servicio)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int daemonizar (char * servicio)"
+
+.PP
+.nf
+4                                  {
+5         pid_t pid;
+6         int i;
+7         int tamanyo = 0;
+8         
+9         /*En caso de no recibir puntero sin servicio*/
+10         if (servicio == NULL)
+11                 return -1;
+12         
+13         /*1\&.Crear un proceso hijo y terminar el proceso padre*/
+14         pid = fork();
+15 
+16         if( pid < 0 ) 
+17                 exit(-1);
+18 
+19         if( pid > 0 ) 
+20                 exit(0);
+21 
+22         /*3\&.Cambiar la máscara de modo de ficheros para que sean accesibles a cualquiera*/
+23         umask(0);
+24         setlogmask(LOG_UPTO(LOG_INFO));
+25         
+26         /*6\&.Abrir el log del sistema para su uso posterior para reportar errores y ver si nuestro demonio funciona correctamente se debe generar un fichero de tipo \&.log
+27         */ 
+28         openlog (servicio, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_DAEMON);
+29         syslog (LOG_ERR, "Initiating new server\&.");
+30         
+31         /*2\&.Crear una nueva sesión de tal forma que el proceso pase a ser el líder de sesión*/
+32         if(setsid() < 0){
+33                 syslog (LOG_ERR,"Error al crear sesion para el proceso hijo\&.");
+34                 exit(-1);
+35         }
+36 
+37         /*4\&.Establecer el directorio raíz / como directorio de trabajo*/
+38         if((chdir("/")) != 0){
+39                 syslog(LOG_ERR,"Error al cambiar el directorio de trabajo = \"/\"");
+40                 exit(-1);
+41         }
+42 
+43         /*5\&.Cerrar todos los descriptores de fichero que pueda haber abiertos incluidos stdin,stdout,stderr*/
+44         syslog(LOG_INFO,"Cerrando descriptores");
+45         tamanyo = getdtablesize();
+46         for(i = 0;i < tamanyo; i++){
+47                 close(i);
+48         }
+49 
+50         openlog (servicio, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_DAEMON);
+51 
+52         return 0;
+53 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.
