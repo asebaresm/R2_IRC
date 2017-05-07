@@ -30,7 +30,7 @@ p_funcion p_array_funciones[] = {
 	pdefault, pdefault, pumode, pdefault, pdefault, pdefault, pdefault,
 	pdefault, pdefault, pdefault, pdefault, pdefault, pdefault, pdefault,
 	pdefault, pdefault, pupartall, pdefault, puback, puunaway, pdefault,
-	puoper, puban, pufsend, pufaccept, pufclose //57
+	puoper, puban, pufsend, pufaccept, pufclose //0-56
 };
 
 
@@ -50,6 +50,7 @@ int puleave(char* command){ return -1; }
 
 //TO-DO: por implementar
 //int pdefault(char* command){ return -1; }
+
 //int puhelp(char* command){ return -1; }
 //int pulist(char* command){ return -1; }
 //int pupart(char* command){ return -1; }
@@ -208,7 +209,7 @@ int puquit(char* command){
 	//kill hilo 'receive_messages()'
 	ret = pthread_cancel(recv_tid);
 	if (ret != 0){
-		g_print(MAG "\npthread_cancel = %d\n" RESET, ret);
+		g_print(MAG "\npthread_cancel() return = %d\n" RESET, ret);
 	}
 
    	IRCUserParse_Quit (command, &reason);

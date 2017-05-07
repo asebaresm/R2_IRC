@@ -649,9 +649,17 @@ int command_query(char *message){
 			g_print("prefix = %s\n", prefix);
 			g_print("msgtarget = %s\n", msgtarget);
 			g_print("msg = %s\n", msg);
+			
 
-			//comentado de momento, se asume que es 'NOTICE AUTH'
-			/*
+			//break;
+			//caso: NOTICE !(generado por el server) (triggeado por /HELP, p.ej.)
+			//caso: !(:irc.eps.net NOTICE testame2 :example "HELP quit" or "HELP privmsg".)
+
+			if(msg == NULL || msgtarget == NULL || prefix == NULL){
+				IRCInterface_WriteSystemThread_Pretty("*","");
+				break;
+			}
+
 			if((!strcmp(msgtarget, nick_user)) && (strcmp(prefix,"irc.eps.net") != 0)) {
 				IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);				
 				sprintf(mensaje, ">%s<", nick_part);
@@ -662,10 +670,10 @@ int command_query(char *message){
 				sprintf(mensaje, ">%s/%s<", nick_part, msgtarget);
 				IRCInterface_AddNewChannelThread(msgtarget, 0);
 				IRCInterface_WriteChannelThread (msgtarget,mensaje,msg);
-			} else {//AUTH			
-				IRCInterface_WriteSystemThread ("*",msg);
+			} else {//AUTH, /HELP
+				//g_print(RED "\n>>>>>>>>>> NO BOI\n" RESET);
+				IRCInterface_WriteSystemThread_Pretty("*",msg);
 			}
-			*/
 			//IRCInterface_WriteSystemThread("*",msg);
 			break;
 
@@ -2295,7 +2303,11 @@ void IRCInterface_NewCommandText(char *command)
 	}
 
 	num_comando = IRCUser_CommandQuery (command);	
-	//g_print(BLU "\n>>>>>>>>>>num_comando: %d \n" RESET,num_comando);
+	g_print(MAG "\n>>>>>>>>>>num_comando -> array de funciones: %d \n" RESET,num_comando);
+	if (num_comando > 56){
+		g_print(YEL "\nWARN - Comando de usuario no reconocido/no tiene asignado uan funcion en el array.\n" RESET);
+		return;
+	}
 	if (p_array_funciones[num_comando](command) == -1){
 		g_print(RED "ERROR - In IRCInterface_NewCommandText: Error en p_array_funciones num: %d \n" RESET,num_comando);
 	}
