@@ -1,10 +1,10 @@
 /**
  * @file xchat2.c
+ * @brief Fichero con principalmente la implementación de los callbacks de xchat2.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
  * @author Celia Mateos
  * @date 20/03/17
- * @brief Fichero con principalmente la implementación de los callbacks de xchat2.
  *
  */
 
@@ -74,6 +74,8 @@ int command_query(char *message){
 	//332
 	char *topic = NULL;
 	char *channel = NULL;
+
+	char inv[200];
 
 	//353
 	//char* show_nick;
@@ -238,7 +240,7 @@ int command_query(char *message){
 			
 			ret = IRCParse_RplLuserClient(message, &prefix, &nick2, &msg, &nusers, &ninvisibles, &nservers);
 			if(ret != IRC_OK){
-				g_print(RED "\nERROR - In command_query: case RPL_LUSERCLIENT -IRCParse_RplLuserClient != IRC_OK" RESET);
+				//g_print(RED "\nERROR - In command_query: case RPL_LUSERCLIENT -IRCParse_RplLuserClient != IRC_OK" RESET);
 				//return IRCERR_NOCONNECT;
 			}
 			g_print("\t message: %s \n",message);
@@ -354,6 +356,24 @@ int command_query(char *message){
 			//IRCInterface_WriteSystem("*",message);			
 			break;
 
+		case RPL_INVITING:
+			g_print(GRN "\n>> [server command] RPL_INVITING - message = %s\n" RESET, message);
+
+			ret = IRCParse_RplInviting (message, &prefix , &nick, &channel, &msg);
+			if(ret != IRC_OK){
+				g_print(RED "\nERROR - In command_query: case RPL_INVITING - IRCParse_RplInviting != IRC_OK" RESET);
+				break;
+			}
+			//strcpy("")
+			if(strcmp(nick,nick_user) == 0){
+				strcpy(inv,"You invited ");
+				strcat(inv, channel);
+				strcat(inv, " to join ");
+				strcat(inv, msg);
+				IRCInterface_WriteSystemThread_Pretty("*",inv);
+			}
+			break;
+
 		case RPL_WHOREPLY: //352
 			g_print(GRN "\n>> [server command] RPL_WHOREPLY - message = %s\n" RESET, message);
 			break;
@@ -422,9 +442,14 @@ int command_query(char *message){
 			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);	
 			break;
 
+		case RPL_UNAWAY: //305
+			g_print(GRN "\n>> [server command] RPL_UNAWAY - message = %s\n" RESET, message);
+			IRCParse_RplUnaway (message, &prefix, &nick, &msg);
+			IRCInterface_WriteSystemThread_Pretty("*",msg);
+			break;
+
 		case RPL_AWAY: //306
 			g_print(GRN "\n>> [server command] RPL_AWAY - message = %s\n" RESET, message);
-			//>> :irc.eps.net 306 gomupo :You have been marked as being away
 			IRCParse_RplAway (message, &prefix, &nick, &nick2, &msg);
 			IRCInterface_WriteSystemThread_Pretty("*",msg);
 			break;
@@ -500,8 +525,8 @@ int command_query(char *message){
 
 		case JOIN:
 			g_print(GRN "\n>> [server command] JOIN - message = %s\n" RESET, message);
-			g_print(MAG "\nJOIN es %ld con IRC_CommandQuery\n" RESET, IRC_CommandQuery(message));
-			g_print(MAG "\nJOIN es %ld con IRCUser_CommandQuery\n" RESET, IRCUser_CommandQuery(message));
+			//g_print(MAG "\nJOIN es %ld con IRC_CommandQuery\n" RESET, IRC_CommandQuery(message));
+			//g_print(MAG "\nJOIN es %ld con IRCUser_CommandQuery\n" RESET, IRCUser_CommandQuery(message));
 
 			ret = IRCParse_Join (message, &prefix, &channel, &key, &msg);
 			if(ret != IRC_OK){
@@ -899,10 +924,15 @@ int command_query(char *message){
 			IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
 			break;
 
+		case ERR_NOSUCHSERVER:
+			g_print(GRN "\n>> [server command] ERR_NOSUCHSERVER - message = %s\n" RESET, message);
+			IRCInterface_WriteSystemThread_Pretty("*",message);
+			break;
+
 		/*TRATAMIENTO DE ERRORES*/
 		case IRCERR_NOCOMMAND:
 			g_print(RED "\nERROR - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_NOCOMMAND -  no hay ningún comando en la cadena de caracteres\n" RESET);
-			IRCInterface_WriteSystemThread("*",message);
+			IRCInterface_WriteSystemThread_Pretty("*",message);
 			return ERR;
 
 		case IRCERR_NOPARAMS:
@@ -941,6 +971,23 @@ int command_query(char *message){
 			return OK;
 
 		default:
+			switch(parse_type2(message)){
+				case 306: //parche porque no devuelve 306 para AWAY
+					g_print(GRN "\n>> [server command] 306 (RPL_AWAY) - message = %s\n" RESET, message);
+					//IRCParse_RplAway (message, &prefix, &nick, &nick2, &msg);
+					IRCInterface_WriteSystemThread_Pretty("*",strnext(strnext(message, ':'), ':'));
+					return OK;
+				case 311: //WHOIS
+				case 312:
+				case 319:
+				case 317:
+				case 318:
+					g_print(GRN "\n>> [server command] 311-318 (RPL_WHOIS...) - message = %s\n" RESET, message);
+					IRCInterface_WriteSystemThread_Pretty("*",strnext(strnext(message, ':'), ':'));
+					return OK;
+				default:
+					break;
+			}
 			g_print(YEL "WARN - In command_query: Alcanzado default del switch()(TO_DO):\n\t %s\n" RESET, message);
 			//sprintf(aux,"[%s] %s",gmtime(time(NULL)), nick)
 			IRCInterface_WriteSystemThread("*",message);
@@ -2218,7 +2265,7 @@ void IRCInterface_KickNick(char *channel, char *nick)
 	char *command=NULL;
 
 	//long IRCMsg_Kick (char **command, char *prefix, char * channel, char *user, char *comment)
-	ret = IRCMsg_Kick (&command, NULL, channel, nick, "Has sido kickeado del servidor");
+	ret = IRCMsg_Kick (&command, NULL, channel, nick, "Te han echado del canal.");
 	if(ret != IRC_OK){
 		g_print(RED "ERROR - In IRCInterface_KickNick : Error en IRCMsg_Kick, no devolvio IRC_OK\n" RESET);
 		return;
@@ -2303,9 +2350,10 @@ void IRCInterface_NewCommandText(char *command)
 	}
 
 	num_comando = IRCUser_CommandQuery (command);	
-	g_print(MAG "\n>>>>>>>>>>num_comando -> array de funciones: %d \n" RESET,num_comando);
+	g_print(MAG "\n\t>num_comando -> array de funciones: %d \n" RESET,num_comando);
 	if (num_comando > 56){
-		g_print(YEL "\nWARN - Comando de usuario no reconocido/no tiene asignado uan funcion en el array.\n" RESET);
+		g_print(YEL "\nWARN - Comando de usuario no reconocido/no tiene asignado una funcion en el array.\n" RESET);
+		pdefault(command);
 		return;
 	}
 	if (p_array_funciones[num_comando](command) == -1){

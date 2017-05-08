@@ -1,6 +1,6 @@
 /**
  * @file G-2361-06-P1-Server.c
- * @brief Implementacion de las funciones del Servidor
+ * @brief Implementacion de las funciones del servidor IRC
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
  * @author Celia Mateos

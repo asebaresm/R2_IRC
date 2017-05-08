@@ -1,4 +1,12 @@
-
+/**
+ * @file G-2361-06-P1-Sockets.c
+ * @brief Implementacion de las funciones propias de sockets
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
+ */
 #include "../includes/G-2361-06-P1-Sockets.h"
 
 

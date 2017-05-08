@@ -3,7 +3,9 @@
  * @brief Implementacion de las funciones para daemonizar el servidor.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
- * 
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
  */
 #include "../includes/daemon.h"
 

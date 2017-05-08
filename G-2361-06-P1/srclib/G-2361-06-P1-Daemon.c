@@ -1,4 +1,12 @@
-
+/**
+ * @file G-2361-06-P1-Daemon.c
+ * @brief Implementacion del daemon utiliza el servidor para ejecutarse en segundo plano
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
+ */
 #include "../includes/G-2361-06-P1-Daemon.h"
 
 int daemonizar (char * servicio ){

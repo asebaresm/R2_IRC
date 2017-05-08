@@ -28,7 +28,7 @@ EXECP1 = $(PREFIX)-Server
 # Construccion de los ejecutables
 #=============================================================
 
-all : lib P1 
+all : lib P1 empaquetar copy
 
 lib : libServidor.a
 
@@ -81,7 +81,10 @@ distr: clean
 # Limpia fichero temporales
 #=============================================================
 clean:
-	rm -rf *\.o $(EXECP1) $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(OBJSMAIN)
+	rm -rf G-2361-06-P1/ *\.o obj/*.o lib/*.a *.tar.gz $(EXECP1) $(OBJSocket) $(OBJServer) $(OBJFunctions) $(OBJDaemon) $(OBJSMAIN)
 
+empaquetar:
+	cd .. ; tar -czf G-2361-06-P1.tar.gz G-2361-06-P1
 
-
+copy:
+	cd .. ; mv G-2361-06-P1.tar.gz G-2361-06-P1/

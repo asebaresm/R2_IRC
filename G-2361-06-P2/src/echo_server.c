@@ -1,9 +1,11 @@
 /** 
  * @file echo_server.c
- * @brief Servidor echo utilizado para comprender y desarrollar el servidor IRC.
+ * @brief Servidor echo utilizado para aprendizaje y pruebas con sockets.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
- * 
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
  */
 
 #include <stdio.h>

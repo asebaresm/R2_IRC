@@ -1,3 +1,12 @@
+/**
+ * @file G-2361-06-P1-Sockets.h
+ * @brief Declaracion de funciones, definición de tipos: implementacion de las funciones propias de sockets
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
+ */
 #ifndef _SOCKET_H
 #define _SOCKET_H
 

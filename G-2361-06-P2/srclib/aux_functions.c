@@ -237,6 +237,30 @@ int parse_type(const char* message){
 	return ERR;
 }
 
+/**
+* @brief Versión 2 de pruebas. Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por IRC_CommandQuery()
+* @param message mensaje original
+* @return int codigo de comando si es un codigo valido, ERR si no lo es o comando invalido
+*/
+int parse_type2(const char* message){
+	int unknw_type;
+	char* token = NULL;
+	char* message_cp = NULL;
+
+	message_cp = strdup(message);
+	token = strtok(message_cp, " ");
+	if(token != NULL){
+		token = strtok(NULL, " ");
+		free(message_cp);
+		unknw_type = atoi(token);
+		if (unknw_type < MAX_IRC_COMMAND){
+			return unknw_type;
+		}
+	}
+	
+	return ERR;
+}
+
 void IRCInterface_WriteSystem_Pretty(char *nick, char *msg){
 	char snap[SNAP_SIZE];
 	char f_nick[MAX_NICK_FIELD];

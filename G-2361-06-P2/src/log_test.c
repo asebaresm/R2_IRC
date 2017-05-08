@@ -3,6 +3,7 @@
  * @brief Prueba de la libreria de logs.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
+ * @author Celia Mateos
  * @date 13/02/17
  *
  */

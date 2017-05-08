@@ -10,18 +10,7 @@
 
 #include "../includes/user_commands.h"
 
-/*
-int (*p_array_funciones[])(char* ) = {
-	pdefault, punames, puhelp, pulist, pujoin, pupart, puleave, puquit,
-	punick, puaway, puwhois, puinvite, pukick, putopic, pdefault, pumsg, puquery,
-	punotice, pdefault, pdefault, pdefault, puwho, pdefault, pdefault,
-	pucycle, pumotd, pdefault, pulusers, pdefault, pdefault, pdefault,
-	pdefault, pdefault, pumode, pdefault, pdefault, pdefault, pdefault,
-	pdefault, pdefault, pdefault, pdefault, pdefault, pdefault, pdefault,
-	pdefault, pdefault, pupartall, pdefault, puback, puunaway, pdefault,
-	puoper, puban, pufsend, pufaccept, pufclose
-};
-*/
+
 p_funcion p_array_funciones[] = {
 	pdefault, punames, puhelp, pulist, pujoin, pupart, puleave, puquit,
 	punick, puaway, puwhois, puinvite, pukick, putopic, pdefault, pumsg, puquery,
@@ -386,6 +375,11 @@ int pdefault(char* command){
 
 /**
 * @brief Comando de usuario PART
+* Used to part (or leave) a channel you currently occupy.
+* All those in the channel will be notified of your departure.
+* If you specify a reason it will be displayed to the users on the channel
+* -
+* Syntax:  PART <chan>,<chan2>,<chan3>,<chan4> <reason>
 * @param command cadena introducida por el usuario en el campo de texto
 * @return OK si todo es correcto, ERR si se produce un error
 */
@@ -404,20 +398,37 @@ int pupart(char* command){
 
 /**
 * @brief Comando de usuario AWAY
+* 
+* Sets your online status to "Away".
+* -
+* Syntax:  AWAY <reason> (Sets you Away with the reason given)
+*          AWAY (Un-Sets you as Away)
+* Example: AWAY Lunch time!
 * @param command cadena introducida por el usuario en el campo de texto
 * @return OK si todo es correcto, ERR si se produce un error
 */
 int puaway(char* command){
 	char* command_enviar;
 	char *reason;
+	int free_f = 0;
 
    	IRCUserParse_Away (command, &reason);
+   	/*
+   	if(reason == NULL || strlen(reason) == 0){
+   		reason = "afk";
+   		free_f = 1;
+   	}*/
+
    	IRCMsg_Away (&command_enviar, NULL, reason);
 	g_print("\t Mensaje a enviar command_enviar en AWAY: %s \n",command_enviar);
 
 	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
 	IRCInterface_PlaneRegisterOutMessage(command_enviar);
-	mfree(2, command_enviar, reason);
+	
+	if(free_f)
+		mfree(1, command_enviar);
+	else
+		mfree(2, command_enviar, reason);
 	return OK;
 }
 
@@ -489,6 +500,7 @@ int puwhois(char* command){
 
 	char command_enviar[MAXDATA];
 	char* nick = NULL;
+	char whois[200];
 
 	g_print("\t Mensaje recibido en UWHOIS: %s \n", command);
 	IRCUserParse_Whois (command, &nick);
@@ -499,6 +511,11 @@ int puwhois(char* command){
 
 	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
 	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+
+	strcpy(whois,"WHOIS ");
+	strcat(whois, nick);
+	IRCInterface_WriteSystem_Pretty("*", "------------------------------");
+	IRCInterface_WriteSystem_Pretty("*", whois);
 	mfree(1, nick);
 	return OK;
 }
@@ -515,6 +532,7 @@ int pulusers(char* command){
 
 	char command_enviar[MAXDATA];
 	char* server;
+	char lusers[200];
 
 	g_print("\t Mensaje recibido en ULUSERS: %s \n", command);
 	IRCUserParse_Lusers (command, &server);
@@ -525,6 +543,11 @@ int pulusers(char* command){
 
 	enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
 	IRCInterface_PlaneRegisterOutMessage(command_enviar);
+
+	strcpy(lusers,"LUSERS ");
+	strcat(lusers, server);
+	IRCInterface_WriteSystem_Pretty("*", "------------------------------");
+	IRCInterface_WriteSystem_Pretty("*", lusers);
 	mfree(1, server);
 	return OK;
 }
@@ -624,7 +647,7 @@ int pucycle(char* command){
     	IRCInterface_PlaneRegisterOutMessage (respuesta);
     	free(respuesta);
     }
-	mfree(1, respuesta);
+
     return OK;   
 }
 

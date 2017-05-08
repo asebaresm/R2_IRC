@@ -1,10 +1,10 @@
 /**
  * @file user_commands.h
+ * @brief Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
  * @author Celia Mateos
  * @date 20/03/17
- * @brief Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario.
  *
  */
 #ifndef user_commands_h

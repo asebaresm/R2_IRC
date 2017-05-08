@@ -1,3 +1,12 @@
+/**
+ * @file G-2361-06-P1-Daemon.h
+ * @brief Declaracion de funciones, definición de tipos: implementacion del daemon utiliza el servidor para ejecutarse en segundo plano
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
+ */
 #ifndef _DAEMON_H
 #define _DAEMON_H
 

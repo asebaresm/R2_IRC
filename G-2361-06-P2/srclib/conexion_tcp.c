@@ -3,6 +3,7 @@
  * @brief Implementacion de la liberia para conexiones TCP
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
+ * @author Celia Mateos
  * @date 13/02/17
  *
  */

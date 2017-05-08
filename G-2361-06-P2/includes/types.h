@@ -3,6 +3,7 @@
  * @brief Definicion de tipos e includes comunes utilizados por los distintos modulos.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
+ * @author Celia Mateos
  * @date 13/02/17
  *
  */

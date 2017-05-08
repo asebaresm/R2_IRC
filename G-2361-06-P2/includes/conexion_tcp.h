@@ -1,8 +1,9 @@
 /**
  * @file conexion_tcp.h
- * @brief Prototipos de funcion de la liberia para conexiones TCP.
+ * @brief Declaraciones de funciones, definición de tipos: liberia para conexiones TCP.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
+ * @author Celia Mateos
  * @date 13/02/17
  *
  */

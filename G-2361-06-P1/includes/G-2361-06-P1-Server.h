@@ -1,3 +1,12 @@
+/**
+ * @file G-2361-06-P1-Server.h
+ * @brief Declaracion de funciones, definición de tipos: implementacion de las funciones del servidor IRC
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
+ */
 #ifndef _SERVER_H
 #define _SERVER_H
 

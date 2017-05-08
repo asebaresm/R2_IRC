@@ -1,9 +1,10 @@
 /** 
  * @file echo_client.c
- * @brief Cliente echo utilizado para comprender y desarrollar el servidor IRC.
+ * @brief Cliente echo utilizado para aprendizaje y pruebas con sockets.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
- * 
+ * @date 13/02/17
+ *
  */
 
 #include <stdio.h> //printf

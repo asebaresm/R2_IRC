@@ -1,10 +1,10 @@
 /**
  * @file xchat2.h
+ * @brief Declaraciones de funciones, definición de tipos: implementación de los callbacks de xchat2.
  * @author Alfonso Sebares
  * @author Beatriz de Pablo
  * @author Celia Mateos
  * @date 20/03/17
- * @brief Declaraciones de funciones, definición de tipos: implementación de los callbacks de xchat2.
  *
  */
 #ifndef xchat_h

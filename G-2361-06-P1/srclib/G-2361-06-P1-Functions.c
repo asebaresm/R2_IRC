@@ -1,3 +1,12 @@
+/**
+ * @file G-2361-06-P1-Functions.c
+ * @brief Implementacion de ciertas funciones IRC que implementa el servidor IRC.
+ * @author Alfonso Sebares
+ * @author Beatriz de Pablo
+ * @author Celia Mateos
+ * @date 13/02/17
+ *
+ */
 #include "../includes/G-2361-06-P1-Functions.h"
 
 
