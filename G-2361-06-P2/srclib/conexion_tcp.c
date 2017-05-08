@@ -11,6 +11,7 @@
  /* -- Includes -- */
 #include "../includes/conexion_tcp.h"
 
+
 int crearConexion(int portno, struct sockaddr_in* server){
 	int socket_desc;
 	int optval; 						/* flag value for setsockopt */
@@ -52,6 +53,7 @@ int crearConexion(int portno, struct sockaddr_in* server){
 	return socket_desc;
 }
 
+
 int recvDatos(int client_sock, char* client_message, int cm_size, char *hostaddrp){
 	int read_size;
 	char buf[AUX_SBUF];
@@ -81,6 +83,7 @@ int recvDatos(int client_sock, char* client_message, int cm_size, char *hostaddr
 //ssize_t write(int fd, const void *buf, size_t count);
 //ssize_t send(int sockfd, const void *buf, size_t len, int flags);
 
+
 int enviarDatos(int client_sock, char* message, int message_size){
 	int sent_size;
 	char buf[AUX_SBUF];
@@ -105,6 +108,7 @@ int enviarDatos(int client_sock, char* message, int message_size){
 
     return sent_size;
 }
+
 
 int cerrarConexion(int client_sock, char* hostaddrp){
 	int sent_size;

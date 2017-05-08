@@ -1,0 +1,282 @@
+\hypertarget{conexion__tcp_8h}{\section{includes/conexion\-\_\-tcp.h File Reference}
+\label{conexion__tcp_8h}\index{includes/conexion\-\_\-tcp.\-h@{includes/conexion\-\_\-tcp.\-h}}
+}
+
+
+Declaraciones de funciones, definición de tipos\-: liberia para conexiones T\-C\-P.  
+
+
+{\ttfamily \#include \char`\"{}types.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}logger.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$unistd.\-h$>$}\\*
+{\ttfamily \#include $<$netdb.\-h$>$}\\*
+{\ttfamily \#include $<$sys/types.\-h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\-h$>$}\\*
+{\ttfamily \#include $<$netinet/in.\-h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\-h$>$}\\*
+Include dependency graph for conexion\-\_\-tcp.\-h\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{conexion__tcp_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{conexion__tcp_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{conexion__tcp_8h_aeca034f67218340ecb2261a22c2f3dcd}{B\-U\-F\-S\-I\-Z\-E}~1024
+\item 
+\#define \hyperlink{conexion__tcp_8h_a6c224620c83dd3234d005fd90eb82207}{A\-U\-X\-\_\-\-S\-B\-U\-F}~1152
+\item 
+\#define \hyperlink{conexion__tcp_8h_a3e4b4faa36cc9e3a7d9895aec8f27592}{M\-A\-X\-\_\-\-C\-O\-N\-\_\-\-R\-E\-Q}~10
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{conexion__tcp_8h_a7180696e651a403677ea6a35b59da285}{crear\-Conexion} (int portno, struct sockaddr\-\_\-in $\ast$server)
+\item 
+int \hyperlink{conexion__tcp_8h_a2ec2b47883bdb05804bec657bfc42516}{recv\-Datos} (int client\-\_\-sock, char $\ast$client\-\_\-message, int cm\-\_\-size, char $\ast$hostaddrp)
+\item 
+int \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviar\-Datos} (int client\-\_\-sock, char $\ast$message, int message\-\_\-size)
+\item 
+int \hyperlink{conexion__tcp_8h_a831321f466f7f9fa60b0f940b7c2d7da}{cerrar\-Conexion} (int client\-\_\-sock, char $\ast$hostaddrp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Declaraciones de funciones, definición de tipos\-: liberia para conexiones T\-C\-P. \begin{DoxyAuthor}{Author}
+Alfonso Sebares 
+
+Beatriz de Pablo 
+
+Celia Mateos 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13/02/17 
+\end{DoxyDate}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{conexion__tcp_8h_a6c224620c83dd3234d005fd90eb82207}{\index{conexion\-\_\-tcp.\-h@{conexion\-\_\-tcp.\-h}!A\-U\-X\-\_\-\-S\-B\-U\-F@{A\-U\-X\-\_\-\-S\-B\-U\-F}}
+\index{A\-U\-X\-\_\-\-S\-B\-U\-F@{A\-U\-X\-\_\-\-S\-B\-U\-F}!conexion_tcp.h@{conexion\-\_\-tcp.\-h}}
+\subsubsection[{A\-U\-X\-\_\-\-S\-B\-U\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\-U\-X\-\_\-\-S\-B\-U\-F~1152}}\label{conexion__tcp_8h_a6c224620c83dd3234d005fd90eb82207}
+Tam. max. del buffer auxiliar para logeo de eventos (1024 + 128 extra) \hypertarget{conexion__tcp_8h_aeca034f67218340ecb2261a22c2f3dcd}{\index{conexion\-\_\-tcp.\-h@{conexion\-\_\-tcp.\-h}!B\-U\-F\-S\-I\-Z\-E@{B\-U\-F\-S\-I\-Z\-E}}
+\index{B\-U\-F\-S\-I\-Z\-E@{B\-U\-F\-S\-I\-Z\-E}!conexion_tcp.h@{conexion\-\_\-tcp.\-h}}
+\subsubsection[{B\-U\-F\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-U\-F\-S\-I\-Z\-E~1024}}\label{conexion__tcp_8h_aeca034f67218340ecb2261a22c2f3dcd}
+Tam. max. del buffer que se lee \hypertarget{conexion__tcp_8h_a3e4b4faa36cc9e3a7d9895aec8f27592}{\index{conexion\-\_\-tcp.\-h@{conexion\-\_\-tcp.\-h}!M\-A\-X\-\_\-\-C\-O\-N\-\_\-\-R\-E\-Q@{M\-A\-X\-\_\-\-C\-O\-N\-\_\-\-R\-E\-Q}}
+\index{M\-A\-X\-\_\-\-C\-O\-N\-\_\-\-R\-E\-Q@{M\-A\-X\-\_\-\-C\-O\-N\-\_\-\-R\-E\-Q}!conexion_tcp.h@{conexion\-\_\-tcp.\-h}}
+\subsubsection[{M\-A\-X\-\_\-\-C\-O\-N\-\_\-\-R\-E\-Q}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X\-\_\-\-C\-O\-N\-\_\-\-R\-E\-Q~10}}\label{conexion__tcp_8h_a3e4b4faa36cc9e3a7d9895aec8f27592}
+Max. de peticiones de conexion activas (e.\-g. la 11 falla si puesto a 10) 
+
+\subsection{Function Documentation}
+\hypertarget{conexion__tcp_8h_a831321f466f7f9fa60b0f940b7c2d7da}{\index{conexion\-\_\-tcp.\-h@{conexion\-\_\-tcp.\-h}!cerrar\-Conexion@{cerrar\-Conexion}}
+\index{cerrar\-Conexion@{cerrar\-Conexion}!conexion_tcp.h@{conexion\-\_\-tcp.\-h}}
+\subsubsection[{cerrar\-Conexion}]{\setlength{\rightskip}{0pt plus 5cm}int cerrar\-Conexion (
+\begin{DoxyParamCaption}
+\item[{int}]{client\-\_\-sock, }
+\item[{char $\ast$}]{hostaddrp}
+\end{DoxyParamCaption}
+)}}\label{conexion__tcp_8h_a831321f466f7f9fa60b0f940b7c2d7da}
+
+\begin{DoxyCode}
+113                                                     \{
+114         \textcolor{keywordtype}{int} sent\_size;
+115         \textcolor{keywordtype}{char} buf[\hyperlink{conexion__tcp_8h_a6c224620c83dd3234d005fd90eb82207}{AUX\_SBUF}];
+116 
+117         \textcolor{keywordflow}{if}(close(client\_sock) < 0)\{
+118         \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"Error al cerrar la conexion"});
+119         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+120 
+121     \}\textcolor{keywordflow}{else}\{
+122         \textcolor{keywordflow}{if} (hostaddrp != NULL)
+123                         sprintf(buf, \textcolor{stringliteral}{"conexion\_tcp.c: conexion cerrada con %s"}, hostaddrp);
+124                 \textcolor{keywordflow}{else}
+125                         sprintf(buf, \textcolor{stringliteral}{"conexion\_tcp.c: conexion cerrada"});
+126                 \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(buf);
+127     \}
+128 
+129     \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+130 \}\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{conexion__tcp_8h_a831321f466f7f9fa60b0f940b7c2d7da_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{conexion__tcp_8h_a7180696e651a403677ea6a35b59da285}{\index{conexion\-\_\-tcp.\-h@{conexion\-\_\-tcp.\-h}!crear\-Conexion@{crear\-Conexion}}
+\index{crear\-Conexion@{crear\-Conexion}!conexion_tcp.h@{conexion\-\_\-tcp.\-h}}
+\subsubsection[{crear\-Conexion}]{\setlength{\rightskip}{0pt plus 5cm}int crear\-Conexion (
+\begin{DoxyParamCaption}
+\item[{int}]{portno, }
+\item[{struct sockaddr\-\_\-in $\ast$}]{server}
+\end{DoxyParamCaption}
+)}}\label{conexion__tcp_8h_a7180696e651a403677ea6a35b59da285}
+
+\begin{DoxyCode}
+15                                                          \{
+16         \textcolor{keywordtype}{int} socket\_desc;
+17         \textcolor{keywordtype}{int} optval;                                             \textcolor{comment}{/* flag value for setsockopt */}
+18         
+19         \textcolor{comment}{//Create socket}
+20         socket\_desc = socket(AF\_INET , SOCK\_STREAM , 0);
+21         \textcolor{keywordflow}{if} (socket\_desc == -1)
+22         \{
+23                 \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"No se ha podido crear socket"});
+24                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+25         \}
+26 
+27         \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"Socket creado"});
+28         
+29         optval = 1;
+30 
+31         setsockopt(socket\_desc, SOL\_SOCKET, SO\_REUSEADDR, (\textcolor{keyword}{const} \textcolor{keywordtype}{void} *)&optval , \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));
+32 
+33         \textcolor{comment}{//Prepare the sockaddr\_in structure}
+34         memset((\textcolor{keywordtype}{char} *) server, 0, \textcolor{keyword}{sizeof}(*server));
+35         server->sin\_family = AF\_INET;
+36         server->sin\_addr.s\_addr = INADDR\_ANY;
+37         server->sin\_port = htons((\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short})portno );
+38          
+39         \textcolor{comment}{//Bind}
+40         \textcolor{keywordflow}{if}( bind(socket\_desc,(\textcolor{keyword}{struct} sockaddr *)server , \textcolor{keyword}{sizeof}(*server)) < 0)
+41         \{
+42                 \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"bind failed"});
+43                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+44         \}
+45         \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"bind done"});
+46          
+47         \textcolor{comment}{//Listen}
+48         listen(socket\_desc , \hyperlink{conexion__tcp_8h_a3e4b4faa36cc9e3a7d9895aec8f27592}{MAX\_CON\_REQ});
+49          
+50         \textcolor{comment}{//Accept and incoming connection}
+51         \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"Esperando conexiones entrantes..."});
+52         
+53         \textcolor{keywordflow}{return} socket\_desc;
+54 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{conexion__tcp_8h_a7180696e651a403677ea6a35b59da285_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{\index{conexion\-\_\-tcp.\-h@{conexion\-\_\-tcp.\-h}!enviar\-Datos@{enviar\-Datos}}
+\index{enviar\-Datos@{enviar\-Datos}!conexion_tcp.h@{conexion\-\_\-tcp.\-h}}
+\subsubsection[{enviar\-Datos}]{\setlength{\rightskip}{0pt plus 5cm}int enviar\-Datos (
+\begin{DoxyParamCaption}
+\item[{int}]{client\-\_\-sock, }
+\item[{char $\ast$}]{message, }
+\item[{int}]{message\-\_\-size}
+\end{DoxyParamCaption}
+)}}\label{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}
+
+\begin{DoxyCode}
+87                                                                  \{
+88         \textcolor{keywordtype}{int} sent\_size;
+89         \textcolor{keywordtype}{char} buf[\hyperlink{conexion__tcp_8h_a6c224620c83dd3234d005fd90eb82207}{AUX\_SBUF}];
+90 
+91         sent\_size = send(client\_sock, message, message\_size, 0);
+92 
+93         \textcolor{keywordflow}{if} (sent\_size == 0)\{
+94         \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"send(): enviado un tam 0 bytes"});
+95                 \textcolor{keywordflow}{return} 0;
+96 
+97     \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(sent\_size < 0)\{
+98                 \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"send(): enviado un tam -1 bytes, error"});
+99                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+100 
+101         \}\textcolor{keywordflow}{else}\{
+102                 \textcolor{comment}{//printf("\(\backslash\)nYEE '%d', '%d', '%d'\(\backslash\)n", message[strlen(message) - 3], message[strlen(message)
+       - 2], message[strlen(message) - 1]);}
+103                 \textcolor{comment}{//if(message[strlen(message) - 2] == 13) //check si es CR,LF}
+104                 \textcolor{comment}{//      message[strlen(message) - 2] = '\(\backslash\)0';}
+105                 sprintf(buf, \textcolor{stringliteral}{"send(): \(\backslash\)"%s\(\backslash\)" (%d Bytes)"}, message, sent\_size);
+106                 \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(buf);
+107         \}
+108 
+109     \textcolor{keywordflow}{return} sent\_size;
+110 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{conexion__tcp_8h_a2ec2b47883bdb05804bec657bfc42516}{\index{conexion\-\_\-tcp.\-h@{conexion\-\_\-tcp.\-h}!recv\-Datos@{recv\-Datos}}
+\index{recv\-Datos@{recv\-Datos}!conexion_tcp.h@{conexion\-\_\-tcp.\-h}}
+\subsubsection[{recv\-Datos}]{\setlength{\rightskip}{0pt plus 5cm}int recv\-Datos (
+\begin{DoxyParamCaption}
+\item[{int}]{client\-\_\-sock, }
+\item[{char $\ast$}]{client\-\_\-message, }
+\item[{int}]{cm\-\_\-size, }
+\item[{char $\ast$}]{hostaddrp}
+\end{DoxyParamCaption}
+)}}\label{conexion__tcp_8h_a2ec2b47883bdb05804bec657bfc42516}
+
+\begin{DoxyCode}
+57                                                                                   \{
+58         \textcolor{keywordtype}{int} read\_size;
+59         \textcolor{keywordtype}{char} buf[\hyperlink{conexion__tcp_8h_a6c224620c83dd3234d005fd90eb82207}{AUX\_SBUF}];
+60 
+61         read\_size = recv(client\_sock , client\_message , cm\_size , 0);
+62 
+63         \textcolor{keywordflow}{if} (read\_size == 0)\{
+64                 sprintf(buf,\textcolor{stringliteral}{"recv(): leido un tam 0 bytes de %s"}, hostaddrp);
+65                 \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(buf);
+66                 \textcolor{keywordflow}{return} 0;
+67 
+68         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(read\_size < 0)\{
+69                 sprintf(buf,\textcolor{stringliteral}{"recv(): leido un tam -1 bytes de %s, error"}, hostaddrp);
+70                 \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(buf);
+71                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+72 
+73         \}\textcolor{keywordflow}{else}\{
+74                 \textcolor{comment}{//if(client\_message[strlen(client\_message) - 2] == 13) //check si es CR,LF}
+75                 \textcolor{comment}{//      client\_message[strlen(client\_message) - 2] = '\(\backslash\)0';}
+76                 sprintf(buf, \textcolor{stringliteral}{"recv(): \(\backslash\)"%s\(\backslash\)" (%d Bytes) de %s"}, client\_message, read\_size, hostaddrp);
+77                 \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(buf);
+78         \}
+79 
+80         \textcolor{keywordflow}{return} read\_size;
+81 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{conexion__tcp_8h_a2ec2b47883bdb05804bec657bfc42516_cgraph}
+\end{center}
+\end{figure}
+
+

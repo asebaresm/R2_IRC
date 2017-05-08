@@ -1,0 +1,13 @@
+<map id="includes/logger.h" name="includes/logger.h">
+<area shape="rect" id="node2" href="$conexion__tcp_8h.html" title="Declaraciones de funciones, definición de tipos: liberia para conexiones TCP. " alt="" coords="427,80,589,107"/>
+<area shape="rect" id="node5" href="$xchat2_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de los callbacks de xchat2..." alt="" coords="294,304,417,331"/>
+<area shape="rect" id="node11" href="$log__test_8c.html" title="Prueba de la libreria de logs. " alt="" coords="892,80,993,107"/>
+<area shape="rect" id="node12" href="$logger_8c.html" title="Descripcion de la liberia de log de errores complementaria a /var/log/syslog. " alt="" coords="1018,80,1120,107"/>
+<area shape="rect" id="node3" href="$aux__functions_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de funciones auxiliares de xchat2..." alt="" coords="191,155,357,181"/>
+<area shape="rect" id="node4" href="$user__commands_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario..." alt="" coords="5,229,187,256"/>
+<area shape="rect" id="node9" href="$conexion__tcp__test_8c.html" title="src/conexion_tcp_test.c" alt="" coords="486,155,647,181"/>
+<area shape="rect" id="node10" href="$conexion__tcp_8c.html" title="Implementacion de la liberia para conexiones TCP. " alt="" coords="671,155,816,181"/>
+<area shape="rect" id="node8" href="$aux__functions_8c.html" title="Implementacion de las funciones auxiliares de xchat2. " alt="" coords="261,229,409,256"/>
+<area shape="rect" id="node7" href="$user__commands_8c.html" title="Implementacion de las funciones IRC de usuario de xchat2. " alt="" coords="14,304,177,331"/>
+<area shape="rect" id="node6" href="$xchat2_8c.html" title="Fichero con principalmente la implementación de los callbacks de xchat2. " alt="" coords="309,379,403,405"/>
+</map>

@@ -1,0 +1,29 @@
+Funcion para dividir en comandos la cadena \char`\"{}message\char`\"{} Tiene implementada una logica de concatenacion de trozos de comandos de cara a cuando se lee el tamaño maximo del buffer de lectura en el socket y se corta un comando en 2 lecturas. 
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{xchat2_8h}{xchat2.h}"}
+
+\textcolor{keywordtype}{void} \hyperlink{xchat2_8h_a63f7dc08db4a2318cb526eee804709b3}{unpipe}(\textcolor{keywordtype}{char}* message, \textcolor{keywordtype}{int} MAXDATA\_flag);
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em massage} & Mensaje recibido para procesar \\
+\hline
+\mbox{\tt in}  & {\em M\-A\-X\-D\-A\-T\-A\-\_\-flag} & Flag que viene activada si se alcanzó el máximo de Bytes leidos por el buffer del socket\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Celia Mateos de Miguel (\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\-mateos@estudiante.\-uam.\-es}) Beatriz de Pablo Garcia (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\-depablo@estudiante.\-uam.\-es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\-sebares@estudiante.\-uam.\-es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13 de febrero de 2017
+\end{DoxyDate}
+
+
+ 

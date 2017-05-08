@@ -1,0 +1,37 @@
+.TH "test_i_r_c__command_query" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+test_i_r_c__command_query \- testIRC_CommandQuery 
+Para un mensaje IRC, comprueba si es un comando reconocido por IRC_CommandQuery
+.PP
+.PP
+.nf
+#include "aux_functions\&.h"
+
+int testIRC_CommandQuery(char* message);
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fImessage\fP Mensaje original
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+int OK si es un comando reconocido y ERR si es IRCERR_NOCOMMAND o IRCERR_UNKNOWNCOMMAND 
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Celia Mateos de Miguel (cel.mateos@estudiante.uam.es) Beatriz de Pablo Garcia (beatriz.depablo@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13 de febrero de 2017
+.RE
+.PP
+.PP
+ 

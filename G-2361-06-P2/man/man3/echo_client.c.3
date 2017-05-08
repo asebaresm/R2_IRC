@@ -1,0 +1,123 @@
+.TH "src/echo_client.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/echo_client.c \- 
+.PP
+Cliente echo utilizado para aprendizaje y pruebas con sockets\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBUFSIZE\fP   1024"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Cliente echo utilizado para aprendizaje y pruebas con sockets\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13/02/17 
+.RE
+.PP
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define BUFSIZE   1024"
+
+.SH "Function Documentation"
+.PP 
+.SS "int main (intargc, char *argv[])"
+
+.PP
+.nf
+19 {
+20     int sock;
+21     struct sockaddr_in server;
+22     char message[BUFSIZE] , server_reply[BUFSIZE];
+23      
+24     //Create socket
+25     sock = socket(AF_INET , SOCK_STREAM , 0);
+26     if (sock == -1)
+27     {
+28         printf("Could not create socket");
+29     }
+30     puts("Socket created");
+31      
+32     server\&.sin_addr\&.s_addr = inet_addr("127\&.0\&.0\&.1");
+33     server\&.sin_family = AF_INET;
+34     server\&.sin_port = htons( 8888 );
+35  
+36     //Connect to remote server
+37     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
+38     {
+39         perror("connect failed\&. Error");
+40         return 1;
+41     }
+42      
+43     puts("Connected\n");
+44      
+45     //keep communicating with server
+46     while((strcmp(message, "_STOP_") != 0))
+47     {
+48         printf("Enter message : ");
+49         scanf("%s" , message);
+50 
+51         //Send some data
+52         if( send(sock , message , sizeof(message) , 0) < 0)
+53         {
+54             puts("Send failed");
+55             return 1;
+56         }
+57          
+58         //Receive a reply from the server
+59         if( recv(sock , server_reply , BUFSIZE , 0) < 0)
+60         {
+61             puts("recv failed");
+62             break;
+63         }
+64          
+65         puts("Server reply :");
+66         puts(server_reply);
+67     }
+68      
+69     puts("_STOP_ enviado, cerrar conexion");
+70     close(sock);
+71     return 0;
+72 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

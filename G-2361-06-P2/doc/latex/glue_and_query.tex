@@ -1,0 +1,29 @@
+Concatena 2 trozos de comandos cortados y llama a \hyperlink{xchat2_8h_a41f93f364aea303a0c93177289733f92}{command\-\_\-query()} para procesarlo como un único comando. Concatena el (trozo de) comando actual en \hyperlink{xchat2_8h_a63f7dc08db4a2318cb526eee804709b3}{unpipe()} y el (trozo de) comando procesado anterior 
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{xchat2_8h}{xchat2.h}"}
+
+\textcolor{keywordtype}{void} \hyperlink{xchat2_8h_a98484e1bbb136d37503aa6c604eff6a2}{glueAndQuery}(\textcolor{keywordtype}{char}* command, \textcolor{keywordtype}{char}* \hyperlink{xchat2_8c_a4e304440b657a8d3265793203cb12393}{last\_command});
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em command} & comando actual procesando en \hyperlink{xchat2_8h_a63f7dc08db4a2318cb526eee804709b3}{unpipe()} \\
+\hline
+\mbox{\tt in}  & {\em last\-\_\-command} & comando anterior procesado en \hyperlink{xchat2_8h_a63f7dc08db4a2318cb526eee804709b3}{unpipe()}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Void
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Celia Mateos de Miguel (\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\-mateos@estudiante.\-uam.\-es}) Beatriz de Pablo Garcia (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\-depablo@estudiante.\-uam.\-es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\-sebares@estudiante.\-uam.\-es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13 de febrero de 2017
+\end{DoxyDate}
+
+
+ 

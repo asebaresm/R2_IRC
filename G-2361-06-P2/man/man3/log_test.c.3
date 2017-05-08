@@ -1,0 +1,93 @@
+.TH "src/log_test.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/log_test.c \- 
+.PP
+Prueba de la libreria de logs\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./includes/logger\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP ()"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "pthread_mutex_t \fBloglock\fP"
+.br
+.RI "\fIDefinicion del Mutex para el descriptor de fichero del log\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Prueba de la libreria de logs\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.PP
+Celia Mateos 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13/02/17 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "int main ()"
+
+.PP
+.nf
+19 {
+20    FILE* fp = NULL;
+21    fp = initLog();
+22 
+23    if (pthread_mutex_init(&loglock, NULL) != OK){
+24       perror("\n mutex init ha devuelto error\n");
+25       return EXIT_FAILURE;
+26    }
+27 
+28    if (fp == NULL){
+29       perror("ERR abriendo fichero");
+30       return (EXIT_FAILURE);
+31    }
+32 
+33    logEvent("Evento 1\&.\&.\&.");
+34    logEvent("Evento 2\&.\&.\&.");
+35    logEvent("Evento 3\&.\&.\&.");
+36    logEvent("Gatos :3");
+37 
+38    fp = fopen("fichero-inexistente\&.txt", "r");
+39    if (fp == NULL){
+40       logERR("Error de fopen detectado");
+41    }
+42 
+43    pthread_mutex_destroy(&loglock);
+44    return (EXIT_SUCCESS);
+45 }
+.fi
+.SH "Variable Documentation"
+.PP 
+.SS "pthread_mutex_t loglock"
+
+.PP
+Definicion del Mutex para el descriptor de fichero del log\&. Declaracion del Mutex para el descriptor de fichero del log\&. Siempre tiene que ser definida en el source princpal\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

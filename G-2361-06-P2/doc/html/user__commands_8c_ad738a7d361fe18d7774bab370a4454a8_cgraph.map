@@ -1,0 +1,12 @@
+<map id="puquit" name="puquit">
+<area shape="rect" id="node2" href="$conexion__tcp_8h.html#ab9468ce1338cfca5736ab407ba155f55" title="enviarDatos" alt="" coords="157,5,249,32"/>
+<area shape="rect" id="node8" href="$conexion__tcp_8h.html#a831321f466f7f9fa60b0f940b7c2d7da" title="cerrarConexion" alt="" coords="147,56,258,83"/>
+<area shape="rect" id="node9" href="$aux__functions_8h.html#a2480cc4793bf25a16cc731dc9d033582" title="Libera punteros si estos no estan a NULL Uso. " alt="" coords="175,173,230,200"/>
+<area shape="rect" id="node10" href="$aux__functions_8h.html#a040868784608606fad914fea56fc65b8" title="IRCInterface_WriteSystem\l_Pretty" alt="" coords="113,107,293,149"/>
+<area shape="rect" id="node3" href="$logger_8h.html#af71188329ee1cf68a59d3f9ddd035ca6" title="logEvent" alt="" coords="345,5,418,32"/>
+<area shape="rect" id="node7" href="$logger_8h.html#a9487660b2ec318326782a9d9e32f8461" title="logERR" alt="" coords="347,56,415,83"/>
+<area shape="rect" id="node4" href="$logger_8c.html#a6d1f5cd19f49b187e2097a467eca0233" title="logWrite" alt="" coords="470,31,541,57"/>
+<area shape="rect" id="node5" href="$logger_8c.html#a9780074b15cc3acc70e3ee5989c8005a" title="snapTime" alt="" coords="607,5,686,32"/>
+<area shape="rect" id="node6" href="$logger_8c.html#ad5ed54850fd750ca0935368e72017537" title="snapClockTime" alt="" coords="590,56,703,83"/>
+<area shape="rect" id="node11" href="$logger_8h.html#a9780074b15cc3acc70e3ee5989c8005a" title="snapTime" alt="" coords="342,115,421,141"/>
+</map>

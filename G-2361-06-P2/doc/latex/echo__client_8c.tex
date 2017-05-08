@@ -1,0 +1,115 @@
+\hypertarget{echo__client_8c}{\section{src/echo\-\_\-client.c File Reference}
+\label{echo__client_8c}\index{src/echo\-\_\-client.\-c@{src/echo\-\_\-client.\-c}}
+}
+
+
+Cliente echo utilizado para aprendizaje y pruebas con sockets.  
+
+
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\-h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\-h$>$}\\*
+{\ttfamily \#include $<$unistd.\-h$>$}\\*
+Include dependency graph for echo\-\_\-client.\-c\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{echo__client_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{echo__client_8c_aeca034f67218340ecb2261a22c2f3dcd}{B\-U\-F\-S\-I\-Z\-E}~1024
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{echo__client_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Cliente echo utilizado para aprendizaje y pruebas con sockets. \begin{DoxyAuthor}{Author}
+Alfonso Sebares 
+
+Beatriz de Pablo 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13/02/17 
+\end{DoxyDate}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{echo__client_8c_aeca034f67218340ecb2261a22c2f3dcd}{\index{echo\-\_\-client.\-c@{echo\-\_\-client.\-c}!B\-U\-F\-S\-I\-Z\-E@{B\-U\-F\-S\-I\-Z\-E}}
+\index{B\-U\-F\-S\-I\-Z\-E@{B\-U\-F\-S\-I\-Z\-E}!echo_client.c@{echo\-\_\-client.\-c}}
+\subsubsection[{B\-U\-F\-S\-I\-Z\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-U\-F\-S\-I\-Z\-E~1024}}\label{echo__client_8c_aeca034f67218340ecb2261a22c2f3dcd}
+
+
+\subsection{Function Documentation}
+\hypertarget{echo__client_8c_a0ddf1224851353fc92bfbff6f499fa97}{\index{echo\-\_\-client.\-c@{echo\-\_\-client.\-c}!main@{main}}
+\index{main@{main}!echo_client.c@{echo\-\_\-client.\-c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{echo__client_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+\begin{DoxyCode}
+19 \{
+20     \textcolor{keywordtype}{int} sock;
+21     \textcolor{keyword}{struct }sockaddr\_in server;
+22     \textcolor{keywordtype}{char} message[\hyperlink{echo__client_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE}] , server\_reply[\hyperlink{echo__client_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE}];
+23      
+24     \textcolor{comment}{//Create socket}
+25     sock = socket(AF\_INET , SOCK\_STREAM , 0);
+26     \textcolor{keywordflow}{if} (sock == -1)
+27     \{
+28         printf(\textcolor{stringliteral}{"Could not create socket"});
+29     \}
+30     puts(\textcolor{stringliteral}{"Socket created"});
+31      
+32     server.sin\_addr.s\_addr = inet\_addr(\textcolor{stringliteral}{"127.0.0.1"});
+33     server.sin\_family = AF\_INET;
+34     server.sin\_port = htons( 8888 );
+35  
+36     \textcolor{comment}{//Connect to remote server}
+37     \textcolor{keywordflow}{if} (connect(sock , (\textcolor{keyword}{struct} sockaddr *)&server , \textcolor{keyword}{sizeof}(server)) < 0)
+38     \{
+39         perror(\textcolor{stringliteral}{"connect failed. Error"});
+40         \textcolor{keywordflow}{return} 1;
+41     \}
+42      
+43     puts(\textcolor{stringliteral}{"Connected\(\backslash\)n"});
+44      
+45     \textcolor{comment}{//keep communicating with server}
+46     \textcolor{keywordflow}{while}((strcmp(message, \textcolor{stringliteral}{"\_STOP\_"}) != 0))
+47     \{
+48         printf(\textcolor{stringliteral}{"Enter message : "});
+49         scanf(\textcolor{stringliteral}{"%s"} , message);
+50 
+51         \textcolor{comment}{//Send some data}
+52         \textcolor{keywordflow}{if}( send(sock , message , \textcolor{keyword}{sizeof}(message) , 0) < 0)
+53         \{
+54             puts(\textcolor{stringliteral}{"Send failed"});
+55             \textcolor{keywordflow}{return} 1;
+56         \}
+57          
+58         \textcolor{comment}{//Receive a reply from the server}
+59         \textcolor{keywordflow}{if}( recv(sock , server\_reply , \hyperlink{echo__client_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE} , 0) < 0)
+60         \{
+61             puts(\textcolor{stringliteral}{"recv failed"});
+62             \textcolor{keywordflow}{break};
+63         \}
+64          
+65         puts(\textcolor{stringliteral}{"Server reply :"});
+66         puts(server\_reply);
+67     \}
+68      
+69     puts(\textcolor{stringliteral}{"\_STOP\_ enviado, cerrar conexion"});
+70     close(sock);
+71     \textcolor{keywordflow}{return} 0;
+72 \}\end{DoxyCode}

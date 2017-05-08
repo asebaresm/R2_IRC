@@ -1,0 +1,9 @@
+<map id="IRCInterface_ActivateExternalMessages" name="IRCInterface_ActivateExternalMessages">
+<area shape="rect" id="node2" href="$aux__functions_8h.html#a06340d30a60b297a60b17841767fad85" title="changeMode" alt="" coords="253,31,349,57"/>
+<area shape="rect" id="node3" href="$conexion__tcp_8h.html#ab9468ce1338cfca5736ab407ba155f55" title="enviarDatos" alt="" coords="398,31,490,57"/>
+<area shape="rect" id="node4" href="$logger_8h.html#af71188329ee1cf68a59d3f9ddd035ca6" title="logEvent" alt="" coords="539,5,613,32"/>
+<area shape="rect" id="node8" href="$logger_8h.html#a9487660b2ec318326782a9d9e32f8461" title="logERR" alt="" coords="542,56,610,83"/>
+<area shape="rect" id="node5" href="$logger_8c.html#a6d1f5cd19f49b187e2097a467eca0233" title="logWrite" alt="" coords="662,31,733,57"/>
+<area shape="rect" id="node6" href="$logger_8c.html#a9780074b15cc3acc70e3ee5989c8005a" title="snapTime" alt="" coords="799,5,878,32"/>
+<area shape="rect" id="node7" href="$logger_8c.html#ad5ed54850fd750ca0935368e72017537" title="snapClockTime" alt="" coords="782,56,895,83"/>
+</map>

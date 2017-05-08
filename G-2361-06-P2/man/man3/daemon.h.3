@@ -1,0 +1,159 @@
+.TH "includes/daemon.h" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+includes/daemon.h \- 
+.PP
+Prototipo de funciones para daemonizar el servidor IRC\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <redes2/irc\&.h>\fP
+.br
+\fC#include <syslog\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBOK\fP   0"
+.br
+.ti -1c
+.RI "#define \fBERROR\fP   -1"
+.br
+.in -1c
+.SS "Functions"
+
+.PP
+.RI "\fBdaemonizar\fP"
+.br
+Funcion para demonizar a un servicio, crear proceso, unirlo al init e inhabilitar la terminal
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchar\fP * servicio: Nombre del servidor para dejarlo en segundo plano
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo ha salido bien, ERROR si hay algun fallo 
+.RE
+.PP
+
+.PP
+.in +1c
+.in +1c
+.ti -1c
+.RI "int \fBdaemonizar\fP (char *servicio)"
+.br
+.RI "\fIFuncion para demonizar a un servicio\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Prototipo de funciones para daemonizar el servidor IRC\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.RE
+.PP
+
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ERROR   -1"
+
+.SS "#define OK   0"
+
+.SH "Function Documentation"
+.PP 
+.SS "int daemonizar (char *servicio)"
+
+.PP
+Funcion para demonizar a un servicio\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchar\fP * servicio: Nombre del servidor para dejarlo en segundo plano 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo ha salido bien, ERROR si hay algun fallo 
+.RE
+.PP
+
+.PP
+.nf
+18                                  {
+19 
+20         pid_t pid;
+21         pid_t sid;
+22 
+23         if (servicio==NULL){
+24                 syslog(LOG_ERR, "Escriba un servicio no nulo\&.");
+25                 return ERROR;
+26         }
+27 
+28         /* 1\&. Ceamos proceso hijo y terminamos el proceso padre */
+29         pid=fork();
+30 
+31         if (pid < 0) {
+32                 syslog(LOG_ERR, "Error al crear proceso hijo");
+33                 return ERROR;
+34         }
+35         if (pid > 0) {
+36                 syslog(LOG_INFO, "Liberando al padre");
+37                 return OK;
+38         }
+39 
+40         
+41         /* 2\&. Crear una nueva sesión de tal forma que el proceso pase a ser lider de sesión, y no sea un zombie\&. */
+42         sid=setsid();
+43         if (sid < 0) {
+44                 syslog (LOG_ERR, "Error creando un SID para el hijo del proceso");
+45                 return ERROR;
+46         }
+47 
+48         
+49         /* 3\&. Cambiar la máscara para que los ficheros sean accesibles a cualquiera (0) */
+50         umask (0);
+51 
+52         /* 4\&. Establecer el directorio raíz / como directorio de trabajo */
+53         if((chdir("/")) < 0){
+54                 syslog (LOG_ERR, "Error al cambiar el directorio de trabajo a la raíz");
+55                 return ERROR;
+56         }
+57 
+58         /* 5\&. Cerrar todos los descriptores de fichero que pueda haber abiertos ya que no se puede usar la terminal*/
+59         syslog(LOG_INFO, "Cerrando descriptores");
+60 
+61         close(STDIN_FILENO); 
+62         close(STDOUT_FILENO);
+63         close(STDERR_FILENO);
+64 
+65         syslog(LOG_INFO, "Mandando descriptores a dev/null\&.\&.");
+66         
+67         freopen("/dev/null", "r", stdin);
+68         freopen("/dev/null", "w", stdout);
+69         freopen("/dev/null", "w", stderr);
+70 
+71         /* 6\&. Abrir el log del sistema para su uso posterior (para que haya comunicacion con el demonio) */
+72         openlog (servicio, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL3);
+73 
+74         syslog (LOG_INFO, "Iniciado nuevo servidor");
+75 
+76         return OK;
+77 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

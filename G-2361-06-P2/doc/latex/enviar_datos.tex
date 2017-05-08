@@ -1,0 +1,31 @@
+Funcion que envia datos a un socket con conexion
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{conexion__tcp_8h}{conexion\_tcp.h}"}
+
+\textcolor{keywordtype}{int} \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\textcolor{keywordtype}{int} client\_sock, \textcolor{keywordtype}{char}* message, \textcolor{keywordtype}{int} message\_size)
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em client\-\_\-sock} & Descriptor del socket \\
+\hline
+\mbox{\tt in}  & {\em message} & Mensaje a enviar \\
+\hline
+\mbox{\tt in}  & {\em message\-\_\-size} & Tamaño del mensaje a enviar\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int tamaño de datos enviados o E\-R\-R si no se ha podido enviar nada 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Celia Mateos de Miguel (\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\-mateos@estudiante.\-uam.\-es}) Beatriz de Pablo Garcia (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\-depablo@estudiante.\-uam.\-es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\-sebares@estudiante.\-uam.\-es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13 de febrero de 2017
+\end{DoxyDate}
+
+
+ 

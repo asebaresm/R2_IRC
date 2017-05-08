@@ -1,0 +1,24 @@
+<map id="IRCInterface_Connect" name="IRCInterface_Connect">
+<area shape="rect" id="node2" href="$xchat2_8c.html#a7230d43b8458797c679e7180bf1fda90" title="Funcion ejecutada por un hilo, que recibe mensajes del servidor y los procesa segun el tipo de respue..." alt="" coords="208,544,339,571"/>
+<area shape="rect" id="node20" href="$conexion__tcp_8h.html#ab9468ce1338cfca5736ab407ba155f55" title="enviarDatos" alt="" coords="1115,443,1207,469"/>
+<area shape="rect" id="node3" href="$conexion__tcp_8h.html#a2ec2b47883bdb05804bec657bfc42516" title="recvDatos" alt="" coords="1120,392,1203,419"/>
+<area shape="rect" id="node9" href="$xchat2_8c.html#a63f7dc08db4a2318cb526eee804709b3" title="Funcion para dividir en comandos la cadena &quot;message&quot;. " alt="" coords="387,367,447,393"/>
+<area shape="rect" id="node4" href="$logger_8h.html#af71188329ee1cf68a59d3f9ddd035ca6" title="logEvent" alt="" coords="1257,417,1330,444"/>
+<area shape="rect" id="node8" href="$logger_8h.html#a9487660b2ec318326782a9d9e32f8461" title="logERR" alt="" coords="1259,367,1327,393"/>
+<area shape="rect" id="node5" href="$logger_8c.html#a6d1f5cd19f49b187e2097a467eca0233" title="logWrite" alt="" coords="1379,392,1450,419"/>
+<area shape="rect" id="node6" href="$logger_8c.html#a9780074b15cc3acc70e3ee5989c8005a" title="snapTime" alt="" coords="1517,367,1595,393"/>
+<area shape="rect" id="node7" href="$logger_8c.html#ad5ed54850fd750ca0935368e72017537" title="snapClockTime" alt="" coords="1499,417,1613,444"/>
+<area shape="rect" id="node10" href="$aux__functions_8h.html#a8d3c58618c3bb95d81a542251062d19e" title="testIRC_CommandQuery" alt="" coords="496,392,667,419"/>
+<area shape="rect" id="node11" href="$xchat2_8c.html#a98484e1bbb136d37503aa6c604eff6a2" title="glueAndQuery" alt="" coords="529,341,633,368"/>
+<area shape="rect" id="node12" href="$xchat2_8c.html#a41f93f364aea303a0c93177289733f92" title="Parsea los mensajes y respuestas que recibe del servidor. " alt="" coords="715,291,834,317"/>
+<area shape="rect" id="node13" href="$aux__functions_8h.html#a043ae6695458ae3a85dc9da43cf9b751" title="IRCInterface_WriteSystem\lThread_Pretty" alt="" coords="885,107,1065,149"/>
+<area shape="rect" id="node15" href="$aux__functions_8h.html#a20f32d171da437faef7716e4b6e667dd" title="Devuelve una cadena que empieza inmediatamente después de la cadena &#39;haystack&#39; tras la primera aparic..." alt="" coords="943,173,1006,200"/>
+<area shape="rect" id="node16" href="$aux__functions_8h.html#a2480cc4793bf25a16cc731dc9d033582" title="Libera punteros si estos no estan a NULL Uso. " alt="" coords="1134,323,1189,349"/>
+<area shape="rect" id="node17" href="$aux__functions_8h.html#a6400bb2b7979a2393f0e84b6646a24fe" title="IRCInterface_WriteChannel\lThread_Pretty" alt="" coords="883,225,1066,266"/>
+<area shape="rect" id="node18" href="$aux__functions_8h.html#a09c2fcb81e148a2f23080a1671869f96" title="Actualiza la lista de nicks de la interfaz y sus estados. " alt="" coords="894,341,1055,368"/>
+<area shape="rect" id="node19" href="$user__commands_8h.html#abaae116595df34db33e65e3d9d225103" title="Comando de usuario NAMES. " alt="" coords="937,443,1012,469"/>
+<area shape="rect" id="node21" href="$aux__functions_8h.html#a9a7f9a514711f5954007dc83533d9362" title="Establece la conexíon con el servidor de archivos para recibir los datos y escribirlos en un fichero..." alt="" coords="937,392,1012,419"/>
+<area shape="rect" id="node22" href="$aux__functions_8h.html#a90798d5fe15fdd743f8802b0f154b854" title="Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por IRC_CommandQuery() ..." alt="" coords="931,5,1018,32"/>
+<area shape="rect" id="node23" href="$aux__functions_8h.html#a1738b19e427c47733b310cbe08431a56" title="Versión 2 de pruebas. Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por ..." alt="" coords="928,56,1021,83"/>
+<area shape="rect" id="node14" href="$logger_8h.html#a9780074b15cc3acc70e3ee5989c8005a" title="snapTime" alt="" coords="1122,216,1201,243"/>
+</map>

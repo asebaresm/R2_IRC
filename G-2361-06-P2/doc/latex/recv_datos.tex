@@ -1,0 +1,30 @@
+Funcion que lee datos recibidos en un socket con conexion
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{conexion__tcp_8h}{conexion\_tcp.h}"}
+
+\textcolor{keywordtype}{int} \hyperlink{conexion__tcp_8h_a2ec2b47883bdb05804bec657bfc42516}{recvDatos}(\textcolor{keywordtype}{int} client\_sock, \textcolor{keywordtype}{char}* client\_message, \textcolor{keywordtype}{int} cm\_size, \textcolor{keywordtype}{char} *hostaddrp)
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em client\-\_\-sock} & Descriptor del socket \\
+\hline
+\mbox{\tt in}  & {\em client\-\_\-message} & Mensaje leido \\
+\hline
+\mbox{\tt in}  & {\em cm\-\_\-size} & Tamaño del mensaje leido \\
+\hline
+\mbox{\tt in}  & {\em server} & Hostname\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int tamaño de datos leidos o E\-R\-R si no se ha podido leer (problema de conexion) Celia Mateos de Miguel (\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\-mateos@estudiante.\-uam.\-es}) Beatriz de Pablo Garcia (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\-depablo@estudiante.\-uam.\-es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\-sebares@estudiante.\-uam.\-es})
+\end{DoxyReturn}
+\begin{DoxyDate}{Date}
+13 de febrero de 2017
+\end{DoxyDate}
+
+
+ 

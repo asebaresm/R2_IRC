@@ -1,0 +1,7 @@
+<map id="includes/xchat2.h" name="includes/xchat2.h">
+<area shape="rect" id="node11" href="$types_8h.html" title="Definicion de tipos e includes comunes utilizados por los distintos modulos. " alt="" coords="598,379,663,405"/>
+<area shape="rect" id="node16" href="$conexion__tcp_8h.html" title="Declaraciones de funciones, definición de tipos: liberia para conexiones TCP. " alt="" coords="392,229,502,256"/>
+<area shape="rect" id="node17" href="$logger_8h.html" title="logger.h" alt="" coords="417,304,484,331"/>
+<area shape="rect" id="node23" href="$user__commands_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario..." alt="" coords="782,80,911,107"/>
+<area shape="rect" id="node24" href="$aux__functions_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de funciones auxiliares de xchat2..." alt="" coords="920,155,1035,181"/>
+</map>

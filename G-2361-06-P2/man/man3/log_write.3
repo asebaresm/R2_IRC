@@ -1,0 +1,39 @@
+.TH "log_write" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+log_write \- logWrite 
+(Primitiva) Escribe un evento/error en el log de la ejecucion actual
+.PP
+.PP
+.nf
+#include "types\&.h"
+
+int logWrite(char* log_msg, char* type);
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIlog_msg\fP Mensaje a grabar en el log 
+.br
+\fItype\fP Tipo de evento (error o evento)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+int OK o ERR 
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13 de febrero de 2017
+.RE
+.PP
+.PP
+ 

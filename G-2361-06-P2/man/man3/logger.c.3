@@ -1,0 +1,219 @@
+.TH "srclib/logger.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+srclib/logger.c \- 
+.PP
+Descripcion de la liberia de log de errores complementaria a /var/log/syslog\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./includes/logger\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char * \fBsnapTime\fP (char *buf, int len)"
+.br
+.ti -1c
+.RI "char * \fBsnapClockTime\fP (char *buf, int len)"
+.br
+.ti -1c
+.RI "FILE * \fBinitLog\fP ()"
+.br
+.ti -1c
+.RI "int \fBlogWrite\fP (char *log_msg, char *type)"
+.br
+.ti -1c
+.RI "int \fBlogEvent\fP (char *log_msg)"
+.br
+.ti -1c
+.RI "int \fBlogERR\fP (char *log_msg)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "char \fBglog_dir\fP [\fBLEN\fP]"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Descripcion de la liberia de log de errores complementaria a /var/log/syslog\&. 
+
+Implementacion de la liberia de log de errores complementaria a /var/log/syslog\&. Se ha implementado teniendo en cuenta al concurrencia entre hilos\&.
+.PP
+\fBNote:\fP
+.RS 4
+La librería asume que el mutex se inicializa y destruye en el source principal\&. 
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13/02/17
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13/02/17 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "FILE* initLog ()"
+
+.PP
+.nf
+37                {
+38         char buf[LEN];
+39         char log_dir[LEN];
+40         struct stat st = {0};
+41         int ret = 0;
+42         FILE *fp = NULL;
+43 
+44         if (stat("logs", &st) == -1) {
+45                 //ret = mkdir("logs", 0700);
+46                 if ( (ret = mkdir("logs", ACCESSPERMS)) != OK ){
+47                         perror("Error al crear el directorio de logs");
+48                         return NULL;
+49                 }
+50         }
+51 
+52         strcpy(log_dir, "logs/");
+53         strcat(log_dir, snapTime(buf, LEN));
+54         strcat(log_dir, "\&.log");
+55 
+56         if ((fp = fopen(log_dir, "w+")) == NULL){
+57                 perror("Error al abrir/crear el log");
+58                 return NULL;
+59         }
+60         
+61         strcpy(glog_dir, log_dir);
+62 
+63         if (fclose(fp) != 0){
+64                 perror("ERR al cerrar log creado");
+65                 return NULL;
+66         }
+67 
+68         return fp;
+69 }
+.fi
+.SS "int logERR (char *log_msg)"
+
+.PP
+.nf
+121                          {
+122         if (logWrite(log_msg, "-(!)- ") == ERR){
+123                 return ERR;
+124         }
+125         return OK;
+126 }
+.fi
+.SS "int logEvent (char *log_msg)"
+
+.PP
+.nf
+114                            {
+115         if (logWrite(log_msg, "- i - ") == ERR){
+116                 return ERR;
+117         }
+118         return OK;
+119 }
+.fi
+.SS "int logWrite (char *log_msg, char *type)"
+
+.PP
+.nf
+71                                        {
+72         FILE* fp = NULL;
+73         char buf[LEN];          //snap de tiempo
+74         char bbuf[BIGLEN];
+75         char buf_err[LEN];      //strerror
+76 
+77         if (strlen(log_msg) > BIGLEN){
+78                 perror("Mensaje de log supera BIGLEN, abortado");
+79                 return ERR;
+80         }
+81 
+82         strcpy(bbuf, "[");
+83         strcat(bbuf, snapTime(buf,LEN));
+84         strcat(bbuf, "] ");
+85         strcat(bbuf, "(");
+86         strcat(bbuf, snapClockTime(buf,LEN));
+87         strcat(bbuf, ") ");
+88         strcat(bbuf, type);
+89         strcat(bbuf, log_msg);
+90 
+91         //Ver si es tipo informativo o de error
+92         if (strcmp(type, "-(!)- ") == 0){
+93                 strcat(bbuf, " : ");
+94                 strerror_r(errno, buf_err, LEN);
+95                 strcat(bbuf, buf_err);
+96         }
+97 
+98         pthread_mutex_lock(&loglock);
+99         if ((fp = fopen(glog_dir, "a")) == NULL){
+100                 perror("Error al abrir log para escritura de evento");
+101                 return ERR;
+102         }
+103 
+104         if (fprintf(fp, "%s\n", bbuf) < 0){
+105                 perror("Error de escritura en el log");
+106                 return ERR;
+107         }
+108         fclose(fp);
+109         pthread_mutex_unlock(&loglock);
+110 
+111         return OK;
+112 }
+.fi
+.SS "char* snapClockTime (char *buf, intlen)"
+
+.PP
+.nf
+28                                        {
+29         struct timespec snap;
+30         clock_gettime(CLOCK_MONOTONIC, &snap);
+31         sprintf(buf,"%d", (int)snap\&.tv_nsec);
+32         return buf;
+33 }
+.fi
+.SS "char* snapTime (char *buf, intlen)"
+
+.PP
+.nf
+15                                   {
+16         time_t curtime;
+17         struct tm *loc_time;
+18 
+19         //Getting current time of system
+20         curtime = time (NULL);
+21         // Converting current time to local time
+22         loc_time = localtime (&curtime);
+23         strftime (buf, len, "%H:%M:%S", loc_time);
+24 
+25         return buf;
+26 }
+.fi
+.SH "Variable Documentation"
+.PP 
+.SS "char glog_dir[\fBLEN\fP]"
+Global con la ruta del \&.log para esta ejecucion 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

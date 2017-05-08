@@ -1,0 +1,1143 @@
+.TH "includes/user_commands.h" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+includes/user_commands.h \- 
+.PP
+Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <redes2/ircxchat\&.h>\fP
+.br
+\fC#include <redes2/irc\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'conexion_tcp\&.h'\fP
+.br
+\fC#include 'aux_functions\&.h'\fP
+.br
+
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef int(* \fBp_funcion\fP )(char *)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBpunotice\fP (char *command)"
+.br
+.RI "\fIComando de usuario NOTICE Send a notice to a user, channel or server\&.
+.IP "\(bu" 2
+NOTICE <nick> <text> Send a notice to a user\&. Ex: /NOTICE Blah hi, how are you?
+.IP "\(bu" 2
+NOTICE <#channel> <text> Send a notice to a channel\&. Ex: /NOTICE #room Hi all, this is annoying\&. 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpucycle\fP (char *command)"
+.br
+.RI "\fIComando de usuario CYCLE Cycles the given channel(s)\&. This command is equivilent to sending a PART then a JOIN command\&.
+.IP "\(bu" 2
+Syntax: CYCLE <chan1>,<chan2>,<chan3> \&.\&.\&. 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpumotd\fP (char *command)"
+.br
+.RI "\fIComando de usuario MOTD Displays the Message Of The Day of the IRC Server you are logged onto\&.
+.IP "\(bu" 2
+Syntax: MOTD MOTD <server> 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpulusers\fP (char *command)"
+.br
+.RI "\fIComando de usuario LUSERS Provides Local and Global user information (Such as Current and Maximum user count)\&.
+.IP "\(bu" 2
+Syntax: LUSERS [server]\&. 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpumode\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpupartall\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpuback\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpuunaway\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpuoper\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpuban\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpufsend\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpufaccept\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpufclose\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBputopic\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpukick\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpuinvite\fP (char *command)"
+.br
+.RI "\fIComando de usuario INVITE Sends a user an Invitation to join a particular channel\&. If the channel is +i, you must be an Operator to use this command, otherwise any user may use the command\&. Invite without parameters lists the channels you have been invited to\&.
+.IP "\(bu" 2
+Syntax: INVITE <user> <channel> 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpuwhois\fP (char *command)"
+.br
+.RI "\fIComando de usuario WHOIS Shows information about the user in question, such as their 'Name', channels they are currently in, their hostmask, etc\&.
+.IP "\(bu" 2
+Syntax: WHOIS <user> 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpuaway\fP (char *command)"
+.br
+.RI "\fIComando de usuario AWAY\&. \fP"
+.ti -1c
+.RI "int \fBpunick\fP (char *command)"
+.br
+.RI "\fIComando de usuario NICK Changes your 'Online Identity' on a server\&. All those in the channel you are in will be alerted of your nickname change\&.
+.IP "\(bu" 2
+Syntax: NICK <new nickname>=''> 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpuquit\fP (char *command)"
+.br
+.RI "\fIComando de usuario QUIT En principio solo se llama con: \fP"
+.ti -1c
+.RI "int \fBpuleave\fP (char *command)"
+.br
+.ti -1c
+.RI "int \fBpupart\fP (char *command)"
+.br
+.RI "\fIComando de usuario PART Used to part (or leave) a channel you currently occupy\&. All those in the channel will be notified of your departure\&. If you specify a reason it will be displayed to the users on the channel
+.IP "\(bu" 2
+Syntax: PART <chan>,<chan2>,<chan3>,<chan4> <reason> 
+.PP
+\fP"
+.ti -1c
+.RI "int \fBpujoin\fP (char *command)"
+.br
+.RI "\fIComando de usuario JOIN\&. \fP"
+.ti -1c
+.RI "int \fBpuwho\fP (char *command)"
+.br
+.RI "\fIComando de usuario WHO\&. \fP"
+.ti -1c
+.RI "int \fBpunames\fP (char *command)"
+.br
+.RI "\fIComando de usuario NAMES\&. \fP"
+.ti -1c
+.RI "int \fBpumsg\fP (char *command)"
+.br
+.RI "\fIComando de usuario MSG y PRIVMSG\&. \fP"
+.ti -1c
+.RI "int \fBpulist\fP (char *command)"
+.br
+.RI "\fIComando de usuario LIST\&. \fP"
+.ti -1c
+.RI "int \fBpuhelp\fP (char *command)"
+.br
+.RI "\fIComando de usuario HELP\&. \fP"
+.ti -1c
+.RI "int \fBpdefault\fP (char *command)"
+.br
+.RI "\fIComando desconocido para el cliente\&. \fP"
+.ti -1c
+.RI "int \fBpuquery\fP (char *command)"
+.br
+.RI "\fIComando de usuario QUERY Use the '/query <user>' command to specify that every message you type should be directed to a single user\&. \fP"
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "int \fBsockfd_user\fP"
+.br
+.ti -1c
+.RI "char \fBnick_user\fP [\fBMAXDATA\fP]"
+.br
+.ti -1c
+.RI "pthread_t \fBrecv_tid\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.PP
+Celia Mateos 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+20/03/17 
+.RE
+.PP
+
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef int(* p_funcion)(char *)"
+definicion del tipo de puntero a array de funciones 
+.SH "Function Documentation"
+.PP 
+.SS "int pdefault (char *command)"
+
+.PP
+Comando desconocido para el cliente\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+369                            { 
+370         IRCInterface_WriteSystem(nick_user, "No se ha podido ejecutar el comando: ");
+371         IRCInterface_WriteSystem(nick_user, command);
+372         return 0;
+373 }
+.fi
+.SS "int puaway (char *command)"
+
+.PP
+Comando de usuario AWAY\&. Sets your online status to 'Away'\&.
+.IP "\(bu" 2
+Syntax: AWAY <reason> (Sets you Away with the reason given) AWAY (Un-Sets you as Away) Example: AWAY Lunch time! 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+
+.PP
+.nf
+410                          {
+411         char* command_enviar;
+412         char *reason;
+413         int free_f = 0;
+414 
+415         IRCUserParse_Away (command, &reason);
+416         /*
+417         if(reason == NULL || strlen(reason) == 0){
+418                 reason = "afk";
+419                 free_f = 1;
+420         }*/
+421 
+422         IRCMsg_Away (&command_enviar, NULL, reason);
+423         g_print("\t Mensaje a enviar command_enviar en AWAY: %s \n",command_enviar);
+424 
+425         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+426         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+427         
+428         if(free_f)
+429                 mfree(1, command_enviar);
+430         else
+431                 mfree(2, command_enviar, reason);
+432         return OK;
+433 }
+.fi
+.SS "int puback (char *command)"
+
+.PP
+.nf
+29 { return -1; }
+.fi
+.SS "int puban (char *command)"
+
+.PP
+.nf
+32 { return -1; } // ya se envia con los botones
+.fi
+.SS "int pucycle (char *command)"
+
+.PP
+Comando de usuario CYCLE Cycles the given channel(s)\&. This command is equivilent to sending a PART then a JOIN command\&.
+.IP "\(bu" 2
+Syntax: CYCLE <chan1>,<chan2>,<chan3> \&.\&.\&. 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+632                           {
+633 
+634         char* respuesta = NULL;
+635     char** target;
+636     int numchannels=0;
+637     int i ;
+638 
+639     IRCUserParse_Cycle (command, &target, &numchannels);
+640     for (i = 0; i< numchannels; i++){
+641         IRCMsg_Part (&respuesta, NULL, target[i], "Saliendo");
+642                 enviarDatos(sockfd_user, respuesta, strlen(respuesta));
+643         IRCInterface_PlaneRegisterOutMessage (respuesta);
+644         free(respuesta);
+645         IRCMsg_Join(&respuesta, NULL, target[i], NULL, NULL);
+646                 enviarDatos(sockfd_user, respuesta, strlen(respuesta));
+647         IRCInterface_PlaneRegisterOutMessage (respuesta);
+648         free(respuesta);
+649     }
+650 
+651     return OK;   
+652 }
+.fi
+.SS "int pufaccept (char *command)"
+
+.PP
+.nf
+34 { return -1; } //se envia con los ficheros
+.fi
+.SS "int pufclose (char *command)"
+
+.PP
+.nf
+35 { return -1; } //se envia con los ficheros
+.fi
+.SS "int pufsend (char *command)"
+
+.PP
+.nf
+33 { return -1; } //se envia con los ficheros
+.fi
+.SS "int puhelp (char *command)"
+
+.PP
+Comando de usuario HELP\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+351                          {
+352         char* comando;
+353         char command_enviar[MAXDATA];
+354 
+355         IRCUserParse_Help (command, &comando);
+356         sprintf(command_enviar, "HELP %s\r\n", comando?comando:"");
+357         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));       
+358         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+359         mfree(1, comando);
+360         return OK;
+361 }
+.fi
+.SS "int puinvite (char *command)"
+
+.PP
+Comando de usuario INVITE Sends a user an Invitation to join a particular channel\&. If the channel is +i, you must be an Operator to use this command, otherwise any user may use the command\&. Invite without parameters lists the channels you have been invited to\&.
+.IP "\(bu" 2
+Syntax: INVITE <user> <channel> 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+470                            {
+471 
+472         char* command_enviar = NULL, *prefix = NULL, *nick = NULL, *channel = NULL;
+473 
+474         g_print("\t Mensaje reciido en UINVITE: %s \n",command);
+475 
+476         IRCParse_Invite (command, &prefix, &nick, &channel); //la parseo con esta funcion del server porque no hay del user
+477         g_print("\t prefix: %s \n",prefix);
+478         g_print("\t nick: %s \n",nick);
+479         g_print("\t channel: %s \n",channel);
+480 
+481         IRCMsg_Invite (&command_enviar, prefix, nick, channel);
+482         g_print("\t Mensaje a enviar en UINVITE: %s \n", command_enviar);
+483 
+484         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+485         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+486         mfree(4, command_enviar, channel, nick, prefix);
+487         return OK;
+488 }
+.fi
+.SS "int pujoin (char *command)"
+
+.PP
+Comando de usuario JOIN\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+131                          { 
+132 
+133         long ret = -1;
+134         int retorno = -1;
+135 
+136         char* key = NULL;
+137         char* msg = NULL;
+138         char* channels = NULL;
+139         char* passwords = NULL;
+140         char* command_enviar = NULL;
+141         char* prefix = NULL;
+142         char canales_y_passwords [MAXDATA] = {0};
+143 
+144         g_print(MAG "\n<< [user command] UJOIN - command = %s\n" RESET, command);
+145 
+146         ret = IRCUserParse_Join(command, &channels, &passwords);
+147         if(ret != IRC_OK){
+148                 g_print(RED "ERROR - In pujoin: IRCUserParse_Join no devolvio IRC_OK\n" RESET);
+149                 return -1;
+150         }
+151         g_print("\t command: %s \n",command);
+152         g_print("\t channels : %s \n",channels);
+153         g_print("\t passwords : %s \n",passwords);
+154 
+155         sprintf(canales_y_passwords,"%s %s",channels,passwords?passwords:"");
+156 
+157         //enviar varios canales
+158         ret = IRCMsg_Join (&command_enviar, prefix, canales_y_passwords, key, msg);
+159         if(ret != IRC_OK){
+160                 g_print(RED "ERROR - In pujoin: IRCMsg_Join no devolvio IRC_OK\n" RESET);
+161                 return -1;
+162         }
+163         g_print("\t Mensaje a enviar command_enviar: %s \n",command_enviar);
+164         
+165         retorno = enviarDatos(sockfd_user,command_enviar, strlen(command_enviar));
+166         if(retorno < 0){
+167                 g_print(RED "ERROR - In pujoin: enviarDatos() devolvio error (ver secuencia en \&.log)\n\t\tEl cliente se cerrará\&.\n" RESET);
+168                 exit(1);
+169         }
+170         if(retorno == 0){ //timeout 
+171                 g_print(RED "ERROR - In pujoin: enviarDatos() envió 0 Bytes(ver secuencia en \&.log)\n\t\t(Timeout de conexión probablemente)\n" RESET);
+172                 exit(1);
+173         }
+174 
+175         IRCInterface_PlaneRegisterOutMessage(command_enviar);   
+176         mfree(6, command_enviar, channels, passwords, prefix, key, msg);
+177         return OK; 
+178 }
+.fi
+.SS "int pukick (char *command)"
+
+.PP
+.nf
+37 { return -1; } //se envia con los botones
+.fi
+.SS "int puleave (char *command)"
+
+.PP
+.nf
+38 { return -1; }
+.fi
+.SS "int pulist (char *command)"
+
+.PP
+Comando de usuario LIST\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+309                          { 
+310         long ret = -1;
+311         int retorno = -1;
+312         char *channel = NULL;
+313         char *searchstring = NULL;
+314         char* command_enviar=NULL;
+315         char* prefix = NULL;
+316 
+317         ret = IRCUserParse_List (command, &channel, &searchstring);
+318         g_print("\t command: %s \n", command);
+319         g_print("\t channel: %s \n", channel);
+320         g_print("\t searchstring: %s \n", searchstring);
+321         if(ret != IRC_OK){
+322                 g_print("ERROR - pulist - IRCUserParse_List \n");
+323                 return ERR;
+324         }
+325 
+326         ret = IRCMsg_List (&command_enviar, prefix, channel, searchstring);
+327         if(ret != IRC_OK){
+328                 g_print("ERROR - pulist - IRCMsg_List \n");
+329                 return ERR;
+330         }
+331 
+332         g_print("\t Mensaje a enviar command_enviar: %s \n",command_enviar);
+333         //sem_wait(&recepcionTCP);
+334         retorno = enviarDatos(sockfd_user,command_enviar, strlen(command_enviar));
+335         if(retorno == ERR){
+336                 g_print("ERROR: IRCInterface_NewCommandText - enviarDatos - list\n");
+337                 return ERR;
+338         }
+339 
+340         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+341         mfree(4, command_enviar, channel, searchstring, prefix);
+342         return OK;
+343 }
+.fi
+.SS "int pulusers (char *command)"
+
+.PP
+Comando de usuario LUSERS Provides Local and Global user information (Such as Current and Maximum user count)\&.
+.IP "\(bu" 2
+Syntax: LUSERS [server]\&. 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+531                            {
+532 
+533         char command_enviar[MAXDATA];
+534         char* server;
+535         char lusers[200];
+536 
+537         g_print("\t Mensaje recibido en ULUSERS: %s \n", command);
+538         IRCUserParse_Lusers (command, &server);
+539 
+540         g_print("\t server: %s \n", server);
+541         sprintf(command_enviar, "LUSERS %s\n\r", server );
+542         g_print("\t Mensaje a enviar en ULUSERS: %s \n", command_enviar);
+543 
+544         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+545         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+546 
+547         strcpy(lusers,"LUSERS ");
+548         strcat(lusers, server);
+549         IRCInterface_WriteSystem_Pretty("*", "------------------------------");
+550         IRCInterface_WriteSystem_Pretty("*", lusers);
+551         mfree(1, server);
+552         return OK;
+553 }
+.fi
+.SS "int pumode (char *command)"
+
+.PP
+.nf
+27 { return -1; } // ya se envia con los botones
+.fi
+.SS "int pumotd (char *command)"
+
+.PP
+Comando de usuario MOTD Displays the Message Of The Day of the IRC Server you are logged onto\&.
+.IP "\(bu" 2
+Syntax: MOTD MOTD <server> 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+565                          {
+566 
+567         char command_enviar[MAXDATA];
+568         char* server;
+569 
+570         g_print("\t Mensaje recibido en UMOTD: %s \n", command);
+571         IRCUserParse_Motd (command, &server);
+572         g_print("\t server: %s \n", server);
+573         sprintf(command_enviar, "MOTD %s\n\r", server );
+574         g_print("\t Mensaje a enviar en UMOTD: %s \n", command_enviar);
+575 
+576         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+577         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+578         mfree(1, server);
+579         return OK;
+580 }
+.fi
+.SS "int pumsg (char *command)"
+
+.PP
+Comando de usuario MSG y PRIVMSG\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+267                         {
+268         char* nickorchannel;
+269         char* msg;
+270         char *command_enviar = NULL;
+271         char *prefix = NULL;
+272         int ret;
+273 
+274         //<< privmsg gomupo :probando
+275         //>> :gomupo!~gonzalo@119\&.181\&.218\&.87\&.dynamic\&.jazztel\&.es PRIVMSG gomupo :probando
+276         ret = IRCUserParse_Msg(command, &nickorchannel, &msg);
+277         if(ret != IRC_OK){
+278                 g_print("ERROR - IRCInterface_NewCommandText - UMSG - IRCUserParse_Msg\n");
+279                 return ERR;
+280         }
+281         g_print("\t command: %s \n", command);
+282         g_print("\t nickorchannel: %s \n", nickorchannel);
+283         g_print("\t msg: %s \n", msg);
+284 
+285         ret = IRCMsg_Privmsg (&command_enviar, prefix, nickorchannel, msg);
+286         if(ret == ERR){
+287                 g_print("ERROR: IRCInterface_NewCommandText - IRCMsg_Privmsg \n");
+288                 return ERR;
+289         }
+290 
+291         g_print("\t Mensaje a enviar command_enviar en pumsg: %s \n",command_enviar);
+292         ret = enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+293         if(ret == ERR){
+294                 g_print("ERROR: IRCInterface_NewCommandText - enviarDatos - Names\n");
+295                 return ERR;
+296         }
+297         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+298         //No recibimos nada en este comando, los mensajes de otros usuarios los recibimos por otro hilo
+299         IRCInterface_WriteChannel (nickorchannel, nick_user, msg);
+300         mfree(4, command_enviar, nickorchannel, prefix, msg);
+301         return OK;
+302 }
+.fi
+.SS "int punames (char *command)"
+
+.PP
+Comando de usuario NAMES\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+64                           { 
+65         //<< NAMES #redes2
+66         //>> :irc\&.eps\&.net 353 gomupo = #redes2 :flowey cgs gomupo Mamo_1 qwerttyue asdfgh alpeh ArcaFacts BotGram
+67         char* channels;
+68         char* passwords;
+69         char* command_enviar;
+70         char* prefix = NULL;
+71         char* target = NULL;
+72         char channels_passwords [MAXDATA] = {0};
+73         int ret;
+74 
+75         g_print(MAG "\n<< [user command] NOTICE - command = %s\n" RESET, command);
+76         /*Comprobar si es un comando names sin argumentos, en caso afirmativo no utilizar la función de Eloy ya que
+77         parece que falla, y mandarlo tal cual*/
+78         //Usamos strcasecmp para que den igual minusculas
+79         if((0 == strcasecmp(command,"/names")) && (strlen(command) == strlen("/names"))){
+80                 g_print("\t Command names sin argumentos: %s \n",command);
+81                 ret = IRCMsg_Names (&command_enviar, prefix, channels_passwords, target);
+82                 if(ret != IRC_OK){
+83                         g_print(RED "ERROR - In punames: IRCMsg_Names no devolvio IRC_OK\n" RESET);
+84                         return ERR;
+85                 }
+86                 g_print("\t command_enviar names sin argumentos: %s \n",command_enviar);
+87                 ret = enviarDatos(sockfd_user,command_enviar, strlen(command_enviar));
+88                 if(ret == ERR){
+89                         g_print(RED "ERROR - In punames: enviarDatos() devolvio error (ver \&.log)\n\t\tEl cliente se cerrará\&.\n" RESET);
+90                         exit(1);
+91                 }
+92                 if(ret == 0){ //timeout seguramente
+93                         g_print(RED "ERROR - In punames: enviarDatos() mandó 0 Bytes(ver \&.log)\n\t\t(Timeout)El cliente se cerrará\&.\n" RESET);
+94                         exit(1);
+95                 }
+96                 IRCInterface_PlaneRegisterOutMessage(command);
+97                 free(command_enviar);
+98                 return OK;
+99         }
+100 
+101         ret = IRCUserParse_Names(command, &channels, &passwords);
+102         if(ret != IRC_OK){
+103                 g_print(RED "ERROR - In punames: IRCUserParse_Names no devolvio IRC_OK\n" RESET);
+104                 return ERR;
+105         }
+106         g_print("\t command: %s \n",command);
+107         g_print("\t channels : %s \n",channels);
+108         g_print("\t passwords : %s \n",passwords);
+109 
+110         sprintf(channels_passwords,"%s %s",channels,passwords?passwords:"");
+111 
+112         ret = IRCMsg_Names (&command_enviar, prefix, channels_passwords, target);
+113         if(ret != IRC_OK){
+114                 g_print(RED "ERROR - In punames: IRCMsg_Names no devolvio IRC_OK\n" RESET);
+115                 return ERR;
+116         }
+117         g_print("\t Mensaje a enviar command_enviar: %s \n",command_enviar);
+118 
+119         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+120 
+121         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+122         mfree(5, command_enviar, channels, passwords, prefix, target);
+123         return OK;
+124 }
+.fi
+.SS "int punick (char *command)"
+
+.PP
+Comando de usuario NICK Changes your 'Online Identity' on a server\&. All those in the channel you are in will be alerted of your nickname change\&.
+.IP "\(bu" 2
+Syntax: NICK <new nickname>=''> 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+444                          {
+445 
+446         char* command_enviar;
+447         char *newnick;
+448 
+449         IRCUserParse_Nick (command, &newnick);
+450         IRCMsg_Nick (&command_enviar, NULL, newnick, NULL);
+451         g_print("\t Mensaje a enviar command_enviar en NICK: %s \n",command_enviar);
+452 
+453         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+454         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+455         mfree(2, command_enviar, newnick);
+456         return OK;
+457 }
+.fi
+.SS "int punotice (char *command)"
+
+.PP
+Comando de usuario NOTICE Send a notice to a user, channel or server\&.
+.IP "\(bu" 2
+NOTICE <nick> <text> Send a notice to a user\&. Ex: /NOTICE Blah hi, how are you?
+.IP "\(bu" 2
+NOTICE <#channel> <text> Send a notice to a channel\&. Ex: /NOTICE #room Hi all, this is annoying\&. 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+597                            {
+598 
+599         char *command_enviar, mensaje[MAXDATA];
+600         char* target, *msg;
+601 
+602         g_print("\t Mensaje recibido en UNOTICE: %s \n", command);
+603         IRCUserParse_Notice (command, &target, &msg);
+604 
+605         IRCMsg_Notice (&command_enviar, NULL, target, msg);
+606 
+607         g_print("\t Mensaje a enviar en UNOTICE: %s \n", command_enviar);
+608         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+609         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+610 
+611         if(target[0] == '#'){
+612                 sprintf(mensaje, ">%s/%s<", nick_user, target);
+613                 IRCInterface_WriteChannel (target, mensaje, msg);
+614         } else {
+615                 sprintf(mensaje, ">%s<", nick_user);            
+616                 IRCInterface_AddNewChannel (target, 0);
+617                 IRCInterface_WriteChannel (target, mensaje, msg);
+618         }
+619         mfree(3, command_enviar, target, msg);
+620         return OK;
+621 }
+.fi
+.SS "int puoper (char *command)"
+
+.PP
+.nf
+31 { return -1; }
+.fi
+.SS "int pupart (char *command)"
+
+.PP
+Comando de usuario PART Used to part (or leave) a channel you currently occupy\&. All those in the channel will be notified of your departure\&. If you specify a reason it will be displayed to the users on the channel
+.IP "\(bu" 2
+Syntax: PART <chan>,<chan2>,<chan3>,<chan4> <reason> 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+386                          {
+387         char* channel;
+388         char command_enviar[MAXDATA];
+389 
+390         IRCUserParse_Part(command, &channel);
+391         sprintf(command_enviar, "PART %s :Saliendo\r\n", channel?channel:IRCInterface_ActiveChannelName());
+392 
+393         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+394         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+395         mfree(1, channel);
+396         return OK;
+397 }
+.fi
+.SS "int pupartall (char *command)"
+
+.PP
+.nf
+28 { return -1; }
+.fi
+.SS "int puquery (char *command)"
+
+.PP
+Comando de usuario QUERY Use the '/query <user>' command to specify that every message you type should be directed to a single user\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+661                           {
+662 
+663         char* nickorchannel, *msg;
+664 
+665         IRCUserParse_Query (command, &nickorchannel, &msg);
+666         g_print("\t Mensaje recibido en UQUERY: %s \n", command);
+667         g_print("\t nickorchannel: %s \n", nickorchannel);
+668         g_print("\t msg: %s \n", msg);
+669 
+670         if(nickorchannel != NULL){
+671                 IRCInterface_AddNewChannel (nickorchannel, 0);
+672         }
+673         mfree(2, nickorchannel, msg);
+674     return OK;
+675 }
+.fi
+.SS "int puquit (char *command)"
+
+.PP
+Comando de usuario QUIT En principio solo se llama con: 
+.IP "\(bu" 2
+Callback: Boton 'Desconectar' -> \fBIRCInterface_DisconnectServer(char *server, int port)\fP
+.IP "\(bu" 2
+Callback: '/QUIT en chat + ENTER' -> IRCInterface_NewCommandText('/QUIT ') 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+
+.PP
+.nf
+188                          {
+189 
+190         char* command_enviar;
+191         char* reason;
+192         //char command[] = "QUIT :Leaving";
+193 
+194         char** channelsQuit;
+195         int numChannelsQuit;
+196         int i, ret;
+197 
+198         //kill hilo 'receive_messages()'
+199         ret = pthread_cancel(recv_tid);
+200         if (ret != 0){
+201                 g_print(MAG "\npthread_cancel() return = %d\n" RESET, ret);
+202         }
+203 
+204         IRCUserParse_Quit (command, &reason);
+205         IRCMsg_Quit (&command_enviar, NULL, reason ? reason : "Desconectando\&.\&.\&.");
+206         g_print("\t Mensaje a enviar command_enviar en QUIT: %s \n",command_enviar);
+207         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+208         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+209         cerrarConexion(sockfd_user, NULL);
+210         mfree(2, command_enviar, reason);
+211 
+212         /*IRCInterface_RemoveAllChannels da segmentation fault por alguna razón*/
+213         IRCInterface_ListAllChannels(&channelsQuit, &numChannelsQuit);
+214         for(i = 0; i<numChannelsQuit; i++){
+215                 //IRCInterface_WriteChannelThread(channelsQuit[i],"*", "Desconectado\&.");
+216                 IRCInterface_RemoveChannel(channelsQuit[i]);
+217         }
+218         IRCInterface_WriteSystem_Pretty("*", "Desconectado\&.");
+219 
+220         return OK;
+221 }
+.fi
+.SS "int putopic (char *command)"
+
+.PP
+.nf
+36 { return -1; } // se envia con la barra de topic
+.fi
+.SS "int puunaway (char *command)"
+
+.PP
+.nf
+30 { return -1; } //existe UNAWAY??
+.fi
+.SS "int puwho (char *command)"
+
+.PP
+Comando de usuario WHO\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+228                         {
+229 
+230         long ret = -1;
+231 
+232         char* command_enviar=NULL;
+233         char* prefix = NULL;
+234         char* mask;
+235         
+236         ret = IRCUserParse_Who (command, &mask);
+237         if(ret != IRC_OK){
+238                 g_print("ERROR - IRCInterface_NewCommandText - UWHO - IRCUserParse_Who");
+239                 return -1;
+240         }
+241         g_print("\t command: %s \n",command);
+242         g_print("\t mask who: %s \n",mask);
+243         
+244         ret = IRCMsg_Who (&command_enviar, prefix, mask, NULL);
+245         if(ret != IRC_OK){
+246                 g_print(RED "ERROR - puwho - IRCMsg_Who \n" RESET);
+247                 return ERR;
+248         }
+249 
+250         g_print("\t command_enviar: %s \n",command_enviar);
+251 
+252         if(enviarDatos(sockfd_user,command_enviar, strlen(command_enviar) == ERR)){
+253                 g_print("ERROR: IRCInterface_NewCommandText - enviarDatos - Who\n");
+254                 return ERR;
+255         }
+256 
+257         IRCInterface_PlaneRegisterOutMessage(command_enviar);   
+258         mfree(3, command_enviar, prefix, mask);
+259         return OK;
+260 }
+.fi
+.SS "int puwhois (char *command)"
+
+.PP
+Comando de usuario WHOIS Shows information about the user in question, such as their 'Name', channels they are currently in, their hostmask, etc\&.
+.IP "\(bu" 2
+Syntax: WHOIS <user> 
+.PP
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcommand\fP cadena introducida por el usuario en el campo de texto 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+499                           {
+500 
+501         char command_enviar[MAXDATA];
+502         char* nick = NULL;
+503         char whois[200];
+504 
+505         g_print("\t Mensaje recibido en UWHOIS: %s \n", command);
+506         IRCUserParse_Whois (command, &nick);
+507 
+508         g_print("\t nick: %s \n", nick);
+509         sprintf(command_enviar, "WHOIS %s\n\r", nick );
+510         g_print("\t Mensaje a enviar en UWHOIS: %s \n", command_enviar);
+511 
+512         enviarDatos(sockfd_user, command_enviar, strlen(command_enviar));
+513         IRCInterface_PlaneRegisterOutMessage(command_enviar);
+514 
+515         strcpy(whois,"WHOIS ");
+516         strcat(whois, nick);
+517         IRCInterface_WriteSystem_Pretty("*", "------------------------------");
+518         IRCInterface_WriteSystem_Pretty("*", whois);
+519         mfree(1, nick);
+520         return OK;
+521 }
+.fi
+.SH "Variable Documentation"
+.PP 
+.SS "char nick_user[\fBMAXDATA\fP]"
+nick del usuario operador del cliente 
+.SS "pthread_t recv_tid"
+tid del hilo encargado de recibir datos del servidor
+.PP
+Globales útiles sobre la conexión del cliente con el servidor 
+.SS "int sockfd_user"
+global con el descriptor socket abierto con el servidor
+.PP
+descriptor con el socket abierto con el servidor 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

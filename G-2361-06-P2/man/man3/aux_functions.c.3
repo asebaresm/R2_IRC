@@ -1,0 +1,511 @@
+.TH "srclib/aux_functions.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+srclib/aux_functions.c \- 
+.PP
+Implementacion de las funciones auxiliares de xchat2\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./includes/aux_functions\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBmfree\fP (int n,\&.\&.\&.)"
+.br
+.RI "\fILibera punteros si estos no estan a NULL Uso\&. \fP"
+.ti -1c
+.RI "int \fBsave_file\fP (void *args)"
+.br
+.RI "\fIEstablece la conexíon con el servidor de archivos para recibir los datos y escribirlos en un fichero\&. \fP"
+.ti -1c
+.RI "void \fBinterface_mostrar_nicks\fP (char *channel, char *list)"
+.br
+.RI "\fIActualiza la lista de nicks de la interfaz y sus estados\&. \fP"
+.ti -1c
+.RI "char * \fBstrnext\fP (char *haystack, int ch)"
+.br
+.RI "\fIDevuelve una cadena que empieza inmediatamente después de la cadena 'haystack' tras la primera aparición de 'ch'\&. \fP"
+.ti -1c
+.RI "int \fBparse_type\fP (const char *message)"
+.br
+.RI "\fIDevuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por IRC_CommandQuery() \fP"
+.ti -1c
+.RI "int \fBparse_type2\fP (const char *message)"
+.br
+.RI "\fIVersión 2 de pruebas\&. Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por IRC_CommandQuery() \fP"
+.ti -1c
+.RI "void \fBIRCInterface_WriteSystem_Pretty\fP (char *nick, char *msg)"
+.br
+.ti -1c
+.RI "void \fBIRCInterface_WriteSystemThread_Pretty\fP (char *nick, char *msg)"
+.br
+.ti -1c
+.RI "void \fBIRCInterface_WriteChannelThread_Pretty\fP (char *chan, char *nick, char *msg)"
+.br
+.ti -1c
+.RI "int \fBtestIRC_CommandQuery\fP (char *message)"
+.br
+.ti -1c
+.RI "int \fBchangeMode\fP (char *channel, char *nick, char *mode)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Implementacion de las funciones auxiliares de xchat2\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.PP
+Celia Mateos 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13/02/17 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "int changeMode (char *channel, char *nick, char *mode)"
+
+.PP
+.nf
+334                                                      {
+335         int ret = -1;
+336         char *command = NULL;
+337 
+338         //long IRCMsg_Mode (char **command, char *prefix, char * channeloruser, char *mode, char *user)
+339         ret = IRCMsg_Mode (&command, NULL, channel, mode, nick);
+340         if(ret != IRC_OK){
+341                 g_print(RED "ERROR - In changeMode: Error en IRCMsg_Mode, no devolvió IRC_OK\n" RESET);
+342                 return ERR;
+343         }
+344         ret = enviarDatos(sockfd_user, command, strlen(command));
+345         if(ret == ERR){
+346                 g_print(RED "ERROR - In changeMode: Error en enviarDatos, devolvió ERR\n" RESET);
+347                 return ERR;
+348         }
+349         IRCInterface_PlaneRegisterOutMessage(command);
+350         free(command);
+351 
+352         return OK;
+353 }
+.fi
+.SS "void interface_mostrar_nicks (char *channel, char *list)"
+
+.PP
+Actualiza la lista de nicks de la interfaz y sus estados\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIchannel\fP canal que se quiere actualizar 
+.br
+\fIlist\fP lista de nicks obtenida del comando names, separados por espacios 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void 
+.RE
+.PP
+
+.PP
+.nf
+161                                                        {
+162         g_print(BLU "\n aux call: interface_mostrar_nicks() \n" RESET);
+163         char* show_nick;
+164         //obtenemos los nicks del mensaje y los mostramos por separado
+165 
+166         //Eliminar los nicks del canal
+167         IRCInterface_NickListChannelThread(channel, NULL, NULL, NULL, NULL, NONE, 0);
+168 
+169         show_nick = strtok(list, " ");
+170         g_print("channel: %s \n",channel);
+171         g_print("show_nick: %s \n",show_nick);
+172         g_print("list: %s \n\n",list);
+173         if (show_nick[0] == '@')
+174         {
+175                 IRCInterface_AddNickChannelThread (channel, ++show_nick, list, list, list, OPERATOR);
+176         }else if (show_nick[0] == '+'){
+177                 IRCInterface_AddNickChannelThread (channel, ++show_nick, list, list, list, VOICE);
+178         } else{
+179                 IRCInterface_AddNickChannelThread (channel, show_nick, list, list, list, NONE);
+180         }
+181         
+182         while ((show_nick = strtok(NULL, " ")) != NULL){
+183                 if (show_nick[0] == '@')
+184                 {
+185                         IRCInterface_AddNickChannelThread (channel, ++show_nick, list, list, list, OPERATOR);
+186                 }else if (show_nick[0] == '+'){
+187                         IRCInterface_AddNickChannelThread (channel, ++show_nick, list, list, list, VOICE);
+188                 } else{
+189                         IRCInterface_AddNickChannelThread (channel, show_nick, list, list, list, NONE);
+190                 }
+191         }
+192 }
+.fi
+.SS "void IRCInterface_WriteChannelThread_Pretty (char *chan, char *nick, char *msg)"
+
+.PP
+.nf
+306                                                                               {
+307         char snap[SNAP_SIZE];
+308         char f_nick[MAX_NICK_FIELD];
+309 
+310         if(strlen(nick) > 9){
+311                 logERR("En IRCInterface_WriteSystemThread_Pretty: strlen(nick) > 9");
+312                 return;
+313         }
+314 
+315         strcpy(f_nick, "[");
+316         strcat(f_nick, snapTime(snap,SNAP_SIZE));
+317         strcat(f_nick, "]");
+318         strcat(f_nick, nick);
+319 
+320         IRCInterface_WriteChannelThread(chan, f_nick, msg);     
+321 }
+.fi
+.SS "void IRCInterface_WriteSystem_Pretty (char *nick, char *msg)"
+
+.PP
+.nf
+264                                                            {
+265         char snap[SNAP_SIZE];
+266         char f_nick[MAX_NICK_FIELD];
+267 
+268         if(strlen(nick) > 9){
+269                 logERR("En IRCInterface_WriteSystemThread_Pretty: strlen(nick) > 9");
+270                 return;
+271         }
+272 
+273         strcpy(f_nick, "[");
+274         strcat(f_nick, snapTime(snap,SNAP_SIZE));
+275         strcat(f_nick, "] ");
+276         strcat(f_nick, "              *");
+277 
+278         //g_print(MAG"\n>>>>%s\n" RESET, f_nick);
+279         if(msg[strlen(msg) - 2] == 13) //check si es comienzo de CR,LF
+280                 msg[strlen(msg) - 2] = '\0';
+281 
+282         IRCInterface_WriteSystem(f_nick,msg);
+283 }
+.fi
+.SS "void IRCInterface_WriteSystemThread_Pretty (char *nick, char *msg)"
+
+.PP
+.nf
+285                                                                  {
+286         char snap[SNAP_SIZE];
+287         char f_nick[MAX_NICK_FIELD];
+288 
+289         if(strlen(nick) > 9){
+290                 logERR("En IRCInterface_WriteSystemThread_Pretty: strlen(nick) > 9");
+291                 return;
+292         }
+293 
+294         strcpy(f_nick, "[");
+295         strcat(f_nick, snapTime(snap,SNAP_SIZE));
+296         strcat(f_nick, "] ");
+297         strcat(f_nick, "              *");
+298 
+299         //g_print(MAG"\n>>>>%s\n" RESET, f_nick);
+300         if(msg[strlen(msg) - 2] == 13) //check si es comienzo de CR,LF
+301                 msg[strlen(msg) - 2] = '\0';
+302 
+303         IRCInterface_WriteSystemThread(f_nick,msg);
+304 }
+.fi
+.SS "void mfree (intn, \&.\&.\&.)"
+
+.PP
+Libera punteros si estos no estan a NULL Uso\&. mfree(3,a,b,c); mfree(4,a,b,c,d); 
+.PP
+.nf
+20                       {
+21 
+22         va_list ap;
+23         char *p = NULL;
+24         register int i;
+25         va_start(ap, n);
+26         for (i = 0; i < n; ++i)
+27         {
+28                 p = (char *) va_arg(ap, char*);
+29                 if( p != NULL) free(p);
+30         }
+31         va_end (ap);
+32 }
+.fi
+.SS "int parse_type (const char *message)"
+
+.PP
+Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por IRC_CommandQuery() 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImessage\fP mensaje original 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+int codigo de comando si es un codigo valido, ERR si no lo es o comando invalido 
+.RE
+.PP
+
+.PP
+.nf
+219                                    {
+220         int unknw_type;
+221         char* token = NULL;
+222         char* message_cp = NULL;
+223 
+224         if(message[0] == ':'){ //mensaje con prefijo, no originado por el cliente
+225                 message_cp = strdup(message);
+226                 token = strtok(message_cp, " ");
+227                 if(token != NULL){
+228                         token = strtok(NULL, " ");
+229                         free(message_cp);
+230                         unknw_type = atoi(token);
+231                         if (unknw_type < MAX_IRC_COMMAND){
+232                                 return unknw_type;
+233                         }
+234                 }
+235         }
+236 
+237         return ERR;
+238 }
+.fi
+.SS "int parse_type2 (const char *message)"
+
+.PP
+Versión 2 de pruebas\&. Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por IRC_CommandQuery() 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImessage\fP mensaje original 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+int codigo de comando si es un codigo valido, ERR si no lo es o comando invalido 
+.RE
+.PP
+
+.PP
+.nf
+245                                     {
+246         int unknw_type;
+247         char* token = NULL;
+248         char* message_cp = NULL;
+249 
+250         message_cp = strdup(message);
+251         token = strtok(message_cp, " ");
+252         if(token != NULL){
+253                 token = strtok(NULL, " ");
+254                 free(message_cp);
+255                 unknw_type = atoi(token);
+256                 if (unknw_type < MAX_IRC_COMMAND){
+257                         return unknw_type;
+258                 }
+259         }
+260         
+261         return ERR;
+262 }
+.fi
+.SS "int save_file (void *args)"
+
+.PP
+Establece la conexíon con el servidor de archivos para recibir los datos y escribirlos en un fichero\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIargs\fP estructura que contiene los parametros necesarios para establacer la conexion 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo fue correcto y ERR si ocurrio un error 
+.RE
+.PP
+
+.PP
+.nf
+39                          {
+40 
+41         g_print("\n =========save_file========= \n");
+42 
+43         File_args* file_args = (File_args*) args;
+44         FILE* file = fopen(file_args->filename,"w");
+45         char message[MAXDATA];
+46         g_print("Guardamos el archivo\n");
+47 
+48         struct hostent *he;
+49     struct in_addr **addr_list;
+50     int i=0;
+51     char ip_addr[INET_ADDRSTRLEN]="";
+52     sleep(2);
+53     g_print("file_args->hostname: %s \nfile_args->port: %d \n",file_args->hostname, file_args->port); 
+54 
+55     int file_sockfd;
+56 
+57     if ((he = gethostbyname(file_args->hostname)) == NULL) {  // get the host info
+58         g_print("ERROR: IRCInterface_Connect - gethostbyname\n");
+59         return ERR;
+60     }
+61 
+62     // print information about this host:
+63     g_print("Official name is: %s\n", he->h_name);
+64     g_print("    IP addresses: ");
+65     addr_list = (struct in_addr **)he->h_addr_list;
+66     for(i = 0; addr_list[i] != NULL; i++) {
+67         strcat(ip_addr,inet_ntoa(*addr_list[i]));
+68         g_print("%s ", inet_ntoa(*addr_list[i]));
+69     }
+70     g_print("\n");
+71     g_print("ip_addr: %s \n",ip_addr); 
+72 
+73     struct sockaddr_in server_struct;
+74     memset(&server_struct, '0', sizeof(server_struct)); 
+75     server_struct\&.sin_family = AF_INET;
+76     server_struct\&.sin_port = htons(file_args->port);
+77         //server_struct\&.sin_port = file_args->port;
+78     //memset(&(server_struct\&.sin_zero), '\0', 8);
+79     server_struct\&.sin_addr = **addr_list;
+80 
+81     //Socket
+82     file_sockfd = socket(AF_INET,SOCK_STREAM,0);
+83     if (file_sockfd == -1){
+84         g_print("Error creando socket\n");
+85         return ERR;
+86     }
+87     //Connect
+88     g_print("Conectando con socket %d\n",file_sockfd);
+89     int cnct = connect(file_sockfd, (struct sockaddr*)&server_struct, sizeof(server_struct));
+90         if (cnct==-1){
+91                         switch(errno){
+92                                 case EACCES:
+93                                 printf("For UNIX domain sockets, which are identified by pathname: Write permission is denied on the socket file, or search permission is denied for one of the directories in the path prefix\&. (See also path_resolution(7)\&.) \n");
+94                                         printf("or The user tried to connect to a broadcast address without having the socket broadcast flag enabled or the connection request failed because of a local firewall rule\&.\n" );
+95                                                                         
+96                                         break;
+97                                 
+98                                 case EPERM:
+99                                         printf("The user tried to connect to a broadcast address without having the socket broadcast flag enabled or the connection request failed because of a local firewall rule\&.\n"); 
+100                                         break;
+101                                 case EADDRINUSE:
+102                                 printf("Local address is already in use\&. \n");
+103                                         break;
+104                                 case EAFNOSUPPORT:
+105                                 printf("The passed address didn't have the correct address family in its sa_family field\&. \n");
+106                                         break;
+107                                 case EAGAIN:
+108                                     printf("No more free local ports or insufficient entries in the routing cache\&. For AF_INET see the description of /proc/sys/net/ipv4/ip_local_port_range ip(7) for information on how to increase the number of local ports\&. \n");
+109                                         break;
+110                                 case EALREADY:
+111                                     printf("The socket is nonblocking and a previous connection attempt has not yet been completed\&.\n"); 
+112                                         break;
+113                                 case EBADF:
+114                                     printf("The file descriptor is not a valid index in the descriptor table\&.\n"); 
+115                                         break;
+116                                 case ECONNREFUSED:
+117                                     printf("No-one listening on the remote address\&. \n");
+118                                         break;
+119                                 case EFAULT:
+120                                     printf("The socket structure address is outside the user's address space\&. \n");
+121                                         break;
+122                                 case EINPROGRESS:
+123                                     printf("The socket is nonblocking and the connection cannot be completed immediately\&. It is possible to select(2) or poll(2) for completion by selecting the socket for writing\&. After select(2) indicates writability, use getsockopt(2) to read the SO_ERROR option at level SOL_SOCKET to determine whether connect() completed successfully (SO_ERROR is zero) or unsuccessfully (SO_ERROR is one of the usual error codes listed here, explaining the reason for the failure)\&. \n"); 
+124                                         break;
+125                                 case EINTR:
+126                                     printf("The system call was interrupted by a signal that was caught; see signal(7)\&.\n"); 
+127                                         break;
+128                                 case EISCONN:
+129                                     printf("The socket is already connected\&.\n"); 
+130                                         break;
+131                                 case ENETUNREACH:
+132                                     printf("Network is unreachable\&. \n");
+133                                         break;
+134                                 case ENOTSOCK:
+135                                     printf("The file descriptor is not associated with a socket\&.\n"); 
+136                                         break;
+137                                 case ETIMEDOUT:
+138                                     printf("Timeout while attempting connection\&. The server may be too busy to accept new connections\&. Note that for IP sockets the timeout may be very long when syncookies are enabled on the server\&.\n");
+139                                     break;
+140                         }
+141                 return -1;
+142         }
+143 
+144         g_print("Campos recibidos: hostname=%s, filename=%s, port=%d, length=%ld\n",file_args->hostname, file_args->filename, file_args->port, file_args->length);
+145         
+146         recvDatos(file_sockfd, message, MAXDATA, he->h_name);
+147         g_print("Estoy recibiendo datos\n");
+148         fputs(message, file);
+149         //fwrite(message, 1, sizeof(message), file);
+150         g_print("Algo paso\&.\&.\&.\n");
+151 
+152         return OK;
+153 }
+.fi
+.SS "char* strnext (char *haystack, intch)"
+
+.PP
+Devuelve una cadena que empieza inmediatamente después de la cadena 'haystack' tras la primera aparición de 'ch'\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhaystack\fP string original donde hacer la busqueda 
+.br
+\fIch\fP delimitador 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+char* substring con la cadena generada, NULL si no se ha encontrado 'ch' 
+.RE
+.PP
+
+.PP
+.nf
+200                                      {
+201         int i, o_length;
+202         char *sep_at = strchr(haystack, ch);
+203         
+204         if(sep_at != NULL){
+205                 o_length = strlen(sep_at);
+206                 for(i=0; i<strlen(sep_at); i++)
+207                         sep_at[i] = sep_at[i+1];
+208                 sep_at[o_length-1] = '\0';
+209         }
+210 
+211         return sep_at;
+212 }
+.fi
+.SS "int testIRC_CommandQuery (char *message)"
+
+.PP
+.nf
+323                                        {
+324         switch(IRC_CommandQuery(message)){
+325                 case IRCERR_NOCOMMAND:
+326                         return ERR;
+327                 case IRCERR_UNKNOWNCOMMAND:
+328                         return ERR;
+329                 default:
+330                         return OK;
+331         }
+332 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

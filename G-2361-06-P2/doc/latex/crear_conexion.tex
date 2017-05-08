@@ -1,0 +1,61 @@
+Funcion que cierra la conexion con un socket.
+
+Crea un socket para una conexion a partir de un puerto e I\-P
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{conexion__tcp_8h}{conexion\_tcp.h}"}
+
+\textcolor{keywordtype}{int} \hyperlink{conexion__tcp_8h_a7180696e651a403677ea6a35b59da285}{crearConexion}(\textcolor{keywordtype}{int} portno, \textcolor{keyword}{struct} sockaddr\_in* server)
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em portno} & Numero de puerto \\
+\hline
+\mbox{\tt in}  & {\em server} & Direccion I\-P\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int descriptor de socket si todo ha ido bien o E\-R\-R 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Celia Mateos de Miguel (\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\-mateos@estudiante.\-uam.\-es}) Beatriz de Pablo Garcia (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\-depablo@estudiante.\-uam.\-es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\-sebares@estudiante.\-uam.\-es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13 de febrero de 2017
+\end{DoxyDate}
+
+
+
+
+Funcion que cierra la conexion con un socket
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{conexion__tcp_8h}{conexion\_tcp.h}"}
+
+\textcolor{keywordtype}{int} \hyperlink{conexion__tcp_8h_a7180696e651a403677ea6a35b59da285}{crearConexion}(\textcolor{keywordtype}{int} portno, \textcolor{keyword}{struct} sockaddr\_in* server)
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em client\-\_\-sock} & Descriptor del socket \\
+\hline
+\mbox{\tt in}  & {\em hostaddrp} & Hostname con el que cerramos al conexion (opcional)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int O\-K si es un comando reconocido y E\-R\-R si es I\-R\-C\-E\-R\-R\-\_\-\-N\-O\-C\-O\-M\-M\-A\-N\-D o I\-R\-C\-E\-R\-R\-\_\-\-U\-N\-K\-N\-O\-W\-N\-C\-O\-M\-M\-A\-N\-D 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Celia Mateos de Miguel (\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\-mateos@estudiante.\-uam.\-es}) Beatriz de Pablo Garcia (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\-depablo@estudiante.\-uam.\-es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\-sebares@estudiante.\-uam.\-es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13 de febrero de 2017
+\end{DoxyDate}
+
+
+ 

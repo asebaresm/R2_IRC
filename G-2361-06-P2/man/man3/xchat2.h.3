@@ -1,0 +1,1273 @@
+.TH "includes/xchat2.h" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+includes/xchat2.h \- 
+.PP
+Declaraciones de funciones, definición de tipos: implementación de los callbacks de xchat2\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <redes2/ircxchat\&.h>\fP
+.br
+\fC#include <redes2/irc\&.h>\fP
+.br
+\fC#include <netdb\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <sys/ioctl\&.h>\fP
+.br
+\fC#include <net/if\&.h>\fP
+.br
+\fC#include 'types\&.h'\fP
+.br
+\fC#include 'conexion_tcp\&.h'\fP
+.br
+\fC#include 'logger\&.h'\fP
+.br
+\fC#include 'user_commands\&.h'\fP
+.br
+\fC#include 'aux_functions\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBcommand_query\fP (char *message)"
+.br
+.RI "\fIParsea los mensajes y respuestas que recibe del servidor\&. \fP"
+.ti -1c
+.RI "void \fBunpipe\fP (char *message, int MAXDATA_flag)"
+.br
+.RI "\fIFuncion para dividir en comandos la cadena 'message'\&. \fP"
+.ti -1c
+.RI "void \fBreceive_messages\fP (void *no_arg)"
+.br
+.RI "\fIFuncion ejecutada por un hilo, que recibe mensajes del servidor y los procesa segun el tipo de respuesta\&. \fP"
+.ti -1c
+.RI "void \fBglueAndQuery\fP (char *command, char *\fBlast_command\fP)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBp_funcion\fP \fBp_array_funciones\fP [57]"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Declaraciones de funciones, definición de tipos: implementación de los callbacks de xchat2\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.PP
+Celia Mateos 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+20/03/17 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "int command_query (char *message)"
+
+.PP
+Parsea los mensajes y respuestas que recibe del servidor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImassage\fP mensaje recibido para procesar 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo fue correcto y ERR si ocurrio un error 
+.RE
+.PP
+< delimitador para separar mensajes 
+.PP
+.nf
+40                                 {
+41 
+42         long ret = -1;
+43         int retorno = -1;
+44         char *prefix = NULL;
+45         int n = -1;
+46         int counter = 1;
+47     char mensaje[MAXDATA] = {0};
+48     char mensajeLargo[10*MAXDATA] = {0};
+49     char *msg = NULL;
+50     char *nick = NULL;
+51     char *nick2 = NULL;
+52     //002
+53     char *servername = NULL;
+54         char *versionname = NULL;
+55         //003
+56         char *timedate = NULL;
+57         //004
+58         char* version = NULL;
+59         char* availableusermodes = NULL;
+60         char* availablechannelmodes = NULL;
+61         char* addedg = NULL;    
+62         //251
+63         int nusers = 0;
+64         int ninvisibles = 0;
+65         int nservers = 0;
+66         char *type = NULL;
+67         //char **parameters = NULL;
+68         //int numparameters = 0;
+69 
+70         //265
+71         char *substring = NULL;
+72         //322
+73         char *visible = NULL;
+74         //332
+75         char *topic = NULL;
+76         char *channel = NULL;
+77 
+78         char inv[200];
+79 
+80         //353
+81         //char* show_nick;
+82 
+83         //JOIN
+84         char* key = NULL;       
+85         char command[MAXDATA];
+86 
+87         //PRIVMSG
+88         char* msgtarget = NULL;
+89         char* origin_nick = NULL;
+90         char nick_privmsg[MAXDATA];
+91         char *filename = NULL, *hostname_destino = NULL;
+92         unsigned long length, port;
+93 
+94         //PART
+95         char* nick_part;
+96         char* username_part;
+97         char* host_part;
+98         char* server_part;
+99 
+100         //PING
+101         char* server, *server2;
+102         char* command_pong;
+103 
+104         //Strtok
+105         const char s[2] = ":"; 
+106         char *token = NULL;
+107 
+108         //472
+109         char *modechar = NULL;
+110 
+111         //MODE
+112         char *channeluser = NULL;
+113         char *mode = NULL;
+114         char *user = NULL;
+115 
+116         //KICK
+117         char *comment = NULL;
+118 
+119         //QUIT
+120         char **channelsQuit;
+121         int numChannelsQuit;
+122         int i;
+123         //char* realname, *host;
+124 
+125         //GENERAL
+126         char **params;
+127         int n_params;
+128         int unknw_type;
+129         const char space_delim[2] = " ";
+130         char *message_cp = NULL;
+131 
+132         //g_print("Mesaje recibido en command_query: %s", message);
+133 
+134         /*
+135         if(message == NULL) {
+136                 g_print(RED "ERROR - In command_query: message == NULL al principio\n\n" RESET);
+137                 return ERR;
+138         }
+139         */
+140 
+141         IRCInterface_PlaneRegisterInMessage(message);
+142 
+143         switch(IRC_CommandQuery(message)){
+144                 case RPL_WELCOME: //001
+145                         ret = IRCParse_RplWelcome(message, &prefix, &nick2, &msg);
+146                         if(ret != IRC_OK){
+147                                 g_print(RED "\nERROR - In command_query: case RPL_WELCOME - IRCParse_RplWelcome != IRC_OK" RESET);
+148                                 //return IRCERR_NOCONNECT;
+149                         }
+150                         g_print("Comandos recibidos en el IRCParse_RplWelcome: \n");
+151                         g_print("\t message: %s \n",message);
+152                         g_print("\t prefix: %s \n",prefix);
+153                         g_print("\t nick2: %s \n",nick2);
+154                         g_print("\t msg: %s \n\n",msg);
+155                         //obtenemos el hostname, util para el envio de ficheros
+156                         hostname = strtok(msg, " ");
+157                         while (((hostname = strtok(NULL, " ")) != NULL) && (counter < 5)){
+158                                 counter++;
+159                         }
+160                         hostname = strtok(NULL, " ");
+161                         g_print("\t hostname: %s \n\n", hostname);
+162                         IRCInterface_WriteSystemThread_Pretty("*", msg);
+163                         break;
+164 
+165                 case RPL_YOURHOST:      //002
+166                         //long IRCParse_RplYourHost (char *strin, char **prefix, char **nick, char **msg, char **servername, char **versionname)
+167                         ret = IRCParse_RplYourHost(message, &prefix, &nick2, &msg, &servername, &versionname);
+168                         if(ret != IRC_OK){
+169                                 g_print(RED "\nERROR - In command_query: case RPL_YOURHOST - IRCParse_RplYourHost != IRC_OK" RESET);
+170                                 //return IRCERR_NOCONNECT;
+171                         }
+172                         g_print("Comandos recibidos en el IRCParse_RplYourHost: \n");
+173                         g_print("\t message: %s \n",message);
+174                         g_print("\t prefix: %s \n",prefix);
+175                         g_print("\t nick2: %s \n",nick2);
+176                         g_print("\t servername: %s \n",servername);
+177                         g_print("\t versionname: %s \n",versionname);           
+178                         g_print("\t msg: %s \n\n",msg);
+179                         IRCInterface_WriteSystemThread_Pretty("*",msg);
+180                         break;
+181 
+182                 case RPL_CREATED://003                  
+183                         //long IRCParse_RplCreated (char *strin, char **prefix, char **nick,char **timedate, char **msg)
+184                         ret = IRCParse_RplCreated(message, &prefix, &nick2, &timedate, &msg);
+185                         if(ret != IRC_OK){
+186                                 g_print(RED "\nERROR - In command_query: case RPL_CREATED - IRCParse_RplCreated != IRC_OK" RESET);
+187                                 //return IRCERR_NOCONNECT;
+188                         }
+189                         g_print("Comandos recibidos en el IRCParse_RplCreated: \n");
+190                         g_print("\t message: %s \n",message);
+191                         g_print("\t prefix: %s \n",prefix);
+192                         g_print("\t nick2: %s \n",nick2);
+193                         g_print("\t timedate: %s \n",timedate); 
+194                         g_print("\t msg: %s \n\n",msg);
+195                         IRCInterface_WriteSystemThread_Pretty("*",msg);
+196                         break;
+197 
+198                 case RPL_MYINFO: //004
+199                         //long IRCParse_RplMyInfo (char *strin, char **prefix, char **nick, char **servername, char **version, char **availableusermodes, char **availablechannelmodes, char **addedg)
+200                         ret = IRCParse_RplMyInfo(message, &prefix, &nick2, &servername, &version, &availableusermodes, &availablechannelmodes, &addedg);
+201                         if(ret != IRC_OK){
+202                                 g_print(RED "\nERROR - In command_query: case RPL_MYINFO - IRCParse_RplMyInfo != IRC_OK" RESET);
+203                                 //return IRCERR_NOCONNECT;
+204                         }
+205                         g_print("Comandos recibidos en el IRCParse_RplMyInfo: \n");
+206                         g_print("\t message: %s \n",message);
+207                         g_print("\t prefix: %s \n",prefix);
+208                         g_print("\t nick2: %s \n",nick2);
+209                         g_print("\t servername: %s \n",servername);
+210                         g_print("\t version: %s \n",version);
+211                         g_print("\t availableusermodes: %s \n",availableusermodes);     
+212                         g_print("\t availablechannelmodes: %s \n",availablechannelmodes);
+213                         g_print("\t addedg: %s \n\n",addedg);
+214                         n = snprintf(mensaje, sizeof mensaje,"%s %s %s %s %s ",servername,version,availableusermodes,availablechannelmodes,addedg);
+215 
+216                         if ( n < 0 || n >= sizeof mensaje ){
+217                                 g_print("Error en sprintf \n");
+218                         return ERR;    // or other error handling
+219                         }
+220                         IRCInterface_WriteSystemThread_Pretty("*",mensaje);             
+221                         break;
+222 
+223                 case RPL_BOUNCE: //005
+224                         //   long IRCParse_RplISupport (char *strin, char **prefix, char **nick, char **msg)                                            
+225                         ret = IRCParse_RplISupport(message, &prefix, &nick2, &msg);
+226                         if(ret != IRC_OK){
+227                                 g_print(RED "\nERROR - In command_query: case RPL_BOUNCE -IRCParse_RplISupport != IRC_OK" RESET);
+228                                 //return IRCERR_NOCONNECT;
+229                         }
+230                         g_print("Comandos recibidos en el IRCParse_RplISupport: \n");
+231                         g_print("\t message: %s \n",message);
+232                         g_print("\t prefix: %s \n",prefix);
+233                         g_print("\t nick2: %s \n",nick2);
+234                         g_print("\t msg: %s \n\n",msg);
+235                         IRCInterface_WriteSystemThread_Pretty("*",msg);         
+236                         break;
+237 
+238                 case RPL_LUSERCLIENT: //251
+239                         //long IRCParse_RplLuserClient (char *strin, char **prefix, char **nick, char **msg, int *nusers, int *ninvisibles, int *nservers)
+240                         
+241                         ret = IRCParse_RplLuserClient(message, &prefix, &nick2, &msg, &nusers, &ninvisibles, &nservers);
+242                         if(ret != IRC_OK){
+243                                 //g_print(RED "\nERROR - In command_query: case RPL_LUSERCLIENT -IRCParse_RplLuserClient != IRC_OK" RESET);
+244                                 //return IRCERR_NOCONNECT;
+245                         }
+246                         g_print("\t message: %s \n",message);
+247                         g_print("\t prefix: %s \n",prefix);
+248                         g_print("\t nick2: %s \n",nick2);
+249                         g_print("\t msg: %s \n",msg);
+250                         g_print("\t nusers: %d \n",nusers);
+251                         g_print("\t ninvisibles: %d \n",ninvisibles);
+252                         g_print("\t nservers: %d \n\n",nservers); 
+253 
+254                         /*ret_strstr = strstr(mensaje,"nicknick");
+255                         IRCInterface_WriteSystem("*",ret_strstr);*/ 
+256 
+257                         sprintf(mensaje,"There are %d users and %d invisibles on %d servers ",nusers,ninvisibles,nservers);
+258                         //sprintf(mensaje,"There are 13 users and 0 services on 1 servers");
+259 
+260                         IRCInterface_WriteSystemThread_Pretty("*",mensaje);                                                                                                     
+261                         break;
+262                         
+263                 case RPL_LUSERCHANNELS: //254
+264                         g_print("\t message: %s \n",message);
+265                         /*Coger el primer token*/
+266                         token = strtok(message,s);
+267                         /*Ir por el resto*/
+268                         if(token != NULL){
+269                                 token = strtok(NULL,s); 
+270                         }
+271                         IRCInterface_WriteSystemThread_Pretty("*",token);
+272 
+273                         token = NULL;
+274                         //IRCInterface_WriteSystem("*",message);        
+275                         break;
+276 
+277                 case RPL_LUSERME : //255
+278                         g_print("\t message: %s \n",message);
+279                         /*Coger el primer token*/
+280                         token = strtok(message,s);
+281                         /*Ir por el resto*/
+282                         if(token != NULL){
+283                                 token = strtok(NULL,s); 
+284                         }
+285                         IRCInterface_WriteSystemThread_Pretty("*",token);
+286 
+287                         token = NULL;
+288                         //IRCInterface_WriteSystem("*",message);        
+289                         break;
+290 
+291                 case RPL_LOCALUSERS: //265
+292                         substring = strnext(message, ':');
+293                         if (substring){
+294                                 substring = strnext(substring, ':');
+295                         }
+296                         IRCInterface_WriteSystemThread_Pretty("*",substring);
+297 
+298                         substring = NULL;
+299                         break;
+300 
+301                 case RPL_GLOBALUSERS: //266
+302                         g_print(GRN "\n>> [server command] RPL_GLOBALUSERS - message = %s\n" RESET, message);
+303                         substring = strnext(message, ':');
+304                         if (substring){
+305                                 substring = strnext(substring, ':');
+306                         }
+307                         IRCInterface_WriteSystemThread_Pretty("*",substring);
+308 
+309                         substring = NULL;               
+310                         break;
+311 
+312                 case RPL_LISTSTART: //321
+313                         g_print(GRN "\n>> [server command] RPL_LISTSTART - message = %s\n" RESET, message);
+314                         token = strtok(message,s);
+315                         if(token != NULL){
+316                                 token = strtok(NULL,s); 
+317                         }
+318                         IRCInterface_WriteSystemThread_Pretty("*",token);
+319 
+320                         break;
+321 
+322                 case RPL_LIST: //322
+323                         //   long IRCParse_RplList (char *strin, char **prefix, char **nick, char **channel, char **visible, char **topic)
+324                         g_print(GRN "\n>> [server command] RPL_LIST - message = %s\n" RESET, message);
+325                         ret = IRCParse_RplList(message, &prefix, &nick2, &channel, &visible, &topic);
+326                         if(ret != IRC_OK){
+327                                 g_print(RED "\nERROR - In command_query: case RPL_LIST - IRCParse_RplList != IRC_OK" RESET);
+328                                 //return IRCERR_NOCONNECT;
+329                         }
+330                         g_print("Comandos recibidos en el IRCParse_RplList: \n");
+331                         g_print("\t message: %s \n",message);
+332                         g_print("\t prefix: %s \n",prefix);
+333                         g_print("\t nick2: %s \n",nick2);
+334                         g_print("\t channel: %s \n",channel);
+335                         g_print("\t visible: %s \n",visible);
+336                         g_print("\t topic: %s \n\n",topic);
+337 
+338                         sprintf(mensajeLargo,"%s \t %s \t %s",channel,visible,topic);
+339                         g_print("Mensaje creado: %s \n\n",mensajeLargo);
+340 
+341                         IRCInterface_WriteSystemThread_Pretty("*",mensajeLargo);
+342                         mfree(5,prefix,nick2,channel,visible,topic);    
+343                         break;
+344 
+345                 case RPL_LISTEND: //323
+346                         g_print(GRN "\n>> [server command] RPL_LISTEND - message = %s\n" RESET, message);
+347                         /*Coger el primer token*/
+348                         token = strtok(message,s);
+349                         /*Ir por el resto*/
+350                         if(token != NULL){
+351                                 token = strtok(NULL,s); 
+352                         }
+353                         IRCInterface_WriteSystemThread_Pretty("*",token);
+354 
+355                         token = NULL;
+356                         //IRCInterface_WriteSystem("*",message);                        
+357                         break;
+358 
+359                 case RPL_INVITING:
+360                         g_print(GRN "\n>> [server command] RPL_INVITING - message = %s\n" RESET, message);
+361 
+362                         ret = IRCParse_RplInviting (message, &prefix , &nick, &channel, &msg);
+363                         if(ret != IRC_OK){
+364                                 g_print(RED "\nERROR - In command_query: case RPL_INVITING - IRCParse_RplInviting != IRC_OK" RESET);
+365                                 break;
+366                         }
+367                         //strcpy("")
+368                         if(strcmp(nick,nick_user) == 0){
+369                                 strcpy(inv,"You invited ");
+370                                 strcat(inv, channel);
+371                                 strcat(inv, " to join ");
+372                                 strcat(inv, msg);
+373                                 IRCInterface_WriteSystemThread_Pretty("*",inv);
+374                         }
+375                         break;
+376 
+377                 case RPL_WHOREPLY: //352
+378                         g_print(GRN "\n>> [server command] RPL_WHOREPLY - message = %s\n" RESET, message);
+379                         break;
+380 
+381                 case RPL_MOTDSTART: //375
+382                         g_print("\t message: %s \n",message);
+383                         /*Coger el primer token*/
+384                         token = strtok(message,s);
+385                         /*Ir por el resto*/
+386                         if(token != NULL){
+387                                 token = strtok(NULL,s); 
+388                         }
+389                         IRCInterface_WriteSystemThread_Pretty("*",token);
+390 
+391                         token = NULL;
+392                         //IRCInterface_WriteSystem("*",message);                        
+393                         break;
+394 
+395                 case RPL_MOTD: //372
+396                         g_print("\t message: %s \n",message);
+397                         /*Coger el primer token*/
+398                         token = strtok(message,s);
+399                         /*Ir por el resto*/
+400                         if(token != NULL){
+401                                 token = strtok(NULL,s); 
+402                         }
+403                         IRCInterface_WriteSystemThread_Pretty("*",token);
+404 
+405                         token = NULL;
+406                         //IRCInterface_WriteSystem("*",message);                
+407                         break;
+408 
+409                 case RPL_ENDOFMOTD: //376
+410                         g_print("\t message: %s \n",message);
+411                         /*Coger el primer token*/
+412                         token = strtok(message,s);
+413                         /*Ir por el resto*/
+414                         if(token != NULL){
+415                                 token = strtok(NULL,s); 
+416                         }
+417                         IRCInterface_WriteSystemThread_Pretty("*",token);
+418 
+419                         token = NULL;
+420                         //IRCInterface_WriteSystem("*",message);        
+421                         return 19;//cambiar por un define
+422                         break;
+423 
+424                 case RPL_TOPIC: //332
+425                         g_print(GRN "\n>> [server command] RPL_TOPIC - message = %s\n" RESET, message);
+426                         //g_print("\n=======CASE RPL_TOPIC=======\n");
+427                         //IRCParse_RplTopic (char *strin, char **prefix, char **nick, char **nick2, char **channel, char **msg)
+428                         ret = IRCParse_RplTopic(message, &prefix, &nick, &channel, &topic);
+429                         if(ret != IRC_OK){
+430                                 g_print(RED "ERROR - In command_query: case RPL_TOPIC - IRCParse_RplTopic devolvio != IRC_OK\n" RESET);
+431                                 //return IRCERR_NOCONNECT;
+432                         }
+433                         g_print("\t message: %s \n",message);
+434                         g_print("\t prefix: %s \n",prefix);
+435                         g_print("\t nick: %s \n",nick);
+436                         g_print("\t channel: %s \n",channel);
+437                         g_print("\t topic: %s \n\n",topic);
+438                         sprintf(mensaje,"El topic para %s es %s ",channel,topic);
+439                         g_print("Mensaje: %s \n",mensaje);
+440                         g_print("Existe canal: %d \n", IRCInterface_QueryChannelExistThread(channel));
+441 
+442                         IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);    
+443                         break;
+444 
+445                 case RPL_UNAWAY: //305
+446                         g_print(GRN "\n>> [server command] RPL_UNAWAY - message = %s\n" RESET, message);
+447                         IRCParse_RplUnaway (message, &prefix, &nick, &msg);
+448                         IRCInterface_WriteSystemThread_Pretty("*",msg);
+449                         break;
+450 
+451                 case RPL_AWAY: //306
+452                         g_print(GRN "\n>> [server command] RPL_AWAY - message = %s\n" RESET, message);
+453                         IRCParse_RplAway (message, &prefix, &nick, &nick2, &msg);
+454                         IRCInterface_WriteSystemThread_Pretty("*",msg);
+455                         break;
+456 
+457                 case TOPIC: //332
+458                         g_print(GRN "\n>> [server command] TOPIC - message = %s\n" RESET, message);
+459                         //   long IRCParse_Topic (char *strin, char **prefix, char **channel, char **topic)
+460                         ret = IRCParse_Topic (message, &prefix, &channel, &topic);
+461                         if(ret != IRC_OK){
+462                                 g_print(RED "ERROR - In command_query: case TOPIC - IRCParse_Topic devolvio != IRC_OK\n" RESET);
+463                                 return ERR;
+464                         }
+465 
+466                         g_print("\t message: %s \n",message);
+467                         g_print("\t prefix: %s \n",prefix);
+468                         g_print("\t channel: %s \n",channel);
+469                         g_print("\t topic: %s \n\n",topic);
+470                         sprintf(mensaje,"El topic para %s es %s \n",channel,topic);
+471                         g_print("Mensaje: %s \n",mensaje);
+472                         g_print("Existe canal: %d \n", IRCInterface_QueryChannelExistThread(channel));
+473 
+474                         IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+475                         break;
+476 
+477                 case RPL_NOTOPIC:
+478                         break;
+479 
+480                 case RPL_TOPICWHOTIME: //333
+481                         break;  
+482 
+483                 case RPL_NAMREPLY: //353 - reply del servidor de de punames()
+484                         g_print(GRN "\n>> [server command] RPL_NAMREPLY - message = %s\n" RESET, message);
+485                         //long IRCParse_RplNamReply (char *strin, char **prefix, char **nick, char **type, char **channel, char **msg)
+486                         ret = IRCParse_RplNamReply(message, &prefix, &nick, &type, &channel, &msg);
+487                         if(ret != IRC_OK){
+488                                 g_print(RED "ERROR - In command_query: case RPL_NAMREPLY - IRCParse_RplNamReply devolvio != IRC_OK\n" RESET);
+489                                 //return IRCERR_NOCONNECT;
+490                         }
+491                         g_print("\t message: %s \n",message);
+492                         g_print("\t prefix: %s \n",prefix);
+493                         g_print("\t nick: %s \n",nick);
+494                         g_print("\t type: %s \n",type);                                                         
+495                         g_print("\t channel: %s \n",channel);
+496                         g_print("\t msg: %s \n\n",msg);
+497 
+498                         //Ojo, que pasa si es names?? sin join
+499                         //Añadir los nicks a la ventana de lad erecha\&. Pillarlos del WHO que se envía 
+500                         //despues del join\&.
+501                         //OJO es una prueba del funcionamineto de IRCInterface_AddNickChannel,
+502                         //los nicks deberían de ser partidos mediante uso strtok o algo parecido
+503                         //IRCInterface_AddNickChannel (channel, msg, msg, msg, msg, VOICE);
+504                         //sprintf(mensaje,"Usuarios en %s: %s",channel,msg);
+505                         //IRCInterface_WriteChannelThread(channel,"*",mensaje);
+506                         interface_mostrar_nicks(channel,msg);   
+507                         break;
+508 
+509                 case RPL_ENDOFNAMES: //366
+510                         g_print("Mensaje recibido en RPL_ENDOFNAMES: \n");
+511                         //long IRCParse_RplEndOfNames (char *strin, char **prefix, char **nick, char **channel, char **msg)
+512                         ret = IRCParse_RplEndOfNames(message, &prefix, &nick2, &channel, &msg);
+513                         if(ret != IRC_OK){
+514                                 g_print(RED "ERROR - In command_query: case RPL_ENDOFNAMES - IRCParse_RplEndOfNames devolvio != IRC_OK\n" RESET);
+515                                 //return IRCERR_NOCONNECT;
+516                         }
+517                         g_print("\t message: %s \n",message);
+518                         g_print("\t prefix: %s \n",prefix);
+519                         g_print("\t nick: %s \n",nick);                                                 
+520                         g_print("\t channel: %s \n",channel);
+521                         g_print("\t msg: %s \n\n",msg);
+522 
+523                         //IRCInterface_WriteChannelThread(channel,"*",msg);
+524                         break;
+525 
+526                 case JOIN:
+527                         g_print(GRN "\n>> [server command] JOIN - message = %s\n" RESET, message);
+528                         //g_print(MAG "\nJOIN es %ld con IRC_CommandQuery\n" RESET, IRC_CommandQuery(message));
+529                         //g_print(MAG "\nJOIN es %ld con IRCUser_CommandQuery\n" RESET, IRCUser_CommandQuery(message));
+530 
+531                         ret = IRCParse_Join (message, &prefix, &channel, &key, &msg);
+532                         if(ret != IRC_OK){
+533                                 g_print(RED "\nERROR - In command_query: JOIN - IRCParse_Join devolvio error\n" RESET);
+534                                 return ERR;
+535                         }
+536                         g_print("Comandos recibidos en el IRCParse_Join: \n");
+537                         g_print("\t message: %s \n",message);
+538                         g_print("\t prefix: %s \n",prefix);
+539                         g_print("\t channel: %s \n",channel);
+540                         g_print("\t key: %s \n",key);
+541                         g_print("\t msg: %s \n\n",msg);
+542 
+543                         IRCInterface_AddNewChannelThread(msg, 0);
+544                         IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+545                         sprintf(mensaje, "%s (%s) se ha unido al canal", nick_part, prefix);
+546                         if(!strcmp(nick_user, nick_part)){
+547                                 IRCInterface_WriteChannelThread(msg,"*", "Bienvenido al canal");
+548                         } else {
+549                                 IRCInterface_WriteChannelThread(msg,"*", mensaje);
+550                         }
+551                         //Actualizar al lista de usuarios
+552                         sprintf(mensaje,"/names %s",msg);
+553                         retorno = punames(mensaje);
+554                         if(retorno == ERR){
+555                                 g_print("ERROR - JOIN - punames");
+556                                 return ERR;                             
+557                         }
+558                         break;
+559 
+560                 case NAMES:
+561                         g_print(GRN "\n>> [server command] NAMES - message = %s\n" RESET, message);
+562                         g_print(GRN "\nNo hay nada aquí, revisar (?)" RESET);
+563                         break;
+564 
+565                 case PRIVMSG:
+566                         g_print(GRN "\n>> [server command] PRIVMSG - message = %s\n" RESET, message);
+567                         ret = IRCParse_Privmsg(message, &prefix, &msgtarget, &msg);
+568                         if(ret != IRC_OK){
+569                                 g_print(RED "\nERROR - In command_query: IRCParse_Privmsg devolvio != IRC_OK" RESET);
+570                                 return ERR;
+571                         }
+572 
+573                         if ((origin_nick = strtok(prefix, "!")) != NULL){
+574                                 strcpy(nick_privmsg, origin_nick);
+575                         }
+576                         g_print("\t nick_privmsg: %s \n",nick_privmsg);
+577                         g_print("\t prefix: %s \n",prefix);
+578                         g_print("\t msgtarget: %s \n",msgtarget);
+579                         g_print("\t msg: %s \n\n",msg);
+580 
+581                         if(msg[0] == 1 || (msg[0] == ':' || msg[1] == 1)) { //envio de ficheros
+582                                 g_print("alguien quiere enviarme un fichero\n");
+583                                 
+584                                 filename = strtok(msg, " ");
+585                                 filename = strtok(NULL, " ");
+586                                 hostname_destino = strtok(NULL, " ");
+587                                 port = (unsigned long) atol(strtok(NULL, " "));
+588                                 length = (unsigned long) atol(strtok(NULL, " "));
+589                                 g_print("filename: %s \n",filename);
+590                                 g_print("hostname_destino: %s \n",hostname_destino);
+591                                 g_print("length: %ld \n",length);
+592                                 g_print("port: %ld \n",port);
+593 
+594                                 if(IRCInterface_ReceiveDialogThread(nick_user, filename) == TRUE){
+595                                         g_print("Lanzamos el hilo que guarda el archivo\n");
+596                                         //pthread_t tid;
+597 
+598                                         File_args args;
+599                                         args\&.hostname = hostname_destino;
+600                                         args\&.filename = filename;
+601                                         args\&.port = port;
+602                                         args\&.length = length;
+603 
+604                                         if(pthread_create( &sendf_tid, NULL, (void*) save_file, (void*) &args) < 0){
+605                                         g_print("Error en la llamada a save_file\n");
+606                                                 return ERR;
+607                                         }
+608                                         break;
+609                                 }
+610                                 /*
+611                                 if (sscanf(msg, "\001AUDIOCHAT %ms %li", &hostname_destino, &port) > 0) {
+612                                         g_print("host=%s, port=%li\n", hostname_destino, port);
+613                                 } else{
+614                                         g_print("Formato incorrecto en envio de fichero\n");
+615                                 }*/
+616                                 ret = enviarDatos(sockfd_user, command, strlen(command));
+617                                 if(ret < 0){
+618                                         g_print(RED "ERROR - In command_query: case PRIVMSG - enviarDatos() devolvio error (ver secuencia en \&.log)\n\t\tEl cliente se cerrará\&.\n" RESET);
+619                                         exit(1);
+620                                 }
+621                                 if(ret == 0){ //timeout 
+622                                         g_print(RED "ERROR - In command_query: case PRIVMSG - enviarDatos() mandó 0 Bytes(ver secuencia en \&.log)\n\t\t(Timeout de conexión probablemente)\n" RESET);
+623                                         exit(1);
+624                                 }
+625                         }
+626 
+627                         if(msgtarget[0] != '#'){//no grupo
+628                                 IRCInterface_AddNewChannelThread(nick_privmsg, 0);                              
+629                                 IRCInterface_WriteChannelThread_Pretty(nick_privmsg, nick_privmsg, msg);
+630                                 return OK;
+631                         }
+632 
+633                         //IRCInterface_WriteChannelThread(msgtarget, nick_privmsg, msg);
+634                         IRCInterface_WriteChannelThread_Pretty(msgtarget, nick_privmsg, msg);
+635                         break;
+636 
+637                 case PART:
+638                         g_print(GRN "\n>> [server command] PART - message = %s\n" RESET, message);
+639                         ret = IRCParse_Part (message, &prefix, &channel, &msg);
+640                         if(ret != IRC_OK){
+641                                 g_print(RED "\nERROR - In command_query: case PART - IRCParse_Part devolvio != IRC_OK" RESET);
+642                                 return ERR;
+643                         }
+644                         g_print("Comandos recibidos en el IRCParse_PART: \n");
+645                         g_print("\t message: %s \n",message);
+646                         g_print("\t prefix: %s \n",prefix);
+647                         g_print("\t channel: %s \n",channel);
+648                         g_print("\t msg: %s \n\n",msg);
+649 
+650                         IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+651                         IRCInterface_DeleteNickChannelThread(channel, nick_part);
+652                         sprintf(mensaje, "El usuario %s ha salido del grupo (%s)",nick_part, msg);
+653                         IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+654                         if(strcmp(nick_user, nick_part) == 0){
+655                                 IRCInterface_RemoveChannelThread(channel);
+656                         } else {
+657                                 sprintf(mensaje,"/names %s",channel);
+658                                 retorno = punames(mensaje);
+659                                 if(retorno == ERR){
+660                                         g_print("ERROR - JOIN - punames");
+661                                         return ERR;                             
+662                                 }
+663                         }
+664 
+665                         break;
+666 
+667                 case NOTICE:
+668                         //g_print("\n=======CASE NOTICE=======\n");
+669                         g_print(GRN "\n>> [server command] NOTICE - message = %s\n" RESET, message);
+670 
+671                         IRCParse_Notice(message, &prefix, &msgtarget, &msg);
+672 
+673                         g_print("prefix = %s\n", prefix);
+674                         g_print("msgtarget = %s\n", msgtarget);
+675                         g_print("msg = %s\n", msg);
+676                         
+677 
+678                         //break;
+679                         //caso: NOTICE !(generado por el server) (triggeado por /HELP, p\&.ej\&.)
+680                         //caso: !(:irc\&.eps\&.net NOTICE testame2 :example "HELP quit" or "HELP privmsg"\&.)
+681 
+682                         if(msg == NULL || msgtarget == NULL || prefix == NULL){
+683                                 IRCInterface_WriteSystemThread_Pretty("*","");
+684                                 break;
+685                         }
+686 
+687                         if((!strcmp(msgtarget, nick_user)) && (strcmp(prefix,"irc\&.eps\&.net") != 0)) {
+688                                 IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);                             
+689                                 sprintf(mensaje, ">%s<", nick_part);
+690                                 IRCInterface_AddNewChannelThread(nick_part, 0);
+691                                 IRCInterface_WriteChannelThread (nick_part,mensaje,msg);
+692                         } else if(msgtarget[0] == '#'){
+693                                 IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+694                                 sprintf(mensaje, ">%s/%s<", nick_part, msgtarget);
+695                                 IRCInterface_AddNewChannelThread(msgtarget, 0);
+696                                 IRCInterface_WriteChannelThread (msgtarget,mensaje,msg);
+697                         } else {//AUTH, /HELP
+698                                 //g_print(RED "\n>>>>>>>>>> NO BOI\n" RESET);
+699                                 IRCInterface_WriteSystemThread_Pretty("*",msg);
+700                         }
+701                         //IRCInterface_WriteSystemThread("*",msg);
+702                         break;
+703 
+704                 case PING:
+705                         g_print(GRN "\n>> [server command] PING - message = %s\n" RESET, message);
+706                         //:irc\&.eps\&.net PONG irc\&.eps\&.net :LAG1460877705692323
+707                         IRCParse_Ping (message, &prefix, &server, &server2, &msg);
+708                         g_print("\t prefix: %s \n",prefix);
+709                         g_print("\t server: %s \n",server);
+710                         g_print("\t server2: %s \n",server2);
+711                         g_print("\t msg: %s \n\n",msg);
+712                         IRCMsg_Pong(&command_pong, prefix?prefix:hostname, server?server:"", server2?server2:"", msg?msg:"");
+713                         enviarDatos(sockfd_user, command_pong, strlen(command_pong));
+714                         g_print(GRN "Pong enviado\n" RESET);
+715                         IRCInterface_PlaneRegisterOutMessageThread(command_pong);
+716                         break;
+717 
+718                 case KICK:
+719                         g_print(GRN "\n>> [server command] KICK - message = %s\n" RESET, message);
+720                         //long IRCParse_Kick (char *strin, char **prefix, char **channel, char **user, char **comment)
+721 
+722                         ret = IRCParse_Kick(message, &prefix, &channel, &user, &comment);
+723                         if(ret != IRC_OK){
+724                                 g_print(RED "\nERROR - In command_query: case KICK - IRCParse_Kick devolvio != IRC_OK" RESET);
+725                                 return ERR;
+726                         }
+727                         g_print("\t message: %s \n",message);
+728                         g_print("\t prefix: %s \n",prefix);
+729                         g_print("\t channel: %s \n",channel);
+730                         g_print("\t user: %s \n",user);
+731                         g_print("\t comment: %s \n\n",comment);
+732 
+733                         sprintf(mensaje,"%s Ha sido echado de %s con mensaje/motivo(%s)",user, channel, comment);
+734                         
+735                         g_print("Mensaje: %s \n",mensaje);
+736                         IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+737 
+738                         //Actualizar al lista de usuarios
+739                         IRCInterface_DeleteNickChannelThread (channel, user);
+740                         if(!strcmp(nick_user,user)){
+741                                 IRCInterface_RemoveChannelThread(channel);
+742                         }
+743                         /*memset(mensaje,0,MAXDATA);
+744                         sprintf(mensaje,"/names %s",channel);
+745                         retorno = punames(mensaje);
+746                         if(retorno == ERR){
+747                                 g_print("ERROR - MODE - punames");
+748                                 return ERR;                             
+749                         } */
+750                         break;
+751 
+752                 case ERR_UNKNOWNMODE: //472
+753                         g_print(GRN "\n>> [server command] ERR_UNKNOWNMODE - message = %s\n" RESET, message);
+754                         //      long IRCParse_ErrUnknownMode (char *strin, char **prefix, char **nick, char **modechar, char **channel, char **msg)
+755                         ret = IRCParse_ErrUnknownMode(message, &prefix, &nick, &modechar, &channel, &msg);
+756                         if(ret != IRC_OK){
+757                                 g_print(RED "\nERROR - In command_query: case ERR_UNKNOWNMODE - IRCParse_ErrUnknownMode != IRC_OK" RESET);
+758                                 //return -1;
+759                         }
+760                         g_print("Comandos recibidos en el IRCParse_ErrUnknownMode: \n");
+761                         g_print("\t message: %s \n",message);
+762                         g_print("\t prefix: %s \n",prefix);
+763                         g_print("\t nick: %s \n",nick);
+764                         g_print("\t modechar: %s \n",nick);                                             
+765                         g_print("\t channel: %s \n",channel);
+766                         g_print("\t msg: %s \n\n",msg);         
+767 
+768                         sprintf(mensaje,"%s %s\n",channel,msg);
+769                         IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+770                         break;
+771 
+772                 case MODE: //
+773                         g_print(GRN "\n>> [server command] MODE - message = %s\n" RESET, message);
+774                         //    long IRCParse_Mode (char *strin, char **prefix, char **channeluser, char **mode, char **user)
+775                         ret = IRCParse_Mode(message, &prefix, &channeluser, &mode, &user);
+776                         if(ret != IRC_OK){
+777                                 g_print(RED "\nERROR - In command_query: case MODE - IRCParse_Mode != IRC_OK" RESET);
+778                                 return ERR;
+779                         }
+780                         g_print("\t message: %s \n",message);
+781                         g_print("\t prefix: %s \n",prefix);
+782                         g_print("\t channeluser: %s \n",channeluser);
+783                         g_print("\t mode: %s \n",mode);
+784                         g_print("\t user: %s \n\n",user);
+785 
+786                         nick = strtok(prefix,"!"); //Coger el usuario que ha mandando el mode
+787                         if(user != NULL){ //Modo usuario
+788                                 //Comprobar si es k o l 
+789                                 if(strcasecmp(mode,"+k") == 0){
+790                                         sprintf(mensaje,"%s establece contraseña del canal %s como: %s ",nick, channeluser, user);
+791                                         g_print("Mensaje: %s \n",mensaje);
+792                                         IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+793                                         break;          
+794                                 }else if(strcasecmp(mode,"+l") == 0){
+795                                         sprintf(mensaje,"%s establece límite del canal %s a %s usuarios",nick, channeluser, user);
+796                                         g_print("Mensaje: %s \n",mensaje);
+797                                         IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+798                                         break;                                          
+799                                 }
+800 
+801                                 sprintf(mensaje,"%s establece el modo %s al usuario %s en el canal %s ",nick, mode, user, channeluser);
+802                                 g_print("Mensaje: %s \n",mensaje);
+803                                 IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+804 
+805                                 /* No funciona IRCInterface_ChangeNickStateChannel :(
+806                                 if(strcasecmp(mode,"+o") == 0){
+807                                         g_print("modo op\n");
+808                                         IRCInterface_ChangeNickStateChannel (channeluser, nick, OPERATOR);
+809                                 }else if(strcasecmp(mode,"+v") == 0){
+810                                         g_print("modo voice\n");
+811                                         IRCInterface_ChangeNickStateChannel (channeluser, nick, VOICE);
+812                                 }else{
+813                                         g_print("else otro modo\n");*/
+814                                         //Actualizar al lista de usuarios
+815                                         
+816                                         memset(mensaje,0,MAXDATA);
+817                                         sprintf(mensaje,"/names %s",channeluser);
+818                                         retorno = punames(mensaje);
+819                                         if(retorno == ERR){
+820                                                 g_print("ERROR - MODE - punames");
+821                                                 return ERR;                             
+822                                         }                                       
+823                                 //}                             
+824                         }else{
+825                                 sprintf(mensaje,"%s establece modo %s %s ", nick, channeluser, mode);
+826                                 g_print("Mensaje: %s \n",mensaje);
+827                                 IRCInterface_WriteChannelThread_Pretty(channeluser,"*",mensaje);
+828                         }                       
+829                         break;
+830 
+831                 case INVITE:                    
+832                         g_print(GRN "\n>> [server command] INVITE - message = %s\n" RESET, message);
+833                         IRCInterface_WriteSystemThread_Pretty("*",message);
+834                         break;
+835 
+836                 case NICK:
+837                         g_print(GRN "\n>> [server command] NICK - message = %s\n" RESET, message);
+838 
+839                         IRCParse_Nick (message, &prefix, &nick, &msg);
+840                         IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+841                         g_print("\t message: %s \n",message);
+842                         g_print("\t prefix: %s \n",prefix);
+843                         g_print("\t nick: %s \n",nick); //esta a null
+844                         g_print("\t msg: %s \n",msg); //el nick viene aqui
+845                         IRCInterface_ChangeNickThread(nick_part, msg);
+846                         sprintf(mensaje, "%s ahora es conocido como %s", nick_part, msg);
+847                         if(!strcmp(nick_part, nick_user)){
+848                                 strcpy(nick_user,msg);                  
+849                         }
+850                         IRCInterface_WriteSystemThread_Pretty("*",mensaje);     
+851                         g_print("new nick: %s\n", msg);
+852 
+853                         break;
+854 
+855                 case QUIT:
+856                         /*
+857                         * Enfoque 1: Cuando alguien sale (QUIT del servidor)
+858                         *       Obtener la lista de canales abiertos -> '/names' en cada canal -> Capturar reply del servidor:
+859                         *       353 -> interface_mostrar_nicks(channel,msg); (se actualizan todas las listas de chats abiertos)
+860                         *
+861                         */
+862                         g_print(GRN "\n>> [server command] QUIT - message = %s\n" RESET, message);
+863                         
+864                         IRCParse_Quit (message, &prefix, &msg);
+865                         IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
+866                         g_print("\t message: %s \n",message);
+867                         g_print("\t prefix: %s \n",prefix);
+868                         g_print("\t msg: %s \n",msg);
+869                         sprintf(mensaje, "%s se ha desconectado (%s)", nick_part, msg);
+870                         IRCInterface_WriteSystemThread("*",mensaje);
+871 
+872                         IRCInterface_ListAllChannelsThread(&channelsQuit, &numChannelsQuit);
+873 
+874                         for(i=0; i<numChannelsQuit; i++){
+875                                 sprintf(mensaje,"/names %s",channelsQuit[i]);
+876                                 retorno = punames(mensaje);
+877                                 if(retorno == ERR){
+878                                         g_print("ERROR - JOIN - punames");
+879                                         return ERR;                             
+880                                 }
+881                         }
+882                         break;
+883 
+884                 case RPL_CHANNELMODEIS: //324   
+885                         g_print(GRN "\n>> [server command] RPL_CHANNELMODEIS - message = %s\n" RESET, message);
+886                         //long IRCParse_RplChannelModeIs(char *strin, char **prefix, char **nick, char **channel, char **modetxt)
+887                         /*ret = IRCParse_RplChannelModeIs(message, &prefix, &channeluser, &mode, &user);
+888                         if(ret != IRC_OK){
+889                                 g_print("ERROR: IRCInterface_Connect - IRCParse_RplTopic\n");
+890                                 return ERR;
+891                         }
+892                         g_print("\t message: %s \n",message);
+893                         g_print("\t prefix: %s \n",prefix);
+894                         g_print("\t channeluser: %s \n",channeluser);
+895                         g_print("\t mode: %s \n",mode);
+896                         g_print("\t user: %s \n\n",user);
+897 
+898                         sprintf(mensaje,"%s establece modo %s %s ", user, channeluser, mode);
+899                         
+900                         g_print("Mensaje: %s \n",mensaje);
+901                         IRCInterface_WriteChannelThread(channeluser,"*",mensaje);*/
+902 
+903                         //Actualizar al lista de usuarios
+904                         break;  
+905 
+906                 case ERR_CHANOPRIVSNEEDED: //482
+907                         g_print(GRN "\n>> [server command] ERR_CHANOPRIVSNEEDED - message = %s\n" RESET, message);
+908                         //   long IRCParse_ErrChanOPrivsNeeded (char *strin, char **prefix, char **nick, char **channel, char **msg)
+909                         ret = IRCParse_ErrChanOPrivsNeeded(message, &prefix, &nick, &channel, &msg);
+910                         if(ret != IRC_OK){
+911                                 g_print(RED "\nERROR - In command_query: case ERR_CHANOPRIVSNEEDED - IRCParse_ErrChanOPrivsNeeded != IRC_OK" RESET);
+912                                 //return ERR;
+913                         }
+914                         g_print("Comandos recibidos en el IRCParse_ErrChanOPrivsNeeded: \n");
+915                         g_print("\t message: %s \n",message);
+916                         g_print("\t prefix: %s \n",prefix);
+917                         g_print("\t nick: %s \n",nick);                 
+918                         g_print("\t channel: %s \n",channel);
+919                         g_print("\t msg: %s \n\n",msg);         
+920 
+921                         sprintf(mensaje,"%s %s\n",channel,msg);
+922                         IRCInterface_WriteChannelThread_Pretty(channel,"*",mensaje);
+923                         break;
+924 
+925                 case ERR_NOSUCHSERVER:
+926                         g_print(GRN "\n>> [server command] ERR_NOSUCHSERVER - message = %s\n" RESET, message);
+927                         IRCInterface_WriteSystemThread_Pretty("*",message);
+928                         break;
+929 
+930                 /*TRATAMIENTO DE ERRORES*/
+931                 case IRCERR_NOCOMMAND:
+932                         g_print(RED "\nERROR - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_NOCOMMAND -  no hay ningún comando en la cadena de caracteres\n" RESET);
+933                         IRCInterface_WriteSystemThread_Pretty("*",message);
+934                         return ERR;
+935 
+936                 case IRCERR_NOPARAMS:
+937                         g_print(RED "\nERROR - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_NOPARAMS -  se ha introducido una cadena de caracteres nula\n" RESET);
+938                         IRCInterface_WriteSystemThread("*",message);
+939                         return ERR;
+940 
+941                 case IRCERR_UNKNOWNCOMMAND:
+942                         //g_print(MAG"\n>>>>>>>>>>>>>>>>>>>>>>>>>>\n"RESET);
+943                         //ret =  IRCParse_GeneralCommand (message, &prefix, &type, &params, &n_params, &msg);
+944                         /*Intenta hacer un parseo apra un type no soportado por IRC_CommandQuery()*/
+945                         unknw_type = parse_type(message);
+946                         if(unknw_type != ERR){
+947                                 switch(unknw_type){ //Intentar tratar un mensaje no reconocido por IRC_CommandQuery() 
+948                                         case 250:
+949                                                 g_print(GRN "\n>> [server command] unknw_type = 250 - message = %s\n" RESET, message);
+950                                                 substring = strnext(message, ':');
+951                                                 if (substring){
+952                                                         substring = strnext(substring, ':');
+953                                                 }
+954                                                 IRCInterface_WriteSystemThread_Pretty("*",substring);
+955 
+956                                                 substring = NULL;
+957                                         break;
+958 
+959                                         default:
+960                                         g_print(YEL "WARN - In command_query: case IRCERR_UNKNOWNCOMMAND:\n\tNo se ha definido un tratamiento para un mensaje desconocido con type = %d\n" RESET, unknw_type);
+961                                         IRCInterface_WriteSystemThread("*",message);
+962                                         break;
+963                                 }
+964                                 return OK;
+965                         }
+966 
+967                         g_print(YEL "WARN - In command_query: Mensaje de error recibido en switch():\n\tIRCERR_UNKNOWNCOMMAND -  l comando que contiene no es reconocido por esta función\&.\n" RESET);
+968                         IRCInterface_WriteSystemThread("*",message);
+969                         return OK;
+970 
+971                 default:
+972                         switch(parse_type2(message)){
+973                                 case 306: //parche porque no devuelve 306 para AWAY
+974                                         g_print(GRN "\n>> [server command] 306 (RPL_AWAY) - message = %s\n" RESET, message);
+975                                         //IRCParse_RplAway (message, &prefix, &nick, &nick2, &msg);
+976                                         IRCInterface_WriteSystemThread_Pretty("*",strnext(strnext(message, ':'), ':'));
+977                                         return OK;
+978                                 case 311: //WHOIS
+979                                 case 312:
+980                                 case 319:
+981                                 case 317:
+982                                 case 318:
+983                                         g_print(GRN "\n>> [server command] 311-318 (RPL_WHOIS\&.\&.\&.) - message = %s\n" RESET, message);
+984                                         IRCInterface_WriteSystemThread_Pretty("*",strnext(strnext(message, ':'), ':'));
+985                                         return OK;
+986                                 default:
+987                                         break;
+988                         }
+989                         g_print(YEL "WARN - In command_query: Alcanzado default del switch()(TO_DO):\n\t %s\n" RESET, message);
+990                         //sprintf(aux,"[%s] %s",gmtime(time(NULL)), nick)
+991                         IRCInterface_WriteSystemThread("*",message);
+992                         return OK;
+993         }
+994 
+995         //Liberamos memoria
+996         //mfree(33,msg,nick,nick2,servername,versionname,timedate,version,availableusermodes,availablechannelmodes,addedg,type,visible,topic,channel,key,
+997         //msgtarget,origin_nick,filename,hostname_destino,nick_part,username_part,host_part,server_part,server,server2,command_pong,token,modechar,channeluser,
+998         //mode,user,comment,realname,host);
+999         return OK;
+1000 
+1001 }
+.fi
+.SS "void glueAndQuery (char *command, char *last_command)"
+
+.PP
+.nf
+1003                                                     {
+1004         char* glued_command = (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+1005         
+1006         strcpy(glued_command, last_command);
+1007         strcat(glued_command, command);
+1008 
+1009         g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+1010         command_query(glued_command);
+1011 
+1012         free(command);
+1013         free(glued_command);
+1014 }
+.fi
+.SS "void receive_messages (void *no_arg)"
+
+.PP
+Funcion ejecutada por un hilo, que recibe mensajes del servidor y los procesa segun el tipo de respuesta\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIno_arg\fP estructura de parametros (vacia) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+OK si todo es correcto, ERR si se produce un error 
+.RE
+.PP
+
+.PP
+.nf
+1134                                    {
+1135 
+1136         char message[MAXDATA];
+1137         int ret;
+1138         g_print(GRN "Hilo Preparado para recibir mensajes\n" RESET);
+1139 
+1140         int oldtype;
+1141         /*No es necesario el pthread_cancel asíncrono aparentemente
+1142         * +INFO: https://www\&.securecoding\&.cert\&.org/confluence/display/c/POS44-C\&.+Do+not+use+signals+to+terminate+threads
+1143         *                https://www\&.securecoding\&.cert\&.org/confluence/display/c/POS47-C\&.+Do+not+use+threads+that+can+be+canceled+asynchronously
+1144         */
+1145         //pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &oldtype);
+1146         
+1147         while(1){
+1148                 //printf(BLU "\nwhile en receive_messages\n" RESET);
+1149                 //sem_wait(&recepcionTCP);
+1150                 memset(message, 0, sizeof(message));
+1151                 ret = recvDatos(sockfd_user, message, MAXDATA, host_name);
+1152                 //sem_post(&recepcionTCP);
+1153                 if(ret == ERR){
+1154                         g_print(RED "ERROR - In receive_messages: recvDatos() devolvio error (ver \&.log)\n\t\tEl cliente se cerrará\&.\n" RESET);
+1155                         exit(1);
+1156                 }
+1157                 if(ret == 0){ //timeout seguramente
+1158                         g_print(RED "ERROR - In receive_messages: recvDatos() leyó 0 Bytes(ver \&.log)\n\t\t(Timeout)El cliente se cerrará\&.\n" RESET);
+1159                         exit(1);
+1160                 }
+1161                 if(ret == MAXDATA)
+1162                         unpipe(message, 1);
+1163                 else
+1164                         unpipe(message, 0);
+1165         }
+1166 }
+.fi
+.SS "void unpipe (char *message, intMAXDATA_flag)"
+
+.PP
+Funcion para dividir en comandos la cadena 'message'\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fImessage\fP cadena recibida, puede incluir mas de un comando 
+.br
+\fIMAXDATA_flag\fP flag que marca que se ha leído el maximo del buffer y han podido cortarse comandos 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void 
+.RE
+.PP
+
+.PP
+.nf
+1022                                             {
+1023 
+1024         char *q = message, *command;
+1025         char *glued_command = NULL;
+1026         int i = 0, test = 0;
+1027 
+1028         while (q != NULL){
+1029                 q = IRC_UnPipelineCommands(q, &command);
+1030                 test = testIRC_CommandQuery(command);
+1031 
+1032                 if(MAXDATA_flag == 1){  //caso 1\&.)riesgo: se ha llamado a unpipe() con un bloque de tam MAXDATA
+1033                         if((i == 0) && (check_next_unpipe == 1)){       //caso 2\&.1)primera iter unpipe, no MAXDATA PERO 'check\&.\&.\&.' activado
+1034                                 if(test == OK && last_test == ERR){                     //caso 2\&.1\&.1)además no da error
+1035                                         glueAndQuery(command, last_command);
+1036                                 }else if(test == ERR && last_test == OK){       //caso 2\&.1\&.2)o bien es la segunda mitad del comando o bien
+1037                                                                                                                         //           da la casualidad de que es un comando mal formado independiente
+1038                                         glueAndQuery(command, last_command);
+1039                                 }else if(test == ERR && last_test == ERR){      //caso 2\&.1\&.3)ambos test petan\&. Concatenar y rezar
+1040                                         glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+1041                                         strcpy(glued_command, last_command);
+1042                                         strcat(glued_command, command);
+1043 
+1044                                         g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+1045                                         if (testIRC_CommandQuery(glued_command) == OK){
+1046                                                 command_query(glued_command);
+1047                                                 free(glued_command);
+1048                                         }else{
+1049                                                 command_query(last_command);
+1050                                                 command_query(command);
+1051                                         }
+1052 
+1053                                         free(command);
+1054                                 }else{                                                                          //caso 2\&.1\&.4)ambos comandos están bien formados
+1055                                         command_query(command);
+1056                                         free(command);
+1057                                 }
+1058                                 //resetear flags:
+1059                                 check_next_unpipe = 0;
+1060                                 strcpy(last_command, "0");
+1061 
+1062                         }else if(q == NULL){ //q es 'resto', comprobar que sea el último comando parseado del bloque
+1063                                 if (test == ERR){                                                       //caso 1\&.1)error en test con MAXDATA_f
+1064                                         g_print(YEL "\nWARN - In unpipe: testIRC_CommandQuery(command) devolvio ERR con MAXDATA_flag activada\n\tSe almacena el trozo de comando=%s\n" RESET, command);
+1065                                         last_test = ERR;
+1066                                         strcpy(last_command, command);
+1067                                         free(command);
+1068                                         check_next_unpipe = 1;
+1069                                         break; //(!) en principio no tiene sentido seguir iterando, es el último mensaje (trozo) del bloque
+1070                                 }else{                                                                          //caso 1\&.2)no error en test con MAXDATA_f, 2 posibilidades:
+1071                                                                                                                         //a)justo ha cogido el comando entero, b)ha cogido parte del comando y lo reconoce como valido
+1072                                         g_print(YEL "\nWARN - In unpipe: testIRC_CommandQuery(command) devolvio OK con MAXDATA_flag activada\n\tSe almacena el trozo de comando=%s\n" RESET, command);
+1073                                         last_test = OK;
+1074                                         strcpy(last_command, command);
+1075                                         free(command);
+1076                                 }
+1077                                 check_next_unpipe = 1;
+1078                         }else{          //si no es el último comando parseado, command_query normal
+1079                                 if(command_query(command) == ERR){
+1080                                         g_print(RED "ERROR - In unpipe: command_query() devolvio ERR (MAXDATA_flag == 1 pero no es el último comando)\n\tcommand = %s" RESET, command);
+1081                                         free(command);
+1082                                 }
+1083                         }
+1084 
+1085                 }else{                                  //caso 2)no se ha llamado a unpipe() con un bloque de tam MAXDATA
+1086                         if((i == 0) && (check_next_unpipe == 1)){       //caso 2\&.1)primera iter unpipe, no MAXDATA PERO 'check\&.\&.\&.' activado
+1087                                 if(test == OK && last_test == ERR){                     //caso 2\&.1\&.1)además no da error
+1088                                         glueAndQuery(command, last_command);
+1089                                 }else if(test == ERR && last_test == OK){       //caso 2\&.1\&.2)o bien es la segunda mitad del comando o bien
+1090                                                                                                                         //           da la casualidad de que es un comando mal formado independiente
+1091                                         glueAndQuery(command, last_command);
+1092                                 }else if(test == ERR && last_test == ERR){      //caso 2\&.1\&.3)ambos test petan\&. No se puede concatenar
+1093                                         glued_command =  (char*) malloc((2 + strlen(command) + strlen(last_command)) * sizeof(char));
+1094                                         strcpy(glued_command, last_command);
+1095                                         strcat(glued_command, command);
+1096                                         g_print(BLU "\nglued_command = %s\n" RESET, glued_command);
+1097 
+1098                                         if (testIRC_CommandQuery(glued_command) == OK){
+1099                                                 command_query(glued_command);
+1100                                                 free(glued_command);
+1101                                         }else{
+1102                                                 command_query(last_command);
+1103                                                 command_query(command);
+1104                                         }
+1105 
+1106                                         free(command);
+1107                                 }else{                                                                          //caso 2\&.1\&.4)ambos comandos están bien formados
+1108                                         command_query(command);
+1109                                         free(command);
+1110                                 }
+1111                                 //resetear flags:
+1112                                 check_next_unpipe = 0;
+1113                                 strcpy(last_command, "0");
+1114                         }else{                                                                          //caso 2\&.2)no MAXDATA, no i=0: command_query normal
+1115                                 if(command_query(command) == ERR){
+1116                                         g_print(RED "ERROR - In unpipe: command_query() devolvio ERR (i != 0, check_\&.\&.\&. False, MAXDATA_flag False)\n\tcommand = %s" RESET, command);
+1117                                         free(command);
+1118                                 }
+1119                         }
+1120                 }
+1121                 i++;
+1122         }
+1123 
+1124     if(command == NULL){
+1125         g_print(RED "ERROR - In unpipe: Se ha solicitado buscar un comando en una cadena vacia\n\n" RESET);
+1126     }   
+1127 }
+.fi
+.SH "Variable Documentation"
+.PP 
+.SS "\fBp_funcion\fP p_array_funciones[57]"
+Array de funciones de usuario definido en \fBuser_commands\&.c\fP 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

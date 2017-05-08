@@ -1,0 +1,183 @@
+.TH "srclib/conexion_tcp.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+srclib/conexion_tcp.c \- 
+.PP
+Implementacion de la liberia para conexiones TCP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+\fC#include '\&.\&./includes/conexion_tcp\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBcrearConexion\fP (int portno, struct sockaddr_in *server)"
+.br
+.ti -1c
+.RI "int \fBrecvDatos\fP (int client_sock, char *client_message, int cm_size, char *hostaddrp)"
+.br
+.ti -1c
+.RI "int \fBenviarDatos\fP (int client_sock, char *message, int message_size)"
+.br
+.ti -1c
+.RI "int \fBcerrarConexion\fP (int client_sock, char *hostaddrp)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Implementacion de la liberia para conexiones TCP\&. 
+
+
+.PP
+\fBAuthor:\fP
+.RS 4
+Alfonso Sebares 
+.PP
+Beatriz de Pablo 
+.PP
+Celia Mateos 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+13/02/17 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "int cerrarConexion (intclient_sock, char *hostaddrp)"
+
+.PP
+.nf
+113                                                     {
+114         int sent_size;
+115         char buf[AUX_SBUF];
+116 
+117         if(close(client_sock) < 0){
+118         logERR("Error al cerrar la conexion");
+119         return ERR;
+120 
+121     }else{
+122         if (hostaddrp != NULL)
+123                         sprintf(buf, "conexion_tcp\&.c: conexion cerrada con %s", hostaddrp);
+124                 else
+125                         sprintf(buf, "conexion_tcp\&.c: conexion cerrada");
+126                 logEvent(buf);
+127     }
+128 
+129     return OK;
+130 }
+.fi
+.SS "int crearConexion (intportno, struct sockaddr_in *server)"
+
+.PP
+.nf
+15                                                          {
+16         int socket_desc;
+17         int optval;                                             /* flag value for setsockopt */
+18         
+19         //Create socket
+20         socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+21         if (socket_desc == -1)
+22         {
+23                 logERR("No se ha podido crear socket");
+24                 return ERR;
+25         }
+26 
+27         logEvent("Socket creado");
+28         
+29         optval = 1;
+30 
+31         setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
+32 
+33         //Prepare the sockaddr_in structure
+34         memset((char *) server, 0, sizeof(*server));
+35         server->sin_family = AF_INET;
+36         server->sin_addr\&.s_addr = INADDR_ANY;
+37         server->sin_port = htons((unsigned short)portno );
+38          
+39         //Bind
+40         if( bind(socket_desc,(struct sockaddr *)server , sizeof(*server)) < 0)
+41         {
+42                 logERR("bind failed");
+43                 return ERR;
+44         }
+45         logEvent("bind done");
+46          
+47         //Listen
+48         listen(socket_desc , MAX_CON_REQ);
+49          
+50         //Accept and incoming connection
+51         logEvent("Esperando conexiones entrantes\&.\&.\&.");
+52         
+53         return socket_desc;
+54 }
+.fi
+.SS "int enviarDatos (intclient_sock, char *message, intmessage_size)"
+
+.PP
+.nf
+87                                                                  {
+88         int sent_size;
+89         char buf[AUX_SBUF];
+90 
+91         sent_size = send(client_sock, message, message_size, 0);
+92 
+93         if (sent_size == 0){
+94         logEvent("send(): enviado un tam 0 bytes");
+95                 return 0;
+96 
+97     }else if(sent_size < 0){
+98                 logERR("send(): enviado un tam -1 bytes, error");
+99                 return ERR;
+100 
+101         }else{
+102                 //printf("\nYEE '%d', '%d', '%d'\n", message[strlen(message) - 3], message[strlen(message) - 2], message[strlen(message) - 1]);
+103                 //if(message[strlen(message) - 2] == 13) //check si es CR,LF
+104                 //      message[strlen(message) - 2] = '\0';
+105                 sprintf(buf, "send(): \"%s\" (%d Bytes)", message, sent_size);
+106                 logEvent(buf);
+107         }
+108 
+109     return sent_size;
+110 }
+.fi
+.SS "int recvDatos (intclient_sock, char *client_message, intcm_size, char *hostaddrp)"
+
+.PP
+.nf
+57                                                                                   {
+58         int read_size;
+59         char buf[AUX_SBUF];
+60 
+61         read_size = recv(client_sock , client_message , cm_size , 0);
+62 
+63         if (read_size == 0){
+64                 sprintf(buf,"recv(): leido un tam 0 bytes de %s", hostaddrp);
+65                 logEvent(buf);
+66                 return 0;
+67 
+68         }else if(read_size < 0){
+69                 sprintf(buf,"recv(): leido un tam -1 bytes de %s, error", hostaddrp);
+70                 logERR(buf);
+71                 return ERR;
+72 
+73         }else{
+74                 //if(client_message[strlen(client_message) - 2] == 13) //check si es CR,LF
+75                 //      client_message[strlen(client_message) - 2] = '\0';
+76                 sprintf(buf, "recv(): \"%s\" (%d Bytes) de %s", client_message, read_size, hostaddrp);
+77                 logEvent(buf);
+78         }
+79 
+80         return read_size;
+81 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

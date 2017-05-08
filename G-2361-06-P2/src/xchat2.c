@@ -10,7 +10,7 @@
 
 #include "../includes/xchat2.h"
 
-pthread_mutex_t loglock;
+pthread_mutex_t loglock;	/**< mutex para el descriptor del log de la ejecución actual */
 
 /**
 * Globales útiles sobre la conexión del cliente con el servidor
@@ -19,18 +19,18 @@ pthread_mutex_t loglock;
 pthread_t recv_tid;
 pthread_t sendf_tid;
 
-int sockfd_user = -1;
-char nick_user[MAXDATA] = {0};
-char* hostname;
-char* active_channel = NULL;
+int sockfd_user = -1;			/**< descriptor con el socket abierto con el servidor */
+char nick_user[MAXDATA] = {0};	/**< nick del usuario operador del cliente */
+char* hostname;					/**< hostname del servidor (uso auxiliar)*/
+char* active_channel = NULL;	/**< nombre del ultimo canal activo en la itnerfaz */
 char* stream;
 
-char host_name[128]; //aux, uso en libreria TCP
+char host_name[128]; 			/**< aux con el hostname, uso en libreria TCP */
 
 //int 1024B_flag = 0;
-char last_command[256] = ""; 		//almacena el ultimo 'message' pasado a unpipe()
-int check_next_unpipe = 0;		//0 no check, 1 check
-int last_test = OK; 			//0 OK, -1 ERR
+char last_command[256] = "";	/**< almacena el ultimo 'message' pasado a unpipe() */
+int check_next_unpipe = 0;		/**< FLAG: 0 no check, 1 check */
+int last_test = OK; 			/**< FLAG: 0 OK, -1 ERR */
 
 /**
 * @brief Parsea los mensajes y respuestas que recibe del servidor
@@ -569,7 +569,7 @@ int command_query(char *message){
 				g_print(RED "\nERROR - In command_query: IRCParse_Privmsg devolvio != IRC_OK" RESET);
 				return ERR;
 			}
-			//>> :gomupo!~gonzalo@119.181.218.87.dynamic.jazztel.es PRIVMSG gon :hola
+
 			if ((origin_nick = strtok(prefix, "!")) != NULL){
 				strcpy(nick_privmsg, origin_nick);
 			}
@@ -580,7 +580,6 @@ int command_query(char *message){
 
 			if(msg[0] == 1 || (msg[0] == ':' || msg[1] == 1)) { //envio de ficheros
 				g_print("alguien quiere enviarme un fichero\n");
-				//char *msg = "\001FSEND gato.jpg ~cgs@cliente168.wlan.uam.es 1234 24422";
 				
 				filename = strtok(msg, " ");
 				filename = strtok(NULL, " ");
@@ -836,8 +835,7 @@ int command_query(char *message){
 
 		case NICK:
 			g_print(GRN "\n>> [server command] NICK - message = %s\n" RESET, message);
-			//<< NICK gomupo2
-			//>> :gomupo!~gonzalo@cliente020.wlan.uam.es NICK :gomupo2
+
 			IRCParse_Nick (message, &prefix, &nick, &msg);
 			IRCParse_ComplexUser(prefix, &nick_part, &username_part, &host_part, &server_part);
 			g_print("\t message: %s \n",message);

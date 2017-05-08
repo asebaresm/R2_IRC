@@ -1,0 +1,122 @@
+\hypertarget{daemon_8c}{\section{src/daemon.c File Reference}
+\label{daemon_8c}\index{src/daemon.\-c@{src/daemon.\-c}}
+}
+
+
+Implementacion de las funciones para daemonizar el servidor.  
+
+
+{\ttfamily \#include \char`\"{}../includes/daemon.\-h\char`\"{}}\\*
+Include dependency graph for daemon.\-c\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{daemon_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{daemon_8c_ae983f3eb0ff5cebb14c2ae123043df39}{daemonizar} (char $\ast$servicio)
+\begin{DoxyCompactList}\small\item\em Funcion para demonizar a un servicio. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementacion de las funciones para daemonizar el servidor. \begin{DoxyAuthor}{Author}
+Alfonso Sebares 
+
+Beatriz de Pablo 
+
+Celia Mateos 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13/02/17 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\hypertarget{daemon_8c_ae983f3eb0ff5cebb14c2ae123043df39}{\index{daemon.\-c@{daemon.\-c}!daemonizar@{daemonizar}}
+\index{daemonizar@{daemonizar}!daemon.c@{daemon.\-c}}
+\subsubsection[{daemonizar}]{\setlength{\rightskip}{0pt plus 5cm}int daemonizar (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{servicio}
+\end{DoxyParamCaption}
+)}}\label{daemon_8c_ae983f3eb0ff5cebb14c2ae123043df39}
+
+
+Funcion para demonizar a un servicio. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em char} & $\ast$ servicio\-: Nombre del servidor para dejarlo en segundo plano \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+O\-K si todo ha salido bien, E\-R\-R\-O\-R si hay algun fallo 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+18                                  \{
+19 
+20         pid\_t pid;
+21         pid\_t sid;
+22 
+23         \textcolor{keywordflow}{if} (servicio==NULL)\{
+24                 syslog(LOG\_ERR, \textcolor{stringliteral}{"Escriba un servicio no nulo."});
+25                 \textcolor{keywordflow}{return} \hyperlink{daemon_8h_a8fe83ac76edc595f6b98cd4a4127aed5}{ERROR};
+26         \}
+27 
+28         \textcolor{comment}{/* 1. Ceamos proceso hijo y terminamos el proceso padre */}
+29         pid=fork();
+30 
+31         \textcolor{keywordflow}{if} (pid < 0) \{
+32                 syslog(LOG\_ERR, \textcolor{stringliteral}{"Error al crear proceso hijo"});
+33                 \textcolor{keywordflow}{return} \hyperlink{daemon_8h_a8fe83ac76edc595f6b98cd4a4127aed5}{ERROR};
+34         \}
+35         \textcolor{keywordflow}{if} (pid > 0) \{
+36                 syslog(LOG\_INFO, \textcolor{stringliteral}{"Liberando al padre"});
+37                 \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+38         \}
+39 
+40         
+41         \textcolor{comment}{/* 2. Crear una nueva sesión de tal forma que el proceso pase a ser lider de sesión, y no sea un
+       zombie. */}
+42         sid=setsid();
+43         \textcolor{keywordflow}{if} (sid < 0) \{
+44                 syslog (LOG\_ERR, \textcolor{stringliteral}{"Error creando un SID para el hijo del proceso"});
+45                 \textcolor{keywordflow}{return} \hyperlink{daemon_8h_a8fe83ac76edc595f6b98cd4a4127aed5}{ERROR};
+46         \}
+47 
+48         
+49         \textcolor{comment}{/* 3. Cambiar la máscara para que los ficheros sean accesibles a cualquiera (0) */}
+50         umask (0);
+51 
+52         \textcolor{comment}{/* 4. Establecer el directorio raíz / como directorio de trabajo */}
+53         \textcolor{keywordflow}{if}((chdir(\textcolor{stringliteral}{"/"})) < 0)\{
+54                 syslog (LOG\_ERR, \textcolor{stringliteral}{"Error al cambiar el directorio de trabajo a la raíz"});
+55                 \textcolor{keywordflow}{return} \hyperlink{daemon_8h_a8fe83ac76edc595f6b98cd4a4127aed5}{ERROR};
+56         \}
+57 
+58         \textcolor{comment}{/* 5. Cerrar todos los descriptores de fichero que pueda haber abiertos ya que no se puede usar la
+       terminal*/}
+59         syslog(LOG\_INFO, \textcolor{stringliteral}{"Cerrando descriptores"});
+60 
+61         close(STDIN\_FILENO); 
+62         close(STDOUT\_FILENO);
+63         close(STDERR\_FILENO);
+64 
+65         syslog(LOG\_INFO, \textcolor{stringliteral}{"Mandando descriptores a dev/null.."});
+66         
+67         freopen(\textcolor{stringliteral}{"/dev/null"}, \textcolor{stringliteral}{"r"}, stdin);
+68         freopen(\textcolor{stringliteral}{"/dev/null"}, \textcolor{stringliteral}{"w"}, stdout);
+69         freopen(\textcolor{stringliteral}{"/dev/null"}, \textcolor{stringliteral}{"w"}, stderr);
+70 
+71         \textcolor{comment}{/* 6. Abrir el log del sistema para su uso posterior (para que haya comunicacion con el demonio) */}
+72         openlog (servicio, LOG\_CONS | LOG\_PID | LOG\_NDELAY, LOG\_LOCAL3);
+73 
+74         syslog (LOG\_INFO, \textcolor{stringliteral}{"Iniciado nuevo servidor"});
+75 
+76         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+77 \}
+\end{DoxyCode}

@@ -1,0 +1,8 @@
+<map id="save_file" name="save_file">
+<area shape="rect" id="node2" href="$conexion__tcp_8h.html#a2ec2b47883bdb05804bec657bfc42516" title="recvDatos" alt="" coords="128,31,211,57"/>
+<area shape="rect" id="node3" href="$logger_8h.html#af71188329ee1cf68a59d3f9ddd035ca6" title="logEvent" alt="" coords="259,5,333,32"/>
+<area shape="rect" id="node7" href="$logger_8h.html#a9487660b2ec318326782a9d9e32f8461" title="logERR" alt="" coords="262,56,330,83"/>
+<area shape="rect" id="node4" href="$logger_8c.html#a6d1f5cd19f49b187e2097a467eca0233" title="logWrite" alt="" coords="382,31,453,57"/>
+<area shape="rect" id="node5" href="$logger_8c.html#a9780074b15cc3acc70e3ee5989c8005a" title="snapTime" alt="" coords="519,5,598,32"/>
+<area shape="rect" id="node6" href="$logger_8c.html#ad5ed54850fd750ca0935368e72017537" title="snapClockTime" alt="" coords="502,56,615,83"/>
+</map>

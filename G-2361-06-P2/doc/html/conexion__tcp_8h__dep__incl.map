@@ -1,0 +1,10 @@
+<map id="includes/conexion_tcp.h" name="includes/conexion_tcp.h">
+<area shape="rect" id="node2" href="$aux__functions_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de funciones auxiliares de xchat2..." alt="" coords="227,80,393,107"/>
+<area shape="rect" id="node3" href="$user__commands_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario..." alt="" coords="16,155,197,181"/>
+<area shape="rect" id="node4" href="$xchat2_8h.html" title="Declaraciones de funciones, definición de tipos: implementación de los callbacks de xchat2..." alt="" coords="193,229,316,256"/>
+<area shape="rect" id="node8" href="$conexion__tcp__test_8c.html" title="src/conexion_tcp_test.c" alt="" coords="497,80,657,107"/>
+<area shape="rect" id="node9" href="$conexion__tcp_8c.html" title="Implementacion de la liberia para conexiones TCP. " alt="" coords="682,80,827,107"/>
+<area shape="rect" id="node7" href="$aux__functions_8c.html" title="Implementacion de las funciones auxiliares de xchat2. " alt="" coords="272,155,420,181"/>
+<area shape="rect" id="node6" href="$user__commands_8c.html" title="Implementacion de las funciones IRC de usuario de xchat2. " alt="" coords="5,229,168,256"/>
+<area shape="rect" id="node5" href="$xchat2_8c.html" title="Fichero con principalmente la implementación de los callbacks de xchat2. " alt="" coords="207,304,301,331"/>
+</map>

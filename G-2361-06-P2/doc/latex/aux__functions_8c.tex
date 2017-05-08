@@ -1,0 +1,627 @@
+\hypertarget{aux__functions_8c}{\section{srclib/aux\-\_\-functions.c File Reference}
+\label{aux__functions_8c}\index{srclib/aux\-\_\-functions.\-c@{srclib/aux\-\_\-functions.\-c}}
+}
+
+
+Implementacion de las funciones auxiliares de xchat2.  
+
+
+{\ttfamily \#include \char`\"{}../includes/aux\-\_\-functions.\-h\char`\"{}}\\*
+Include dependency graph for aux\-\_\-functions.\-c\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aux__functions_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{aux__functions_8c_a2480cc4793bf25a16cc731dc9d033582}{mfree} (int n,...)
+\begin{DoxyCompactList}\small\item\em Libera punteros si estos no estan a N\-U\-L\-L Uso. \end{DoxyCompactList}\item 
+int \hyperlink{aux__functions_8c_a9a7f9a514711f5954007dc83533d9362}{save\-\_\-file} (void $\ast$args)
+\begin{DoxyCompactList}\small\item\em Establece la conexíon con el servidor de archivos para recibir los datos y escribirlos en un fichero. \end{DoxyCompactList}\item 
+void \hyperlink{aux__functions_8c_a09c2fcb81e148a2f23080a1671869f96}{interface\-\_\-mostrar\-\_\-nicks} (char $\ast$channel, char $\ast$list)
+\begin{DoxyCompactList}\small\item\em Actualiza la lista de nicks de la interfaz y sus estados. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{aux__functions_8c_a20f32d171da437faef7716e4b6e667dd}{strnext} (char $\ast$haystack, int ch)
+\begin{DoxyCompactList}\small\item\em Devuelve una cadena que empieza inmediatamente después de la cadena 'haystack' tras la primera aparición de 'ch'. \end{DoxyCompactList}\item 
+int \hyperlink{aux__functions_8c_a90798d5fe15fdd743f8802b0f154b854}{parse\-\_\-type} (const char $\ast$message)
+\begin{DoxyCompactList}\small\item\em Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por I\-R\-C\-\_\-\-Command\-Query() \end{DoxyCompactList}\item 
+int \hyperlink{aux__functions_8c_a1738b19e427c47733b310cbe08431a56}{parse\-\_\-type2} (const char $\ast$message)
+\begin{DoxyCompactList}\small\item\em Versión 2 de pruebas. Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por I\-R\-C\-\_\-\-Command\-Query() \end{DoxyCompactList}\item 
+void \hyperlink{aux__functions_8c_a040868784608606fad914fea56fc65b8}{I\-R\-C\-Interface\-\_\-\-Write\-System\-\_\-\-Pretty} (char $\ast$nick, char $\ast$msg)
+\item 
+void \hyperlink{aux__functions_8c_a043ae6695458ae3a85dc9da43cf9b751}{I\-R\-C\-Interface\-\_\-\-Write\-System\-Thread\-\_\-\-Pretty} (char $\ast$nick, char $\ast$msg)
+\item 
+void \hyperlink{aux__functions_8c_a6400bb2b7979a2393f0e84b6646a24fe}{I\-R\-C\-Interface\-\_\-\-Write\-Channel\-Thread\-\_\-\-Pretty} (char $\ast$chan, char $\ast$nick, char $\ast$msg)
+\item 
+int \hyperlink{aux__functions_8c_a8d3c58618c3bb95d81a542251062d19e}{test\-I\-R\-C\-\_\-\-Command\-Query} (char $\ast$message)
+\item 
+int \hyperlink{aux__functions_8c_a06340d30a60b297a60b17841767fad85}{change\-Mode} (char $\ast$channel, char $\ast$nick, char $\ast$mode)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementacion de las funciones auxiliares de xchat2. \begin{DoxyAuthor}{Author}
+Alfonso Sebares 
+
+Beatriz de Pablo 
+
+Celia Mateos 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13/02/17 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\hypertarget{aux__functions_8c_a06340d30a60b297a60b17841767fad85}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!change\-Mode@{change\-Mode}}
+\index{change\-Mode@{change\-Mode}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{change\-Mode}]{\setlength{\rightskip}{0pt plus 5cm}int change\-Mode (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{channel, }
+\item[{char $\ast$}]{nick, }
+\item[{char $\ast$}]{mode}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a06340d30a60b297a60b17841767fad85}
+
+\begin{DoxyCode}
+334                                                      \{
+335         \textcolor{keywordtype}{int} ret = -1;
+336         \textcolor{keywordtype}{char} *command = NULL;
+337 
+338         \textcolor{comment}{//long IRCMsg\_Mode (char **command, char *prefix, char * channeloruser, char *mode, char *user)}
+339         ret = IRCMsg\_Mode (&command, NULL, channel, mode, nick);
+340         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+341                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In changeMode: Error en IRCMsg\_Mode, no devolvió IRC\_OK\(\backslash\)n"} 
+      \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+342                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+343         \}
+344         ret = \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command, strlen(command));
+345         \textcolor{keywordflow}{if}(ret == \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR})\{
+346                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In changeMode: Error en enviarDatos, devolvió ERR\(\backslash\)n"} 
+      \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+347                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+348         \}
+349         IRCInterface\_PlaneRegisterOutMessage(command);
+350         free(command);
+351 
+352         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+353 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aux__functions_8c_a06340d30a60b297a60b17841767fad85_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{aux__functions_8c_a09c2fcb81e148a2f23080a1671869f96}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!interface\-\_\-mostrar\-\_\-nicks@{interface\-\_\-mostrar\-\_\-nicks}}
+\index{interface\-\_\-mostrar\-\_\-nicks@{interface\-\_\-mostrar\-\_\-nicks}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{interface\-\_\-mostrar\-\_\-nicks}]{\setlength{\rightskip}{0pt plus 5cm}void interface\-\_\-mostrar\-\_\-nicks (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{channel, }
+\item[{char $\ast$}]{list}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a09c2fcb81e148a2f23080a1671869f96}
+
+
+Actualiza la lista de nicks de la interfaz y sus estados. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & canal que se quiere actualizar \\
+\hline
+{\em list} & lista de nicks obtenida del comando names, separados por espacios \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+161                                                        \{
+162         g\_print(\hyperlink{types_8h_add9307de87f38e77d336751e305886f6}{BLU} \textcolor{stringliteral}{"\(\backslash\)n aux call: interface\_mostrar\_nicks() \(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+163         \textcolor{keywordtype}{char}* show\_nick;
+164         \textcolor{comment}{//obtenemos los nicks del mensaje y los mostramos por separado}
+165 
+166         \textcolor{comment}{//Eliminar los nicks del canal}
+167         IRCInterface\_NickListChannelThread(channel, NULL, NULL, NULL, NULL, NONE, 0);
+168 
+169         show\_nick = strtok(list, \textcolor{stringliteral}{" "});
+170         g\_print(\textcolor{stringliteral}{"channel: %s \(\backslash\)n"},channel);
+171         g\_print(\textcolor{stringliteral}{"show\_nick: %s \(\backslash\)n"},show\_nick);
+172         g\_print(\textcolor{stringliteral}{"list: %s \(\backslash\)n\(\backslash\)n"},list);
+173         \textcolor{keywordflow}{if} (show\_nick[0] == \textcolor{charliteral}{'@'})
+174         \{
+175                 IRCInterface\_AddNickChannelThread (channel, ++show\_nick, list, list, list, OPERATOR);
+176         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (show\_nick[0] == \textcolor{charliteral}{'+'})\{
+177                 IRCInterface\_AddNickChannelThread (channel, ++show\_nick, list, list, list, VOICE);
+178         \} \textcolor{keywordflow}{else}\{
+179                 IRCInterface\_AddNickChannelThread (channel, show\_nick, list, list, list, NONE);
+180         \}
+181         
+182         \textcolor{keywordflow}{while} ((show\_nick = strtok(NULL, \textcolor{stringliteral}{" "})) != NULL)\{
+183                 \textcolor{keywordflow}{if} (show\_nick[0] == \textcolor{charliteral}{'@'})
+184                 \{
+185                         IRCInterface\_AddNickChannelThread (channel, ++show\_nick, list, list, list, OPERATOR
+      );
+186                 \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (show\_nick[0] == \textcolor{charliteral}{'+'})\{
+187                         IRCInterface\_AddNickChannelThread (channel, ++show\_nick, list, list, list, VOICE);
+188                 \} \textcolor{keywordflow}{else}\{
+189                         IRCInterface\_AddNickChannelThread (channel, show\_nick, list, list, list, NONE);
+190                 \}
+191         \}
+192 \}
+\end{DoxyCode}
+\hypertarget{aux__functions_8c_a6400bb2b7979a2393f0e84b6646a24fe}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!I\-R\-C\-Interface\-\_\-\-Write\-Channel\-Thread\-\_\-\-Pretty@{I\-R\-C\-Interface\-\_\-\-Write\-Channel\-Thread\-\_\-\-Pretty}}
+\index{I\-R\-C\-Interface\-\_\-\-Write\-Channel\-Thread\-\_\-\-Pretty@{I\-R\-C\-Interface\-\_\-\-Write\-Channel\-Thread\-\_\-\-Pretty}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{I\-R\-C\-Interface\-\_\-\-Write\-Channel\-Thread\-\_\-\-Pretty}]{\setlength{\rightskip}{0pt plus 5cm}void I\-R\-C\-Interface\-\_\-\-Write\-Channel\-Thread\-\_\-\-Pretty (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{chan, }
+\item[{char $\ast$}]{nick, }
+\item[{char $\ast$}]{msg}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a6400bb2b7979a2393f0e84b6646a24fe}
+
+\begin{DoxyCode}
+306                                                                               \{
+307         \textcolor{keywordtype}{char} snap[\hyperlink{aux__functions_8h_a9e8ece425678b8ada57d963482ca7c63}{SNAP\_SIZE}];
+308         \textcolor{keywordtype}{char} f\_nick[\hyperlink{aux__functions_8h_a0eb099cedadf6c8aebb6b92b34d71631}{MAX\_NICK\_FIELD}];
+309 
+310         \textcolor{keywordflow}{if}(strlen(nick) > 9)\{
+311                 \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"En IRCInterface\_WriteSystemThread\_Pretty: strlen(nick) > 9"});
+312                 \textcolor{keywordflow}{return};
+313         \}
+314 
+315         strcpy(f\_nick, \textcolor{stringliteral}{"["});
+316         strcat(f\_nick, \hyperlink{logger_8h_a9780074b15cc3acc70e3ee5989c8005a}{snapTime}(snap,\hyperlink{aux__functions_8h_a9e8ece425678b8ada57d963482ca7c63}{SNAP\_SIZE}));
+317         strcat(f\_nick, \textcolor{stringliteral}{"]"});
+318         strcat(f\_nick, nick);
+319 
+320         IRCInterface\_WriteChannelThread(chan, f\_nick, msg);     
+321 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aux__functions_8c_a6400bb2b7979a2393f0e84b6646a24fe_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{aux__functions_8c_a040868784608606fad914fea56fc65b8}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!I\-R\-C\-Interface\-\_\-\-Write\-System\-\_\-\-Pretty@{I\-R\-C\-Interface\-\_\-\-Write\-System\-\_\-\-Pretty}}
+\index{I\-R\-C\-Interface\-\_\-\-Write\-System\-\_\-\-Pretty@{I\-R\-C\-Interface\-\_\-\-Write\-System\-\_\-\-Pretty}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{I\-R\-C\-Interface\-\_\-\-Write\-System\-\_\-\-Pretty}]{\setlength{\rightskip}{0pt plus 5cm}void I\-R\-C\-Interface\-\_\-\-Write\-System\-\_\-\-Pretty (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{nick, }
+\item[{char $\ast$}]{msg}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a040868784608606fad914fea56fc65b8}
+
+\begin{DoxyCode}
+264                                                            \{
+265         \textcolor{keywordtype}{char} snap[\hyperlink{aux__functions_8h_a9e8ece425678b8ada57d963482ca7c63}{SNAP\_SIZE}];
+266         \textcolor{keywordtype}{char} f\_nick[\hyperlink{aux__functions_8h_a0eb099cedadf6c8aebb6b92b34d71631}{MAX\_NICK\_FIELD}];
+267 
+268         \textcolor{keywordflow}{if}(strlen(nick) > 9)\{
+269                 \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"En IRCInterface\_WriteSystemThread\_Pretty: strlen(nick) > 9"});
+270                 \textcolor{keywordflow}{return};
+271         \}
+272 
+273         strcpy(f\_nick, \textcolor{stringliteral}{"["});
+274         strcat(f\_nick, \hyperlink{logger_8h_a9780074b15cc3acc70e3ee5989c8005a}{snapTime}(snap,\hyperlink{aux__functions_8h_a9e8ece425678b8ada57d963482ca7c63}{SNAP\_SIZE}));
+275         strcat(f\_nick, \textcolor{stringliteral}{"] "});
+276         strcat(f\_nick, \textcolor{stringliteral}{"              *"});
+277 
+278         \textcolor{comment}{//g\_print(MAG"\(\backslash\)n>>>>%s\(\backslash\)n" RESET, f\_nick);}
+279         \textcolor{keywordflow}{if}(msg[strlen(msg) - 2] == 13) \textcolor{comment}{//check si es comienzo de CR,LF}
+280                 msg[strlen(msg) - 2] = \textcolor{charliteral}{'\(\backslash\)0'};
+281 
+282         IRCInterface\_WriteSystem(f\_nick,msg);
+283 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aux__functions_8c_a040868784608606fad914fea56fc65b8_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{aux__functions_8c_a043ae6695458ae3a85dc9da43cf9b751}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!I\-R\-C\-Interface\-\_\-\-Write\-System\-Thread\-\_\-\-Pretty@{I\-R\-C\-Interface\-\_\-\-Write\-System\-Thread\-\_\-\-Pretty}}
+\index{I\-R\-C\-Interface\-\_\-\-Write\-System\-Thread\-\_\-\-Pretty@{I\-R\-C\-Interface\-\_\-\-Write\-System\-Thread\-\_\-\-Pretty}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{I\-R\-C\-Interface\-\_\-\-Write\-System\-Thread\-\_\-\-Pretty}]{\setlength{\rightskip}{0pt plus 5cm}void I\-R\-C\-Interface\-\_\-\-Write\-System\-Thread\-\_\-\-Pretty (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{nick, }
+\item[{char $\ast$}]{msg}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a043ae6695458ae3a85dc9da43cf9b751}
+
+\begin{DoxyCode}
+285                                                                  \{
+286         \textcolor{keywordtype}{char} snap[\hyperlink{aux__functions_8h_a9e8ece425678b8ada57d963482ca7c63}{SNAP\_SIZE}];
+287         \textcolor{keywordtype}{char} f\_nick[\hyperlink{aux__functions_8h_a0eb099cedadf6c8aebb6b92b34d71631}{MAX\_NICK\_FIELD}];
+288 
+289         \textcolor{keywordflow}{if}(strlen(nick) > 9)\{
+290                 \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"En IRCInterface\_WriteSystemThread\_Pretty: strlen(nick) > 9"});
+291                 \textcolor{keywordflow}{return};
+292         \}
+293 
+294         strcpy(f\_nick, \textcolor{stringliteral}{"["});
+295         strcat(f\_nick, \hyperlink{logger_8h_a9780074b15cc3acc70e3ee5989c8005a}{snapTime}(snap,\hyperlink{aux__functions_8h_a9e8ece425678b8ada57d963482ca7c63}{SNAP\_SIZE}));
+296         strcat(f\_nick, \textcolor{stringliteral}{"] "});
+297         strcat(f\_nick, \textcolor{stringliteral}{"              *"});
+298 
+299         \textcolor{comment}{//g\_print(MAG"\(\backslash\)n>>>>%s\(\backslash\)n" RESET, f\_nick);}
+300         \textcolor{keywordflow}{if}(msg[strlen(msg) - 2] == 13) \textcolor{comment}{//check si es comienzo de CR,LF}
+301                 msg[strlen(msg) - 2] = \textcolor{charliteral}{'\(\backslash\)0'};
+302 
+303         IRCInterface\_WriteSystemThread(f\_nick,msg);
+304 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aux__functions_8c_a043ae6695458ae3a85dc9da43cf9b751_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{aux__functions_8c_a2480cc4793bf25a16cc731dc9d033582}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!mfree@{mfree}}
+\index{mfree@{mfree}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{mfree}]{\setlength{\rightskip}{0pt plus 5cm}void mfree (
+\begin{DoxyParamCaption}
+\item[{int}]{n, }
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a2480cc4793bf25a16cc731dc9d033582}
+
+
+Libera punteros si estos no estan a N\-U\-L\-L Uso. 
+
+mfree(3,a,b,c); mfree(4,a,b,c,d); 
+\begin{DoxyCode}
+20                       \{
+21 
+22         va\_list ap;
+23         \textcolor{keywordtype}{char} *p = NULL;
+24         \textcolor{keyword}{register} \textcolor{keywordtype}{int} i;
+25         va\_start(ap, n);
+26         \textcolor{keywordflow}{for} (i = 0; i < n; ++i)
+27         \{
+28                 p = (\textcolor{keywordtype}{char} *) va\_arg(ap, \textcolor{keywordtype}{char}*);
+29                 \textcolor{keywordflow}{if}( p != NULL) free(p);
+30         \}
+31         va\_end (ap);
+32 \}
+\end{DoxyCode}
+\hypertarget{aux__functions_8c_a90798d5fe15fdd743f8802b0f154b854}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!parse\-\_\-type@{parse\-\_\-type}}
+\index{parse\-\_\-type@{parse\-\_\-type}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{parse\-\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}int parse\-\_\-type (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{message}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a90798d5fe15fdd743f8802b0f154b854}
+
+
+Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por I\-R\-C\-\_\-\-Command\-Query() 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & mensaje original \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int codigo de comando si es un codigo valido, E\-R\-R si no lo es o comando invalido 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+219                                    \{
+220         \textcolor{keywordtype}{int} unknw\_type;
+221         \textcolor{keywordtype}{char}* token = NULL;
+222         \textcolor{keywordtype}{char}* message\_cp = NULL;
+223 
+224         \textcolor{keywordflow}{if}(message[0] == \textcolor{charliteral}{':'})\{ \textcolor{comment}{//mensaje con prefijo, no originado por el cliente}
+225                 message\_cp = strdup(message);
+226                 token = strtok(message\_cp, \textcolor{stringliteral}{" "});
+227                 \textcolor{keywordflow}{if}(token != NULL)\{
+228                         token = strtok(NULL, \textcolor{stringliteral}{" "});
+229                         free(message\_cp);
+230                         unknw\_type = atoi(token);
+231                         \textcolor{keywordflow}{if} (unknw\_type < \hyperlink{types_8h_a8756b6216508f7f2f20ebc934889ee77}{MAX\_IRC\_COMMAND})\{
+232                                 \textcolor{keywordflow}{return} unknw\_type;
+233                         \}
+234                 \}
+235         \}
+236 
+237         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+238 \}
+\end{DoxyCode}
+\hypertarget{aux__functions_8c_a1738b19e427c47733b310cbe08431a56}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!parse\-\_\-type2@{parse\-\_\-type2}}
+\index{parse\-\_\-type2@{parse\-\_\-type2}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{parse\-\_\-type2}]{\setlength{\rightskip}{0pt plus 5cm}int parse\-\_\-type2 (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{message}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a1738b19e427c47733b310cbe08431a56}
+
+
+Versión 2 de pruebas. Devuelve el tipo de comando (código 3 digitos) de un mensaje no reconocido por I\-R\-C\-\_\-\-Command\-Query() 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & mensaje original \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int codigo de comando si es un codigo valido, E\-R\-R si no lo es o comando invalido 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+245                                     \{
+246         \textcolor{keywordtype}{int} unknw\_type;
+247         \textcolor{keywordtype}{char}* token = NULL;
+248         \textcolor{keywordtype}{char}* message\_cp = NULL;
+249 
+250         message\_cp = strdup(message);
+251         token = strtok(message\_cp, \textcolor{stringliteral}{" "});
+252         \textcolor{keywordflow}{if}(token != NULL)\{
+253                 token = strtok(NULL, \textcolor{stringliteral}{" "});
+254                 free(message\_cp);
+255                 unknw\_type = atoi(token);
+256                 \textcolor{keywordflow}{if} (unknw\_type < \hyperlink{types_8h_a8756b6216508f7f2f20ebc934889ee77}{MAX\_IRC\_COMMAND})\{
+257                         \textcolor{keywordflow}{return} unknw\_type;
+258                 \}
+259         \}
+260         
+261         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+262 \}
+\end{DoxyCode}
+\hypertarget{aux__functions_8c_a9a7f9a514711f5954007dc83533d9362}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!save\-\_\-file@{save\-\_\-file}}
+\index{save\-\_\-file@{save\-\_\-file}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{save\-\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}int save\-\_\-file (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{args}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a9a7f9a514711f5954007dc83533d9362}
+
+
+Establece la conexíon con el servidor de archivos para recibir los datos y escribirlos en un fichero. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em args} & estructura que contiene los parametros necesarios para establacer la conexion \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+O\-K si todo fue correcto y E\-R\-R si ocurrio un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+39                          \{
+40 
+41         g\_print(\textcolor{stringliteral}{"\(\backslash\)n =========save\_file========= \(\backslash\)n"});
+42 
+43         \hyperlink{struct_file__args}{File\_args}* file\_args = (\hyperlink{struct_file__args}{File\_args}*) args;
+44         FILE* file = fopen(file\_args->\hyperlink{struct_file__args_ad24dfcb255f29ee677793a0051c7336b}{filename},\textcolor{stringliteral}{"w"});
+45         \textcolor{keywordtype}{char} message[\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}];
+46         g\_print(\textcolor{stringliteral}{"Guardamos el archivo\(\backslash\)n"});
+47 
+48         \textcolor{keyword}{struct }hostent *he;
+49     \textcolor{keyword}{struct }in\_addr **addr\_list;
+50     \textcolor{keywordtype}{int} i=0;
+51     \textcolor{keywordtype}{char} ip\_addr[INET\_ADDRSTRLEN]=\textcolor{stringliteral}{""};
+52     sleep(2);
+53     g\_print(\textcolor{stringliteral}{"file\_args->hostname: %s \(\backslash\)nfile\_args->port: %d \(\backslash\)n"},file\_args->
+      \hyperlink{struct_file__args_a9aa177aea3a099397a09131a92f30115}{hostname}, file\_args->\hyperlink{struct_file__args_a83e78eb2ebacdc7e63eca61d1340fa61}{port}); 
+54 
+55     \textcolor{keywordtype}{int} file\_sockfd;
+56 
+57     \textcolor{keywordflow}{if} ((he = gethostbyname(file\_args->\hyperlink{struct_file__args_a9aa177aea3a099397a09131a92f30115}{hostname})) == NULL) \{  \textcolor{comment}{// get the host info}
+58         g\_print(\textcolor{stringliteral}{"ERROR: IRCInterface\_Connect - gethostbyname\(\backslash\)n"});
+59         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+60     \}
+61 
+62     \textcolor{comment}{// print information about this host:}
+63     g\_print(\textcolor{stringliteral}{"Official name is: %s\(\backslash\)n"}, he->h\_name);
+64     g\_print(\textcolor{stringliteral}{"    IP addresses: "});
+65     addr\_list = (\textcolor{keyword}{struct }in\_addr **)he->h\_addr\_list;
+66     \textcolor{keywordflow}{for}(i = 0; addr\_list[i] != NULL; i++) \{
+67         strcat(ip\_addr,inet\_ntoa(*addr\_list[i]));
+68         g\_print(\textcolor{stringliteral}{"%s "}, inet\_ntoa(*addr\_list[i]));
+69     \}
+70     g\_print(\textcolor{stringliteral}{"\(\backslash\)n"});
+71     g\_print(\textcolor{stringliteral}{"ip\_addr: %s \(\backslash\)n"},ip\_addr); 
+72 
+73     \textcolor{keyword}{struct }sockaddr\_in server\_struct;
+74     memset(&server\_struct, \textcolor{charliteral}{'0'}, \textcolor{keyword}{sizeof}(server\_struct)); 
+75     server\_struct.sin\_family = AF\_INET;
+76     server\_struct.sin\_port = htons(file\_args->\hyperlink{struct_file__args_a83e78eb2ebacdc7e63eca61d1340fa61}{port});
+77         \textcolor{comment}{//server\_struct.sin\_port = file\_args->port;}
+78     \textcolor{comment}{//memset(&(server\_struct.sin\_zero), '\(\backslash\)0', 8);}
+79     server\_struct.sin\_addr = **addr\_list;
+80 
+81     \textcolor{comment}{//Socket}
+82     file\_sockfd = socket(AF\_INET,SOCK\_STREAM,0);
+83     \textcolor{keywordflow}{if} (file\_sockfd == -1)\{
+84         g\_print(\textcolor{stringliteral}{"Error creando socket\(\backslash\)n"});
+85         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+86     \}
+87     \textcolor{comment}{//Connect}
+88     g\_print(\textcolor{stringliteral}{"Conectando con socket %d\(\backslash\)n"},file\_sockfd);
+89     \textcolor{keywordtype}{int} cnct = connect(file\_sockfd, (\textcolor{keyword}{struct} sockaddr*)&server\_struct, \textcolor{keyword}{sizeof}(server\_struct));
+90         \textcolor{keywordflow}{if} (cnct==-1)\{
+91                         \textcolor{keywordflow}{switch}(errno)\{
+92                                 \textcolor{keywordflow}{case} EACCES:
+93                                 printf(\textcolor{stringliteral}{"For UNIX domain sockets, which are identified by pathname: Write
+       permission is denied on the socket file, or search permission is denied for one of the directories in the path
+       prefix. (See also path\_resolution(7).) \(\backslash\)n"});
+94                                         printf(\textcolor{stringliteral}{"or The user tried to connect to a broadcast address without
+       having the socket broadcast flag enabled or the connection request failed because of a local firewall rule.
+      \(\backslash\)n"} );
+95                                                                         
+96                                         \textcolor{keywordflow}{break};
+97                                 
+98                                 \textcolor{keywordflow}{case} EPERM:
+99                                         printf(\textcolor{stringliteral}{"The user tried to connect to a broadcast address without
+       having the socket broadcast flag enabled or the connection request failed because of a local firewall rule.\(\backslash\)n"}
+      ); 
+100                                         \textcolor{keywordflow}{break};
+101                                 \textcolor{keywordflow}{case} EADDRINUSE:
+102                                 printf(\textcolor{stringliteral}{"Local address is already in use. \(\backslash\)n"});
+103                                         \textcolor{keywordflow}{break};
+104                                 \textcolor{keywordflow}{case} EAFNOSUPPORT:
+105                                 printf(\textcolor{stringliteral}{"The passed address didn't have the correct address family in its
+       sa\_family field. \(\backslash\)n"});
+106                                         \textcolor{keywordflow}{break};
+107                                 \textcolor{keywordflow}{case} EAGAIN:
+108                                     printf(\textcolor{stringliteral}{"No more free local ports or insufficient entries in the routing
+       cache. For AF\_INET see the description of /proc/sys/net/ipv4/ip\_local\_port\_range ip(7) for information on
+       how to increase the number of local ports. \(\backslash\)n"});
+109                                         \textcolor{keywordflow}{break};
+110                                 \textcolor{keywordflow}{case} EALREADY:
+111                                     printf(\textcolor{stringliteral}{"The socket is nonblocking and a previous connection attempt has
+       not yet been completed.\(\backslash\)n"}); 
+112                                         \textcolor{keywordflow}{break};
+113                                 \textcolor{keywordflow}{case} EBADF:
+114                                     printf(\textcolor{stringliteral}{"The file descriptor is not a valid index in the descriptor
+       table.\(\backslash\)n"}); 
+115                                         \textcolor{keywordflow}{break};
+116                                 \textcolor{keywordflow}{case} ECONNREFUSED:
+117                                     printf(\textcolor{stringliteral}{"No-one listening on the remote address. \(\backslash\)n"});
+118                                         \textcolor{keywordflow}{break};
+119                                 \textcolor{keywordflow}{case} EFAULT:
+120                                     printf(\textcolor{stringliteral}{"The socket structure address is outside the user's address
+       space. \(\backslash\)n"});
+121                                         \textcolor{keywordflow}{break};
+122                                 \textcolor{keywordflow}{case} EINPROGRESS:
+123                                     printf(\textcolor{stringliteral}{"The socket is nonblocking and the connection cannot be
+       completed immediately. It is possible to select(2) or poll(2) for completion by selecting the socket for writing.
+       After select(2) indicates writability, use getsockopt(2) to read the SO\_ERROR option at level SOL\_SOCKET to
+       determine whether connect() completed successfully (SO\_ERROR is zero) or unsuccessfully (SO\_ERROR is one of
+       the usual error codes listed here, explaining the reason for the failure). \(\backslash\)n"}); 
+124                                         \textcolor{keywordflow}{break};
+125                                 \textcolor{keywordflow}{case} EINTR:
+126                                     printf(\textcolor{stringliteral}{"The system call was interrupted by a signal that was caught;
+       see signal(7).\(\backslash\)n"}); 
+127                                         \textcolor{keywordflow}{break};
+128                                 \textcolor{keywordflow}{case} EISCONN:
+129                                     printf(\textcolor{stringliteral}{"The socket is already connected.\(\backslash\)n"}); 
+130                                         \textcolor{keywordflow}{break};
+131                                 \textcolor{keywordflow}{case} ENETUNREACH:
+132                                     printf(\textcolor{stringliteral}{"Network is unreachable. \(\backslash\)n"});
+133                                         \textcolor{keywordflow}{break};
+134                                 \textcolor{keywordflow}{case} ENOTSOCK:
+135                                     printf(\textcolor{stringliteral}{"The file descriptor is not associated with a socket.\(\backslash\)n"}); 
+136                                         \textcolor{keywordflow}{break};
+137                                 \textcolor{keywordflow}{case} ETIMEDOUT:
+138                                     printf(\textcolor{stringliteral}{"Timeout while attempting connection. The server may be too busy
+       to accept new connections. Note that for IP sockets the timeout may be very long when syncookies are
+       enabled on the server.\(\backslash\)n"});
+139                                     \textcolor{keywordflow}{break};
+140                         \}
+141                 \textcolor{keywordflow}{return} -1;
+142         \}
+143 
+144         g\_print(\textcolor{stringliteral}{"Campos recibidos: hostname=%s, filename=%s, port=%d, length=%ld\(\backslash\)n"},file\_args->
+      \hyperlink{struct_file__args_a9aa177aea3a099397a09131a92f30115}{hostname}, file\_args->\hyperlink{struct_file__args_ad24dfcb255f29ee677793a0051c7336b}{filename}, file\_args->\hyperlink{struct_file__args_a83e78eb2ebacdc7e63eca61d1340fa61}{port}, file\_args->
+      \hyperlink{struct_file__args_a3168e8734e7ad263d88a6da49b4aff20}{length});
+145         
+146         \hyperlink{conexion__tcp_8h_a2ec2b47883bdb05804bec657bfc42516}{recvDatos}(file\_sockfd, message, \hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}, he->h\_name);
+147         g\_print(\textcolor{stringliteral}{"Estoy recibiendo datos\(\backslash\)n"});
+148         fputs(message, file);
+149         \textcolor{comment}{//fwrite(message, 1, sizeof(message), file);}
+150         g\_print(\textcolor{stringliteral}{"Algo paso...\(\backslash\)n"});
+151 
+152         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+153 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\-:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aux__functions_8c_a9a7f9a514711f5954007dc83533d9362_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{aux__functions_8c_a20f32d171da437faef7716e4b6e667dd}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!strnext@{strnext}}
+\index{strnext@{strnext}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{strnext}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ strnext (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{haystack, }
+\item[{int}]{ch}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a20f32d171da437faef7716e4b6e667dd}
+
+
+Devuelve una cadena que empieza inmediatamente después de la cadena 'haystack' tras la primera aparición de 'ch'. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em haystack} & string original donde hacer la busqueda \\
+\hline
+{\em ch} & delimitador \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+char$\ast$ substring con la cadena generada, N\-U\-L\-L si no se ha encontrado 'ch' 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+200                                      \{
+201         \textcolor{keywordtype}{int} i, o\_length;
+202         \textcolor{keywordtype}{char} *sep\_at = strchr(haystack, ch);
+203         
+204         \textcolor{keywordflow}{if}(sep\_at != NULL)\{
+205                 o\_length = strlen(sep\_at);
+206                 \textcolor{keywordflow}{for}(i=0; i<strlen(sep\_at); i++)
+207                         sep\_at[i] = sep\_at[i+1];
+208                 sep\_at[o\_length-1] = \textcolor{charliteral}{'\(\backslash\)0'};
+209         \}
+210 
+211         \textcolor{keywordflow}{return} sep\_at;
+212 \}
+\end{DoxyCode}
+\hypertarget{aux__functions_8c_a8d3c58618c3bb95d81a542251062d19e}{\index{aux\-\_\-functions.\-c@{aux\-\_\-functions.\-c}!test\-I\-R\-C\-\_\-\-Command\-Query@{test\-I\-R\-C\-\_\-\-Command\-Query}}
+\index{test\-I\-R\-C\-\_\-\-Command\-Query@{test\-I\-R\-C\-\_\-\-Command\-Query}!aux_functions.c@{aux\-\_\-functions.\-c}}
+\subsubsection[{test\-I\-R\-C\-\_\-\-Command\-Query}]{\setlength{\rightskip}{0pt plus 5cm}int test\-I\-R\-C\-\_\-\-Command\-Query (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{message}
+\end{DoxyParamCaption}
+)}}\label{aux__functions_8c_a8d3c58618c3bb95d81a542251062d19e}
+
+\begin{DoxyCode}
+323                                        \{
+324         \textcolor{keywordflow}{switch}(IRC\_CommandQuery(message))\{
+325                 \textcolor{keywordflow}{case} IRCERR\_NOCOMMAND:
+326                         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+327                 \textcolor{keywordflow}{case} IRCERR\_UNKNOWNCOMMAND:
+328                         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+329                 \textcolor{keywordflow}{default}:
+330                         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+331         \}
+332 \}
+\end{DoxyCode}
