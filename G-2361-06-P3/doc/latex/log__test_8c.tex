@@ -1,0 +1,89 @@
+\hypertarget{log__test_8c}{}\section{src/log\+\_\+test.c File Reference}
+\label{log__test_8c}\index{src/log\+\_\+test.\+c@{src/log\+\_\+test.\+c}}
+
+
+Prueba de la libreria de logs.  
+
+
+{\ttfamily \#include \char`\"{}../includes/logger.\+h\char`\"{}}\\*
+Include dependency graph for log\+\_\+test.\+c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{log__test_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+pthread\+\_\+mutex\+\_\+t \hyperlink{log__test_8c_a53497b00bd1ff0270ca7a108d5794dbc}{loglock}
+\begin{DoxyCompactList}\small\item\em Definicion del Mutex para el descriptor de fichero del log. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Prueba de la libreria de logs. 
+
+\begin{DoxyAuthor}{Author}
+Alfonso Sebares 
+
+Beatriz de Pablo 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13/02/17 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\index{log\+\_\+test.\+c@{log\+\_\+test.\+c}!main@{main}}
+\index{main@{main}!log\+\_\+test.\+c@{log\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{main()}{main()}}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{log__test_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{}\label{log__test_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}
+
+\begin{DoxyCode}
+18 \{
+19    FILE* fp = NULL;
+20    fp = \hyperlink{logger_8h_a1fa2e9d39664def63d53e3d576dc923f}{initLog}();
+21 
+22    \textcolor{keywordflow}{if} (pthread\_mutex\_init(&\hyperlink{log__test_8c_a53497b00bd1ff0270ca7a108d5794dbc}{loglock}, NULL) != \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK})\{
+23       perror(\textcolor{stringliteral}{"\(\backslash\)n mutex init ha devuelto error\(\backslash\)n"});
+24       \textcolor{keywordflow}{return} EXIT\_FAILURE;
+25    \}
+26 
+27    \textcolor{keywordflow}{if} (fp == NULL)\{
+28       perror(\textcolor{stringliteral}{"ERR abriendo fichero"});
+29       \textcolor{keywordflow}{return} (EXIT\_FAILURE);
+30    \}
+31 
+32    \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"Evento 1..."});
+33    \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"Evento 2..."});
+34    \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"Evento 3..."});
+35    \hyperlink{logger_8h_af71188329ee1cf68a59d3f9ddd035ca6}{logEvent}(\textcolor{stringliteral}{"Gatos :3"});
+36 
+37    fp = fopen(\textcolor{stringliteral}{"fichero-inexistente.txt"}, \textcolor{stringliteral}{"r"});
+38    \textcolor{keywordflow}{if} (fp == NULL)\{
+39       \hyperlink{logger_8h_a9487660b2ec318326782a9d9e32f8461}{logERR}(\textcolor{stringliteral}{"Error de fopen detectado"});
+40    \}
+41 
+42    pthread\_mutex\_destroy(&\hyperlink{log__test_8c_a53497b00bd1ff0270ca7a108d5794dbc}{loglock});
+43    \textcolor{keywordflow}{return} (EXIT\_SUCCESS);
+44 \}\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
+
+
+
+\subsection{Variable Documentation}
+\index{log\+\_\+test.\+c@{log\+\_\+test.\+c}!loglock@{loglock}}
+\index{loglock@{loglock}!log\+\_\+test.\+c@{log\+\_\+test.\+c}}
+\subsubsection[{\texorpdfstring{loglock}{loglock}}]{\setlength{\rightskip}{0pt plus 5cm}pthread\+\_\+mutex\+\_\+t loglock}\hypertarget{log__test_8c_a53497b00bd1ff0270ca7a108d5794dbc}{}\label{log__test_8c_a53497b00bd1ff0270ca7a108d5794dbc}
+
+
+Definicion del Mutex para el descriptor de fichero del log. 
+
+Declaracion del Mutex para el descriptor de fichero del log. Siempre tiene que ser definida en el source princpal. 

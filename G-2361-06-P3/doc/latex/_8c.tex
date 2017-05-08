@@ -1,0 +1,64 @@
+\hypertarget{_8c}{}\section{src/.c File Reference}
+\label{_8c}\index{src/.\+c@{src/.\+c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\+h$>$}\\*
+{\ttfamily \#include $<$netinet/in.\+h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\\*
+{\ttfamily \#include $<$syslog.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include $<$redes2/irc.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P1-\/\+Daemon.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P1-\/\+Server.\+h\char`\"{}}\\*
+Include dependency graph for .c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{.\+c@{.\+c}!main@{main}}
+\index{main@{main}!.\+c@{.\+c}}
+\subsubsection[{\texorpdfstring{main(int argc, char $\ast$argv[])}{main(int argc, char *argv[])}}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hypertarget{_8c_a0ddf1224851353fc92bfbff6f499fa97}{}\label{_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+\begin{DoxyCode}
+28                                 \{
+29         \textcolor{keywordtype}{int} dm, socket;
+30         \textcolor{keywordtype}{char} *path, buffer[80];
+31 
+32         \textcolor{keywordflow}{if} (argc != 2)\{
+33                 printf(\textcolor{stringliteral}{"\(\backslash\)nERROR - Uso ./<ejecutable> <numero\_de\_puerto>\(\backslash\)n"});
+34                 \textcolor{keywordflow}{return} EXIT\_FAILURE;
+35         \}
+36 
+37         socket = atoi(argv[1]);
+38         \textcolor{keywordflow}{if}(socket < 1024)\{
+39                 printf(\textcolor{stringliteral}{"\(\backslash\)nERROR - Numero de puerto en el espacio de puertos del sistema.\(\backslash\)n"});
+40                 \textcolor{keywordflow}{return} EXIT\_FAILURE;
+41         \}
+42         
+43         path = realpath(\textcolor{stringliteral}{"motd.txt"}, buffer);    
+44         
+45         dm  = daemonizar (argv[0]);
+46         \textcolor{keywordflow}{if}(dm == -1)\{
+47                 \textcolor{keywordflow}{return} -1;
+48         \}
+49 
+50         servidor(socket, path);
+51 
+52         \textcolor{keywordflow}{return} 0;
+53 
+54 \}
+\end{DoxyCode}

@@ -1,0 +1,120 @@
+\hypertarget{_g-2361-06-_p1-_sockets_8h}{}\section{includes/\+G-\/2361-\/06-\/\+P1-\/\+Sockets.h File Reference}
+\label{_g-2361-06-_p1-_sockets_8h}\index{includes/\+G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{includes/\+G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\+h$>$}\\*
+{\ttfamily \#include $<$netinet/in.\+h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\\*
+{\ttfamily \#include $<$syslog.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include $<$redes2/irc.\+h$>$}\\*
+Include dependency graph for G-\/2361-\/06-\/\+P1-\/\+Sockets.h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_g-2361-06-_p1-_sockets_8h_a1c803e4ececfb47d2791c9283c85eb00}{N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}~100
+\item 
+\#define \hyperlink{_g-2361-06-_p1-_sockets_8h_a70ed59adcb4159ac551058053e649640}{S\+I\+ZE}~8192
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{_g-2361-06-_p1-_sockets_8h_af2f55f83053c8fdebb8da511cd65880c}{abrir\+\_\+socket\+T\+CP} (int puerto)
+\item 
+int \hyperlink{_g-2361-06-_p1-_sockets_8h_a172e85f036cff044fd5ba218460115c7}{acepta\+\_\+conexion} (int I\+Dsocket)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}!N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS@{N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}}
+\index{N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS@{N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}!G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}}
+\subsubsection[{\texorpdfstring{N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}{NUM_SOCKETS}}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS~100}\hypertarget{_g-2361-06-_p1-_sockets_8h_a1c803e4ececfb47d2791c9283c85eb00}{}\label{_g-2361-06-_p1-_sockets_8h_a1c803e4ececfb47d2791c9283c85eb00}
+Numero de sockects maximo \index{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}!S\+I\+ZE@{S\+I\+ZE}}
+\index{S\+I\+ZE@{S\+I\+ZE}!G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}}
+\subsubsection[{\texorpdfstring{S\+I\+ZE}{SIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+I\+ZE~8192}\hypertarget{_g-2361-06-_p1-_sockets_8h_a70ed59adcb4159ac551058053e649640}{}\label{_g-2361-06-_p1-_sockets_8h_a70ed59adcb4159ac551058053e649640}
+Tamanno para la entrada 
+
+\subsection{Function Documentation}
+\index{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}!abrir\+\_\+socket\+T\+CP@{abrir\+\_\+socket\+T\+CP}}
+\index{abrir\+\_\+socket\+T\+CP@{abrir\+\_\+socket\+T\+CP}!G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}}
+\subsubsection[{\texorpdfstring{abrir\+\_\+socket\+T\+C\+P(int puerto)}{abrir_socketTCP(int puerto)}}]{\setlength{\rightskip}{0pt plus 5cm}int abrir\+\_\+socket\+T\+CP (
+\begin{DoxyParamCaption}
+\item[{int}]{puerto}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_sockets_8h_af2f55f83053c8fdebb8da511cd65880c}{}\label{_g-2361-06-_p1-_sockets_8h_af2f55f83053c8fdebb8da511cd65880c}
+
+\begin{DoxyCode}
+5                                \{
+6         \textcolor{keywordtype}{int} IDsocket, opt = 1;
+7         \textcolor{keyword}{struct }sockaddr\_in addr;
+8 
+9         printf(\textcolor{stringliteral}{"Creando socket.... \(\backslash\)n"});
+10         IDsocket = socket(AF\_INET, SOCK\_STREAM, 0);
+11 
+12         \textcolor{keywordflow}{if} (IDsocket < 0)\{
+13                 syslog(LOG\_ERR, \textcolor{stringliteral}{"Error en la creacion del socket"});
+14                 \textcolor{comment}{/*printf("Error en la creacion del socket \(\backslash\)n");*/}
+15                 \textcolor{keywordflow}{return} EXIT\_FAILURE;
+16         \}
+17                 \textcolor{comment}{//setsockopt(sockfd, SOL\_SOCKET, SO\_REUSEADDR, (const void *)&optval , sizeof(int));}
+18         \textcolor{keywordflow}{if} (setsockopt(IDsocket, SOL\_SOCKET, SO\_REUSEADDR, &opt, \textcolor{keyword}{sizeof}(opt)) < 0) \{
+19                 syslog(LOG\_ERR, \textcolor{stringliteral}{"Error - setsockopt (SO\_REUSEADDR)"});
+20                 printf(\textcolor{stringliteral}{"\(\backslash\)nError - setsockopt (SO\_REUSEADDR)"});
+21                 \textcolor{comment}{/*printf("Error - setsockopt (SO\_REUSEADDR)");*/}
+22                 close(IDsocket);
+23                 \textcolor{keywordflow}{return} EXIT\_FAILURE;
+24         \}
+25         memset(&addr, 0, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} sockaddr\_in));
+26         bzero(&addr, \textcolor{keyword}{sizeof}(addr));
+27 
+28         addr.sin\_family = AF\_INET; \textcolor{comment}{/* familia TCP/IP*/}
+29         addr.sin\_port = htons(puerto); \textcolor{comment}{/*Asignacion de puerto*/}
+30         addr.sin\_addr.s\_addr = htonl(INADDR\_ANY); \textcolor{comment}{/*Aceptacion de todas las direcciones*/}
+31 
+32         \textcolor{keywordflow}{if} (bind (IDsocket, (\textcolor{keyword}{struct} sockaddr *)&addr, \textcolor{keyword}{sizeof}(addr)) < 0)\{
+33                 syslog(LOG\_ERR, \textcolor{stringliteral}{"Error al nombrar socket"});
+34                 \textcolor{comment}{/*printf("Error al nombrar el socket \(\backslash\)n");*/}
+35                 \textcolor{keywordflow}{return} EXIT\_FAILURE;
+36         \}
+37 
+38         printf(\textcolor{stringliteral}{"Servidor activo escuchando\(\backslash\)n"});
+39         \textcolor{keywordflow}{if} (listen (IDsocket, \hyperlink{_g-2361-06-_p1-_server_8h_a1c803e4ececfb47d2791c9283c85eb00}{NUM\_SOCKETS}) < 0)\{
+40                 syslog(LOG\_ERR, \textcolor{stringliteral}{"Error al escuchar"});
+41                 \textcolor{comment}{/*printf("Error al escuchar \(\backslash\)n");*/}
+42                 \textcolor{keywordflow}{return} EXIT\_FAILURE;
+43         \}
+44 
+45 
+46         \textcolor{keywordflow}{return} IDsocket;
+47 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}!acepta\+\_\+conexion@{acepta\+\_\+conexion}}
+\index{acepta\+\_\+conexion@{acepta\+\_\+conexion}!G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h@{G-\/2361-\/06-\/\+P1-\/\+Sockets.\+h}}
+\subsubsection[{\texorpdfstring{acepta\+\_\+conexion(int I\+Dsocket)}{acepta_conexion(int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}int acepta\+\_\+conexion (
+\begin{DoxyParamCaption}
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_sockets_8h_a172e85f036cff044fd5ba218460115c7}{}\label{_g-2361-06-_p1-_sockets_8h_a172e85f036cff044fd5ba218460115c7}
+
+\begin{DoxyCode}
+50                                  \{
+51         \textcolor{keywordtype}{int} descriptor;
+52         socklen\_t  len;
+53         \textcolor{keyword}{struct }sockaddr conexion;
+54 
+55         \textcolor{keywordflow}{if} ((descriptor = accept(IDsocket, &conexion, &len)) < 0)\{
+56                 syslog(LOG\_ERR, \textcolor{stringliteral}{"Error al aceptar conexion"});
+57                 
+58                 \textcolor{comment}{//printf("Error al aceptar conexion \(\backslash\)n");}
+59                 \textcolor{keywordflow}{return} EXIT\_FAILURE;
+60         \}
+61         \textcolor{keywordflow}{return} descriptor;
+62 \}
+\end{DoxyCode}

@@ -1,0 +1,40 @@
+.TH "aceptar_canal_seguro__s_s_l" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+aceptar_canal_seguro__s_s_l \- aceptar_canal_seguro_SSL 
+Función que se encarga de bloquear la aplicación\&.
+.PP
+.PP
+.nf
+#include "G\-2361\-06\-P3\-funciones_ssl\&.h"
+SSL* aceptar_canal_seguro_SSL(SSL_CTX* ctx,int sockfd);
+.fi
+.PP
+.PP
+La función se encargará de bloquear la aplicación, que se quedará esperando hasta recibir un handshake por parte del cliente\&. Recibe como parámetros contexto SSL y identificdor de socket\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP contexto SSL 
+.br
+\fIsockfd\fP id del socket
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Puntero de la estructura del contexto\&.
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Beatriz de Pablo García (beatriz.depablo@estudiante.uam.es) Celia Mateos del Miguel(cel.mateos@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+25 de Abril de 2017
+.RE
+.PP
+.PP
+ 

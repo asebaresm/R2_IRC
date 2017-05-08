@@ -1,0 +1,294 @@
+\hypertarget{_g-2361-06-_p1-_functions_8c}{}\section{srclib/\+G-\/2361-\/06-\/\+P1-\/\+Functions.c File Reference}
+\label{_g-2361-06-_p1-_functions_8c}\index{srclib/\+G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{srclib/\+G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P1-\/\+Functions.\+h\char`\"{}}\\*
+Include dependency graph for G-\/2361-\/06-\/\+P1-\/\+Functions.c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_a5fa63429b3483f20a469c23625c96820}{libera\+Lista} (char $\ast$$\ast$lista, long n\+Elems)
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_a210d0586ca040ccaa2104d06e224c108}{funcion\+User} (char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost}, int I\+Dsocket)
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_ad060b5b909c563dc4d6d1737c9bfaaa9}{funcion\+Nick} (long \hyperlink{_g-2361-06-_p1-_server_8c_a7350fbd6ad10618f3b750b1f99ca5c3c}{id}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\+\_\+name}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, int I\+Dsocket)
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_a92e862feef3db4374ed9b1b941edfae3}{funcion\+Away} (long \hyperlink{_g-2361-06-_p1-_server_8c_a7350fbd6ad10618f3b750b1f99ca5c3c}{id}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\+\_\+name}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}, int I\+Dsocket)
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_a3280e4bc8a783afb907ef479e98b909e}{funcion\+Ping} (char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{server1}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2}, int I\+Dsocket)
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_af6cded1bd771b1ca20653d1f81383a21}{funcion\+Part} (char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\+\_\+name}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}, int I\+Dsocket)
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_ae0239d5f3a7464bbaeb1726cd5bb363f}{funcion\+List} (char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}, int I\+Dsocket)
+\item 
+void \hyperlink{_g-2361-06-_p1-_functions_8c_a76e61a7cc585c5d49d5609ffbef0bfb1}{funcion\+Motd} (char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\+\_\+name}, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}, int I\+Dsocket, char $\ast$\hyperlink{_g-2361-06-_p1-_server_8c_a5666511ca3d4a3dc685c6f14c663aed5}{fich})
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!funcion\+Away@{funcion\+Away}}
+\index{funcion\+Away@{funcion\+Away}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{funcion\+Away(long id, char $\ast$usuario, char $\ast$nick\+\_\+name, char $\ast$real, char $\ast$away, char $\ast$msg, int I\+Dsocket)}{funcionAway(long id, char *usuario, char *nick_name, char *real, char *away, char *msg, int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}void funcion\+Away (
+\begin{DoxyParamCaption}
+\item[{long}]{id, }
+\item[{char $\ast$}]{usuario, }
+\item[{char $\ast$}]{nick\+\_\+name, }
+\item[{char $\ast$}]{real, }
+\item[{char $\ast$}]{away, }
+\item[{char $\ast$}]{msg, }
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_a92e862feef3db4374ed9b1b941edfae3}{}\label{_g-2361-06-_p1-_functions_8c_a92e862feef3db4374ed9b1b941edfae3}
+
+\begin{DoxyCode}
+46                                                                                                           \{
+47         \textcolor{keywordtype}{char} *away\_msj;
+48 
+49         \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away} == NULL)\{ \textcolor{comment}{/*No hay away*/}
+50                 IRCTADUser\_SetAway (\textcolor{keywordtype}{id}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+51                 IRCMsg\_RplNowAway (&away\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+52         \}\textcolor{keywordflow}{else}\{ \textcolor{comment}{/*Hay away*/}
+53                 \textcolor{comment}{/*Se borra*/}
+54                 IRCTADUser\_SetAway (\textcolor{keywordtype}{id}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, NULL);
+55                 IRCMsg\_RplUnaway (&away\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+56         \}
+57         send(IDsocket,away\_msj,strlen(away\_msj),0);
+58         free(away\_msj);
+59 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!funcion\+List@{funcion\+List}}
+\index{funcion\+List@{funcion\+List}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{funcion\+List(char $\ast$nick, char $\ast$target, int I\+Dsocket)}{funcionList(char *nick, char *target, int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}void funcion\+List (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{nick, }
+\item[{char $\ast$}]{target, }
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_ae0239d5f3a7464bbaeb1726cd5bb363f}{}\label{_g-2361-06-_p1-_functions_8c_ae0239d5f3a7464bbaeb1726cd5bb363f}
+
+\begin{DoxyCode}
+107                                                         \{
+108         \textcolor{keywordtype}{char} **listaCanales, *can, *listaEnd;
+109         \textcolor{keywordtype}{long} numCanales, mode, numUsuariosCanal, modeVal;
+110         \textcolor{keywordtype}{char} nUsusCanales[4];
+111         \textcolor{keywordtype}{int} i;
+112 
+113         \textcolor{comment}{/*Obtiene una lista con el nombre de los canales existentes*/}
+114         IRCTADChan\_GetList(&listaCanales, &numCanales, \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+115 
+116         \textcolor{keywordflow}{for}(i = 0; i < numCanales; i++)\{
+117                 \textcolor{comment}{/*Modo del canal en formato entero*/}
+118                 mode = IRCTADChan\_GetModeInt (listaCanales[i]);
+119                 modeVal = mode & IRCMODE\_SECRET;
+120 
+121                 \textcolor{keywordflow}{if}(modeVal != IRCMODE\_SECRET)\{
+122                         \textcolor{comment}{/*Obtiene numero de usuarios de un canal*/}
+123                         numUsuariosCanal = IRCTADChan\_GetNumberOfUsers (listaCanales[i]);
+124                         sprintf(nUsusCanales,\textcolor{stringliteral}{"%ld"},numUsuariosCanal);
+125                         \textcolor{comment}{/*Mensaje de respuesta*/}
+126                         IRCMsg\_RplList(&can, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, listaCanales[i], nUsusCanales, \textcolor{stringliteral}{""});
+127                         send(IDsocket, can, strlen(can), 0);
+128                 \}
+129         \}
+130 
+131         \textcolor{keywordflow}{if}(i > 0)\{
+132                 \textcolor{comment}{/*Mensaje de respuesta*/}
+133                 IRCMsg\_RplListEnd(&listaEnd,\hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO},\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick});
+134                 send(IDsocket,listaEnd,strlen(listaEnd),0);
+135                 free(listaEnd);free(can);
+136                 IRCTADChan\_FreeList (listaCanales, numCanales);
+137         \}
+138 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!funcion\+Motd@{funcion\+Motd}}
+\index{funcion\+Motd@{funcion\+Motd}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{funcion\+Motd(char $\ast$nick\+\_\+name, char $\ast$target, int I\+Dsocket, char $\ast$fich)}{funcionMotd(char *nick_name, char *target, int IDsocket, char *fich)}}]{\setlength{\rightskip}{0pt plus 5cm}void funcion\+Motd (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{nick\+\_\+name, }
+\item[{char $\ast$}]{target, }
+\item[{int}]{I\+Dsocket, }
+\item[{char $\ast$}]{fich}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_a76e61a7cc585c5d49d5609ffbef0bfb1}{}\label{_g-2361-06-_p1-_functions_8c_a76e61a7cc585c5d49d5609ffbef0bfb1}
+
+\begin{DoxyCode}
+140                                                                          \{
+141         \textcolor{keywordtype}{char} lectura[80];
+142         \textcolor{keywordtype}{char} *motdStart\_msj, *motd\_msj, *motdEnd\_msj;
+143         FILE *f;
+144         f = fopen(\hyperlink{_g-2361-06-_p1-_server_8c_a5666511ca3d4a3dc685c6f14c663aed5}{fich},\textcolor{stringliteral}{"r"});
+145         
+146         \textcolor{keywordflow}{if}(!\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target})
+147                 IRCMsg\_RplMotdStart (&motdStart\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO});
+148         \textcolor{keywordflow}{else}
+149                 IRCMsg\_RplMotdStart (&motdStart\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+150 
+151         send(IDsocket,motdStart\_msj,strlen(motdStart\_msj),0);
+152         
+153         \textcolor{keywordflow}{while}(fgets(lectura, 80, f) != NULL)\{
+154                 lectura[strlen(lectura)-1] = 0;
+155                 IRCMsg\_RplMotd(&motd\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, lectura);
+156                 send(IDsocket,motd\_msj,strlen(motd\_msj),0);             
+157         \}
+158 
+159         fclose(f);
+160         IRCMsg\_RplEndOfMotd (&motdEnd\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+161         send(IDsocket,motdEnd\_msj,strlen(motdEnd\_msj),0);
+162 
+163         free(motd\_msj); free(motdStart\_msj); free(motdEnd\_msj);
+164 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!funcion\+Nick@{funcion\+Nick}}
+\index{funcion\+Nick@{funcion\+Nick}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{funcion\+Nick(long id, char $\ast$usuario, char $\ast$nick\+\_\+name, char $\ast$real, char $\ast$nick, int I\+Dsocket)}{funcionNick(long id, char *usuario, char *nick_name, char *real, char *nick, int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}void funcion\+Nick (
+\begin{DoxyParamCaption}
+\item[{long}]{id, }
+\item[{char $\ast$}]{usuario, }
+\item[{char $\ast$}]{nick\+\_\+name, }
+\item[{char $\ast$}]{real, }
+\item[{char $\ast$}]{nick, }
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_ad060b5b909c563dc4d6d1737c9bfaaa9}{}\label{_g-2361-06-_p1-_functions_8c_ad060b5b909c563dc4d6d1737c9bfaaa9}
+
+\begin{DoxyCode}
+30                                                                                                \{
+31         \textcolor{keywordtype}{char} *complex = NULL, *msj\_nick = NULL;
+32         
+33         \textcolor{comment}{/*Crea el array por ejemplo : :celia!~celia@66.red-83-63-217.staticip.rima-tde.net*/}
+34         IRC\_ComplexUser(&complex, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, NULL, NULL);
+35 
+36         IRCTADUser\_Set(\textcolor{keywordtype}{id}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real});
+37 
+38         \textcolor{comment}{/*Mensaje de vuelta del comando NICK*/}
+39         IRCMsg\_Nick(&msj\_nick, complex, NULL, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick});
+40         send(IDsocket, msj\_nick, strlen(msj\_nick), 0);
+41 
+42         free(complex); free(msj\_nick); 
+43 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!funcion\+Part@{funcion\+Part}}
+\index{funcion\+Part@{funcion\+Part}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{funcion\+Part(char $\ast$channel, char $\ast$nick\+\_\+name, char $\ast$msg, int I\+Dsocket)}{funcionPart(char *channel, char *nick_name, char *msg, int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}void funcion\+Part (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{channel, }
+\item[{char $\ast$}]{nick\+\_\+name, }
+\item[{char $\ast$}]{msg, }
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_af6cded1bd771b1ca20653d1f81383a21}{}\label{_g-2361-06-_p1-_functions_8c_af6cded1bd771b1ca20653d1f81383a21}
+
+\begin{DoxyCode}
+75                                                                          \{
+76         \textcolor{keywordtype}{char} *part\_msj, **lista = NULL;
+77         \textcolor{keywordtype}{long} nChannels = 0, nUsus = 0;
+78         \textcolor{keywordtype}{int} i, flag = 0;
+79 
+80         \textcolor{comment}{/*Obtenemos la lista con los nombres de todos los canales*/}
+81         IRCTADChan\_GetList (&lista, &nChannels, NULL);
+82         \textcolor{keywordflow}{for}(i = 0; i < nChannels; i++)\{
+83                 \textcolor{keywordflow}{if}(strcmp(lista[i], \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}) == 0)\{
+84                         flag = 1; \textcolor{comment}{/*El canal existe*/}
+85                 \}
+86         \}
+87         IRCTADChan\_FreeList (lista, nChannels);
+88 
+89         \textcolor{keywordflow}{if}(flag == 0)\{ \textcolor{comment}{/*No existe el canal*/}
+90                 IRCMsg\_ErrNoSuchChannel(&part\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+91                 send(IDsocket,part\_msj,strlen(part\_msj),0);
+92         \}\textcolor{keywordflow}{else}\{
+93 
+94                 IRCTAD\_Part (\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+95                 nUsus = IRCTADChan\_GetNumberOfUsers(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}); \textcolor{comment}{/*Obtenemos el numero de usuarios del
+       canal*/}
+96 
+97                 \textcolor{keywordflow}{if}(nUsus <= 0)\{ \textcolor{comment}{/*Si no hay usuarios*/}
+98                         IRCTADChan\_Delete(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}); \textcolor{comment}{/*Se borra el canal*/}
+99                 \}
+100 
+101                 IRCMsg\_Part (&part\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+102                 send(IDsocket,part\_msj,strlen(part\_msj),0);
+103         \}
+104         free(part\_msj); 
+105 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!funcion\+Ping@{funcion\+Ping}}
+\index{funcion\+Ping@{funcion\+Ping}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{funcion\+Ping(char $\ast$server1, char $\ast$server2, int I\+Dsocket)}{funcionPing(char *server1, char *server2, int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}void funcion\+Ping (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{server1, }
+\item[{char $\ast$}]{server2, }
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_a3280e4bc8a783afb907ef479e98b909e}{}\label{_g-2361-06-_p1-_functions_8c_a3280e4bc8a783afb907ef479e98b909e}
+
+\begin{DoxyCode}
+62                                                             \{
+63         \textcolor{keywordtype}{char} *pong\_msj;
+64 
+65         \textcolor{keywordflow}{if}(!\hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2})\{ \textcolor{comment}{/*En el caso de que no se especifique el server2*/}
+66                 IRCMsg\_Pong (&pong\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{server1});
+67                 send(IDsocket,pong\_msj,strlen(pong\_msj),0);
+68         \}\textcolor{keywordflow}{else}\{
+69                 IRCMsg\_Pong (&pong\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{server1}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2});
+70                 send(IDsocket,pong\_msj,strlen(pong\_msj),0);
+71         \}
+72         free(pong\_msj);
+73 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!funcion\+User@{funcion\+User}}
+\index{funcion\+User@{funcion\+User}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{funcion\+User(char $\ast$user, char $\ast$nick, char $\ast$realname, char $\ast$modehost, int I\+Dsocket)}{funcionUser(char *user, char *nick, char *realname, char *modehost, int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}void funcion\+User (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{user, }
+\item[{char $\ast$}]{nick, }
+\item[{char $\ast$}]{realname, }
+\item[{char $\ast$}]{modehost, }
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_a210d0586ca040ccaa2104d06e224c108}{}\label{_g-2361-06-_p1-_functions_8c_a210d0586ca040ccaa2104d06e224c108}
+
+\begin{DoxyCode}
+11                                                                                       \{
+12         \textcolor{keywordtype}{char} *welcome\_msj, *host\_msj, *create\_msj, *info\_msj, *respuesta;
+13 
+14         \textcolor{comment}{/*Mensaje 001*/}
+15         IRCMsg\_RplWelcome (&welcome\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, \hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost});
+16         \textcolor{comment}{/*Mensaje 002*/}
+17         IRCMsg\_RplYourHost (&host\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, \textcolor{stringliteral}{"localhost"}, \textcolor{stringliteral}{"1.0"});
+18         \textcolor{comment}{/*Mensaje 003*/}
+19         IRCMsg\_RplCreated (&create\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, 0);
+20         \textcolor{comment}{/*Mensaje 004*/}
+21         IRCMsg\_RplMyInfo(&info\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, \textcolor{stringliteral}{"Practica 1"}, \textcolor{stringliteral}{"1.0"}, \textcolor{stringliteral}{"abBcCFiIoqrRswx"}, \textcolor{stringliteral}{"
+      abehiIklmMnoOPqQrRstvVz"});
+22 
+23         \textcolor{comment}{/*Todos los mensajes en uno solo*/}
+24         IRC\_PipelineCommands(&respuesta, welcome\_msj, host\_msj, create\_msj, info\_msj, NULL);
+25 
+26         send(IDsocket, respuesta, strlen(respuesta), 0);
+27         free(welcome\_msj); free(host\_msj), free(create\_msj); free(info\_msj); free(respuesta);
+28 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}!libera\+Lista@{libera\+Lista}}
+\index{libera\+Lista@{libera\+Lista}!G-\/2361-\/06-\/\+P1-\/\+Functions.\+c@{G-\/2361-\/06-\/\+P1-\/\+Functions.\+c}}
+\subsubsection[{\texorpdfstring{libera\+Lista(char $\ast$$\ast$lista, long n\+Elems)}{liberaLista(char **lista, long nElems)}}]{\setlength{\rightskip}{0pt plus 5cm}void libera\+Lista (
+\begin{DoxyParamCaption}
+\item[{char $\ast$$\ast$}]{lista, }
+\item[{long}]{n\+Elems}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_functions_8c_a5fa63429b3483f20a469c23625c96820}{}\label{_g-2361-06-_p1-_functions_8c_a5fa63429b3483f20a469c23625c96820}
+
+\begin{DoxyCode}
+4                                            \{
+5         \textcolor{keywordtype}{int} i;
+6         \textcolor{keywordflow}{for}(i=0;i<nElems;i++)
+7                 free(lista[i]);
+8 \}
+\end{DoxyCode}

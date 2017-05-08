@@ -1,0 +1,159 @@
+\hypertarget{_g-2361-06-_p1-echo__server_8c}{}\section{src/\+G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.c File Reference}
+\label{_g-2361-06-_p1-echo__server_8c}\index{src/\+G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{src/\+G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$netdb.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\+h$>$}\\*
+{\ttfamily \#include $<$netinet/in.\+h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+Include dependency graph for G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.c\+:
+% FIG 0
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_g-2361-06-_p1-echo__server_8c_aeca034f67218340ecb2261a22c2f3dcd}{B\+U\+F\+S\+I\+ZE}~1024
+\item 
+\#define \hyperlink{_g-2361-06-_p1-echo__server_8c_a3e4b4faa36cc9e3a7d9895aec8f27592}{M\+A\+X\+\_\+\+C\+O\+N\+\_\+\+R\+EQ}~10
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{_g-2361-06-_p1-echo__server_8c_aad9796c174f7ef5d226cd169f2520fd5}{error} (char $\ast$msg)
+\item 
+int \hyperlink{_g-2361-06-_p1-echo__server_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}!B\+U\+F\+S\+I\+ZE@{B\+U\+F\+S\+I\+ZE}}
+\index{B\+U\+F\+S\+I\+ZE@{B\+U\+F\+S\+I\+ZE}!G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}}
+\subsubsection[{\texorpdfstring{B\+U\+F\+S\+I\+ZE}{BUFSIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+F\+S\+I\+ZE~1024}\hypertarget{_g-2361-06-_p1-echo__server_8c_aeca034f67218340ecb2261a22c2f3dcd}{}\label{_g-2361-06-_p1-echo__server_8c_aeca034f67218340ecb2261a22c2f3dcd}
+Tam. max. del buffer que se lee \index{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}!M\+A\+X\+\_\+\+C\+O\+N\+\_\+\+R\+EQ@{M\+A\+X\+\_\+\+C\+O\+N\+\_\+\+R\+EQ}}
+\index{M\+A\+X\+\_\+\+C\+O\+N\+\_\+\+R\+EQ@{M\+A\+X\+\_\+\+C\+O\+N\+\_\+\+R\+EQ}!G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}}
+\subsubsection[{\texorpdfstring{M\+A\+X\+\_\+\+C\+O\+N\+\_\+\+R\+EQ}{MAX_CON_REQ}}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+A\+X\+\_\+\+C\+O\+N\+\_\+\+R\+EQ~10}\hypertarget{_g-2361-06-_p1-echo__server_8c_a3e4b4faa36cc9e3a7d9895aec8f27592}{}\label{_g-2361-06-_p1-echo__server_8c_a3e4b4faa36cc9e3a7d9895aec8f27592}
+Max. de peticiones de conexion activas (e.\+g. la 11 falla si puesto a 10) 
+
+\subsection{Function Documentation}
+\index{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}!error@{error}}
+\index{error@{error}!G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}}
+\subsubsection[{\texorpdfstring{error(char $\ast$msg)}{error(char *msg)}}]{\setlength{\rightskip}{0pt plus 5cm}void error (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{msg}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-echo__server_8c_aad9796c174f7ef5d226cd169f2520fd5}{}\label{_g-2361-06-_p1-echo__server_8c_aad9796c174f7ef5d226cd169f2520fd5}
+
+\begin{DoxyCode}
+25                       \{
+26         perror(msg);
+27         exit(1);
+28 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}!main@{main}}
+\index{main@{main}!G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c@{G-\/2361-\/06-\/\+P1-\/echo\+\_\+server.\+c}}
+\subsubsection[{\texorpdfstring{main(int argc, char $\ast$argv[])}{main(int argc, char *argv[])}}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-echo__server_8c_a0ddf1224851353fc92bfbff6f499fa97}{}\label{_g-2361-06-_p1-echo__server_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+\begin{DoxyCode}
+31 \{
+32         \textcolor{keywordtype}{int} socket\_desc , client\_sock , c , read\_size;
+33         \textcolor{keywordtype}{int} portno;
+34         \textcolor{keywordtype}{int} optval; \textcolor{comment}{/* flag value for setsockopt */}
+35         \textcolor{keyword}{struct }sockaddr\_in server , client;
+36         \textcolor{keyword}{struct }hostent *hostp; \textcolor{comment}{/* client host info */}
+37         \textcolor{keywordtype}{char} client\_message[\hyperlink{_g-2361-06-_p1-echo__server_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE}];
+38         \textcolor{keywordtype}{char} *hostaddrp; \textcolor{comment}{/* dotted decimal host addr string */}
+39          
+40         \textcolor{keywordflow}{if} (argc != 2) \{
+41                 fprintf(stderr, \textcolor{stringliteral}{"usage: %s <port>\(\backslash\)n"}, argv[0]);
+42                 exit(1);
+43         \}
+44         portno = atoi(argv[1]);
+45         
+46         \textcolor{comment}{//Create socket}
+47         socket\_desc = socket(AF\_INET , SOCK\_STREAM , 0);
+48         \textcolor{keywordflow}{if} (socket\_desc == -1)
+49         \{
+50                 printf(\textcolor{stringliteral}{"Could not create socket"});
+51         \}
+52         puts(\textcolor{stringliteral}{"Socket created"});
+53         
+54         optval = 1;
+55         setsockopt(socket\_desc, SOL\_SOCKET, SO\_REUSEADDR, (\textcolor{keyword}{const} \textcolor{keywordtype}{void} *)&optval , \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));
+56 
+57         \textcolor{comment}{//Prepare the sockaddr\_in structure}
+58         memset((\textcolor{keywordtype}{char} *) &server, 0, \textcolor{keyword}{sizeof}(server));
+59         server.sin\_family = AF\_INET;
+60         server.sin\_addr.s\_addr = INADDR\_ANY;
+61         server.sin\_port = htons((\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{short})portno );
+62          
+63         \textcolor{comment}{//Bind}
+64         \textcolor{keywordflow}{if}( bind(socket\_desc,(\textcolor{keyword}{struct} sockaddr *)&server , \textcolor{keyword}{sizeof}(server)) < 0)
+65         \{
+66                 \textcolor{comment}{//print the error message}
+67                 \textcolor{comment}{//printf("\(\backslash\)nstrerror: %s\(\backslash\)n", strerror(errno));}
+68                 perror(\textcolor{stringliteral}{"bind failed. Error"});
+69                 \textcolor{keywordflow}{return} 1;
+70         \}
+71         puts(\textcolor{stringliteral}{"bind done"});
+72          
+73         \textcolor{comment}{//Listen}
+74         listen(socket\_desc , \hyperlink{_g-2361-06-_p1-echo__server_8c_a3e4b4faa36cc9e3a7d9895aec8f27592}{MAX\_CON\_REQ});
+75          
+76         \textcolor{comment}{//Accept and incoming connection}
+77         puts(\textcolor{stringliteral}{"Waiting for incoming connections..."});
+78         c = \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct }sockaddr\_in);
+79          
+80         \textcolor{comment}{//accept connection from an incoming client}
+81         client\_sock = accept(socket\_desc, (\textcolor{keyword}{struct} sockaddr *)&client, (socklen\_t*)&c);
+82         \textcolor{keywordflow}{if} (client\_sock < 0)
+83         \{
+84                 perror(\textcolor{stringliteral}{"accept failed"});
+85                 \textcolor{keywordflow}{return} 1;
+86         \}
+87 
+88         hostp = gethostbyaddr((\textcolor{keyword}{const} \textcolor{keywordtype}{char} *)&client.sin\_addr.s\_addr, \textcolor{keyword}{sizeof}(client.sin\_addr.s\_addr), 
+      AF\_INET);
+89         \textcolor{keywordflow}{if} (hostp == NULL)
+90                 \hyperlink{_g-2361-06-_p1-echo__server_8c_aad9796c174f7ef5d226cd169f2520fd5}{error}(\textcolor{stringliteral}{"ERROR on gethostbyaddr"});
+91 
+92         hostaddrp = inet\_ntoa(client.sin\_addr);
+93 
+94         \textcolor{keywordflow}{if} (hostaddrp == NULL)
+95                 \hyperlink{_g-2361-06-_p1-echo__server_8c_aad9796c174f7ef5d226cd169f2520fd5}{error}(\textcolor{stringliteral}{"ERROR on inet\_ntoa\(\backslash\)n"});
+96         printf(\textcolor{stringliteral}{"\(\backslash\)nserver established connection with %s (%s)\(\backslash\)n"}, hostp->h\_name, hostaddrp);
+97          
+98         \textcolor{comment}{//Receive a message from client}
+99         \textcolor{keywordflow}{while}( strcmp(client\_message, \textcolor{stringliteral}{"\_STOP\_"}) != 0 )
+100         \{
+101                 read\_size = recv(client\_sock , client\_message , \hyperlink{_g-2361-06-_p1-echo__server_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE} , 0);
+102                 printf(\textcolor{stringliteral}{"\(\backslash\)nRecibido: %s"}, client\_message);
+103                 \textcolor{keywordflow}{if} (read\_size < 0)\{
+104                         perror(\textcolor{stringliteral}{"recv failed"});
+105                 \}
+106                 \textcolor{comment}{//Send the message back to client}
+107                 \textcolor{comment}{//write(client\_sock , client\_message , read\_size);}
+108                 \textcolor{comment}{/*afinar un poco mas que mandar siempre BUFSIZE:*/}
+109                 write(client\_sock , client\_message , strlen(client\_message)+1); 
+110         \}
+111         
+112         puts(\textcolor{stringliteral}{"Client disconnected"});
+113         fflush(stdout);
+114         close(client\_sock);
+115          
+116         \textcolor{keywordflow}{return} 0;
+117 \}\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
+

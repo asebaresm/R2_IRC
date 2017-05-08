@@ -1,0 +1,40 @@
+.TH "fijar_contexto__s_s_l" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+fijar_contexto__s_s_l \- fijar_contexto_SSL 
+Función que inicializa el contexto para hacer uso de canales seguros \&.
+.PP
+.PP
+.nf
+#include "G\-2361\-06\-P3\-funciones_ssl\&.h"
+SSL_CTX* fijar_contexto_SSL(char* cert, char* key);
+.fi
+.PP
+.PP
+La función se encargar de inicializar el contexto que será utilizado para la creación de canales seguros\&. Recibe como parámetros las rutas a los certificados y las claves con la que se va a trabajar\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcert\fP certificado del que se utiliza la función 
+.br
+\fIkey\fP certificado llave del que se utiliza la función
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Puntero de la estructura del contexto creado\&.
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Beatriz de Pablo García (beatriz.depablo@estudiante.uam.es) Celia Mateos del Miguel(cel.mateos@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+25 de Abril de 2017
+.RE
+.PP
+.PP
+ 

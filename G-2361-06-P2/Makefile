@@ -8,16 +8,16 @@
 # Compilador
 CC = gcc
 #Cuando se rompe algo en el portátil de Alfonso (ignorar)
-INC = -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/gtk-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gtk-3.0/gdk -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/atk-1.0
+#INC = -I/G-2361-06-P2-usr/G-2361-06-P2-include/G-2361-06-P2-glib-2.0 -I/G-2361-06-P2-usr/G-2361-06-P2-lib/G-2361-06-P2-x86_64-linux-gnu/G-2361-06-P2-glib-2.0/G-2361-06-P2-include -I/G-2361-06-P2-usr/G-2361-06-P2-include/G-2361-06-P2-gtk-2.0 -I/G-2361-06-P2-usr/G-2361-06-P2-include/G-2361-06-P2-cairo -I/G-2361-06-P2-usr/G-2361-06-P2-include/G-2361-06-P2-pango-1.0 -I/G-2361-06-P2-usr/G-2361-06-P2-include/G-2361-06-P2-gtk-3.0/G-2361-06-P2-gdk -I/G-2361-06-P2-usr/G-2361-06-P2-include/G-2361-06-P2-gdk-pixbuf-2.0 -I/G-2361-06-P2-usr/G-2361-06-P2-include/G-2361-06-P2-atk-1.0
 # Flags compilacion
 #CFLAGS = -g -Wall $(INC) -Wno-unused-variable -Wno-unused-but-set-variable
 CFLAGS = -g -Wall -Wno-unused-variable -Wno-unused-but-set-variable
 IFLAGS = -lircinterface `pkg-config --cflags gtk+-3.0 --libs gtk+-3.0` -rdynamic
 LIBS = -lircinterface -lircredes -lirctad
 # Ejecutables
-EXE = xchat2
-EXE_LEARN = echo_server echo_client log_test conexion_tcp_test
-DIR_NAME = G-2361-06-P1
+EXE = G-2361-06-P2-xchat2
+EXE_LEARN = G-2361-06-P2-echo_server G-2361-06-P2-echo_client G-2361-06-P2-log_test G-2361-06-P2-conexion_tcp_test
+DIR_NAME = G-2361-06-P2
 .PHONY: clean all
 
 all: $(EXE)
@@ -28,46 +28,46 @@ extra: $(EXE_LEARN)
 # Construccion de los ejecutables
 #===================================
 # Ejecutables
-xchat2: src/xchat2.c src/daemon.c lib/lib-logger.a lib/lib-conexion_tcp.a lib/lib-aux_functions.a lib/lib-user_commands.a
-	$(CC) $(CFLAGS) src/xchat2.c -o xchat2 $(IFLAGS) lib/lib-logger.a lib/lib-conexion_tcp.a lib/lib-user_commands.a lib/lib-aux_functions.a -pthread ${LIBS}
+G-2361-06-P2-xchat2: src/G-2361-06-P2-xchat2.c lib/G-2361-06-P2-lib-logger.a lib/G-2361-06-P2-lib-conexion_tcp.a lib/G-2361-06-P2-lib-aux_functions.a lib/G-2361-06-P2-lib-user_commands.a
+	$(CC) $(CFLAGS) src/G-2361-06-P2-xchat2.c -o G-2361-06-P2-xchat2 $(IFLAGS) lib/G-2361-06-P2-lib-logger.a lib/G-2361-06-P2-lib-conexion_tcp.a lib/G-2361-06-P2-lib-user_commands.a lib/G-2361-06-P2-lib-aux_functions.a -pthread ${LIBS}
 
-echo_server: src/echo_server.c
-	$(CC) $(CFLAGS) -o echo_server src/echo_server.c
+G-2361-06-P2-echo_server: src/G-2361-06-P2-echo_server.c
+	$(CC) $(CFLAGS) -o G-2361-06-P2-echo_server src/G-2361-06-P2-echo_server.c
 
-echo_client: src/echo_client.c
-	$(CC) $(CFLAGS) -o echo_client src/echo_client.c
+G-2361-06-P2-echo_client: src/G-2361-06-P2-echo_client.c
+	$(CC) $(CFLAGS) -o G-2361-06-P2-echo_client src/G-2361-06-P2-echo_client.c
 
-log_test: src/log_test.c lib/lib-logger.a
-	$(CC) $(CFLAGS) -o log_test src/log_test.c lib/lib-logger.a
+G-2361-06-P2-log_test: src/G-2361-06-P2-log_test.c lib/G-2361-06-P2-lib-logger.a
+	$(CC) $(CFLAGS) -o G-2361-06-P2-log_test src/G-2361-06-P2-log_test.c lib/G-2361-06-P2-lib-logger.a
 
-conexion_tcp_test: src/conexion_tcp_test.c lib/lib-logger.a lib/lib-conexion_tcp.a
-	$(CC) $(CFLAGS) -o conexion_tcp_test src/conexion_tcp_test.c lib/lib-conexion_tcp.a lib/lib-logger.a
+G-2361-06-P2-conexion_tcp_test: src/G-2361-06-P2-conexion_tcp_test.c lib/G-2361-06-P2-lib-logger.a lib/G-2361-06-P2-lib-conexion_tcp.a
+	$(CC) $(CFLAGS) -o G-2361-06-P2-conexion_tcp_test src/G-2361-06-P2-conexion_tcp_test.c lib/G-2361-06-P2-lib-conexion_tcp.a lib/G-2361-06-P2-lib-logger.a
 
 #Objetos
-objlib/logger.o: srclib/logger.c
-	$(CC) $(CFLAGS) -c srclib/logger.c -o objlib/logger.o
+objlib/G-2361-06-P2-logger.o: srclib/G-2361-06-P2-logger.c
+	$(CC) $(CFLAGS) -c srclib/G-2361-06-P2-logger.c -o objlib/G-2361-06-P2-logger.o
 
-objlib/conexion_tcp.o: srclib/conexion_tcp.c
-	$(CC) $(CFLAGS) -c srclib/conexion_tcp.c -o objlib/conexion_tcp.o
+objlib/G-2361-06-P2-conexion_tcp.o: srclib/G-2361-06-P2-conexion_tcp.c
+	$(CC) $(CFLAGS) -c srclib/G-2361-06-P2-conexion_tcp.c -o objlib/G-2361-06-P2-conexion_tcp.o
 
-objlib/aux_functions.o: srclib/aux_functions.c
-	$(CC) $(CFLAGS) -c srclib/aux_functions.c -o objlib/aux_functions.o $(IFLAGS) $(LIBS)
+objlib/G-2361-06-P2-aux_functions.o: srclib/G-2361-06-P2-aux_functions.c
+	$(CC) $(CFLAGS) -c srclib/G-2361-06-P2-aux_functions.c -o objlib/G-2361-06-P2-aux_functions.o $(IFLAGS) $(LIBS)
 
-objlib/user_commands.o: srclib/user_commands.c
-	$(CC) $(CFLAGS) -c srclib/user_commands.c -o objlib/user_commands.o $(IFLAGS) $(LIBS)
+objlib/G-2361-06-P2-user_commands.o: srclib/G-2361-06-P2-user_commands.c
+	$(CC) $(CFLAGS) -c srclib/G-2361-06-P2-user_commands.c -o objlib/G-2361-06-P2-user_commands.o $(IFLAGS) $(LIBS)
 
 #Libs
-lib/lib-logger.a: objlib/logger.o	
-	ar rcs lib/lib-logger.a objlib/logger.o
+lib/G-2361-06-P2-lib-logger.a: objlib/G-2361-06-P2-logger.o	
+	ar rcs lib/G-2361-06-P2-lib-logger.a objlib/G-2361-06-P2-logger.o
 
-lib/lib-conexion_tcp.a: objlib/conexion_tcp.o
-	ar rcs lib/lib-conexion_tcp.a objlib/conexion_tcp.o
+lib/G-2361-06-P2-lib-conexion_tcp.a: objlib/G-2361-06-P2-conexion_tcp.o
+	ar rcs lib/G-2361-06-P2-lib-conexion_tcp.a objlib/G-2361-06-P2-conexion_tcp.o
 
-lib/lib-user_commands.a: objlib/user_commands.o
-	ar rcs lib/lib-user_commands.a objlib/user_commands.o
+lib/G-2361-06-P2-lib-user_commands.a: objlib/G-2361-06-P2-user_commands.o
+	ar rcs lib/G-2361-06-P2-lib-user_commands.a objlib/G-2361-06-P2-user_commands.o
 
-lib/lib-aux_functions.a: objlib/aux_functions.o
-	ar rcs lib/lib-aux_functions.a objlib/aux_functions.o
+lib/G-2361-06-P2-lib-aux_functions.a: objlib/G-2361-06-P2-aux_functions.o
+	ar rcs lib/G-2361-06-P2-lib-aux_functions.a objlib/G-2361-06-P2-aux_functions.o
 
 #===========================
 # Limpia ficheros temporales
@@ -76,12 +76,13 @@ clean:
 	rm -f lib/*.a obj/*.o objlib/*.o $(EXE) $(EXE_LEARN) $(DIR_NAME).tar.gz
 
 #================================
-# Autores/ayuda de la práctica
+# Autores/G-2361-06-P2-ayuda de la práctica
 #================================
 info:
 	@echo "--------------------------------------------"
 	@echo "    Practica 1 Redes de comunicaciones 2"
-	@echo "     Alfonso Sebares y Beatriz de Pablo."
+	@echo "     Alfonso Sebares, Beatriz de Pablo y"
+	@echo "              Celia Mateos"
 	@echo "            Ayuda: make help" 
 	@echo "--------------------------------------------"
 	
@@ -99,7 +100,7 @@ kill:
 
 	
 #====================================
-# Documentación/comprimir la práctica
+# Documentación/G-2361-06-P2-comprimir la práctica
 #====================================	
 empaquetar:
 	@make clean

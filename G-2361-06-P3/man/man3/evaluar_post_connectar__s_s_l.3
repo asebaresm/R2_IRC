@@ -1,0 +1,40 @@
+.TH "evaluar_post_connectar__s_s_l" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+evaluar_post_connectar__s_s_l \- evaluar_post_connectar_SSL 
+Función que comprueba si la comunicación se puede considerar segura\&.
+.PP
+.PP
+.nf
+#include "G\-2361\-06\-P3\-funciones_ssl\&.h"
+int evaluar_post_connectar_SSL(SSL * ssl);
+.fi
+.PP
+.PP
+La funciónque comprueba una vez realizado el handshake si el canal de co- municación se puede considerar seguro\&.
+.PP
+Recibe como parámetros contexto SSL\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIssl\fP contexto SSL
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Devuelve 0 al no encontrar el certificado en caso contrario\&.\&.\&.
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Beatriz de Pablo García (beatriz.depablo@estudiante.uam.es) Celia Mateos del Miguel(cel.mateos@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+25 de Abril de 2017
+.RE
+.PP
+.PP
+ 

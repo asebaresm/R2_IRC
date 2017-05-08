@@ -1,0 +1,30 @@
+Función que se encarga de bloquear la aplicación.
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{_g-2361-06-_p3-funciones__ssl_8h}{G-2361-06-P3-funciones\_ssl.h}"}
+SSL* \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_aaeb9457077403f2261ca1a86e3802a1d}{aceptar\_canal\_seguro\_SSL}(SSL\_CTX* ctx,\textcolor{keywordtype}{int} sockfd);
+\end{DoxyCode}
+
+
+La función se encargará de bloquear la aplicación, que se quedará esperando hasta recibir un handshake por parte del cliente. Recibe como parámetros contexto S\+SL y identificdor de socket.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em ctx} & contexto S\+SL \\
+\hline
+\mbox{\tt in}  & {\em sockfd} & id del socket\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Puntero de la estructura del contexto.
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Beatriz de Pablo García (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\+depablo@estudiante.\+uam.\+es}) Celia Mateos del Miguel(\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\+mateos@estudiante.\+uam.\+es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\+sebares@estudiante.\+uam.\+es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+25 de Abril de 2017
+\end{DoxyDate}
+
+
+ 

@@ -1,0 +1,174 @@
+.TH "src/G-2361-06-P3-echo_serverSSL.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/G-2361-06-P3-echo_serverSSL.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <netdb\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <netinet/in\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include '\&.\&./includes/G\-2361\-06\-P3\-funciones_ssl\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBUFSIZE\fP   1024"
+.br
+.ti -1c
+.RI "#define \fBMAX_CON_REQ\fP   10"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBerror\fP (char *msg)"
+.br
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define BUFSIZE   1024"
+Tam\&. max\&. del buffer que se lee 
+.SS "#define MAX_CON_REQ   10"
+Max\&. de peticiones de conexion activas (e\&.g\&. la 11 falla si puesto a 10) 
+.SH "Function Documentation"
+.PP 
+.SS "void error (char * msg)"
+
+.PP
+.nf
+27                       {
+28         perror(msg);
+29         exit(1);
+30 }
+.fi
+.SS "int main (int argc, char * argv[])"
+
+.PP
+.nf
+33 {
+34         int socket_desc , client_sock , c , read_size;
+35         int portno;
+36         int optval; /* flag value for setsockopt */
+37         struct sockaddr_in server , client;
+38         struct hostent *hostp; /* client host info */
+39         char client_message[BUFSIZE];
+40         char *hostaddrp; /* dotted decimal host addr string */
+41         SSL_CTX* ctx=NULL;
+42         SSL * ssl=NULL;
+43          
+44         portno = 8888;
+45         
+46         inicializar_nivel_SSL();
+47         ctx=fijar_contexto_SSL(SERVER_CERT, SERVER_KEY);
+48 
+49         //Create socket
+50         socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+51         if (socket_desc == -1)
+52         {
+53                 perror("Could not create socket");
+54                 return 1;
+55         }
+56         
+57         optval = 1;
+58         setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
+59 
+60         //Prepare the sockaddr_in structure
+61         memset((char *) &server, 0, sizeof(server));
+62         server\&.sin_family = AF_INET;
+63         server\&.sin_addr\&.s_addr = INADDR_ANY;
+64         server\&.sin_port = htons((unsigned short)portno );
+65          
+66         //Bind
+67         if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
+68         {
+69                 //print the error message
+70                 //printf("\nstrerror: %s\n", strerror(errno));
+71                 perror("bind failed\&. Error");
+72                 return 1;
+73         }
+74          
+75         //Listen
+76         listen(socket_desc , MAX_CON_REQ);
+77 
+78         //Accept and incoming connection
+79         c = sizeof(struct sockaddr_in);
+80          
+81         //accept connection from an incoming client
+82         client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
+83         if (client_sock < 0)
+84         {
+85                 perror("accept failed");
+86                 return 1;
+87         }
+88 
+89         hostp = gethostbyaddr((const char *)&client\&.sin_addr\&.s_addr, sizeof(client\&.sin_addr\&.s_addr), AF_INET);
+90         if (hostp == NULL){
+91                 perror("ERROR on gethostbyaddr");
+92                 return 1;
+93         }
+94 
+95         hostaddrp = inet_ntoa(client\&.sin_addr);
+96 
+97         if (hostaddrp == NULL){
+98                 perror("ERROR on inet_ntoa\n");
+99                 return 1;
+100         }
+101         printf("\nserver established connection with %s (%s)\n", hostp->h_name, hostaddrp);
+102         
+103         ssl=aceptar_canal_seguro_SSL(ctx, client_sock); 
+104 
+105         //Receive a message from client
+106         while( strcmp(client_message, "exit") != 0 )
+107         {
+108 
+109                 read_size = recibir_datos_SSL(ssl, client_message);
+110                 if (read_size < 0){
+111                         break;
+112                 }
+113 
+114                 if (enviar_datos_SSL(ssl, client_message) < 0)
+115                         break; 
+116 
+117                 puts(client_message);
+118                 fflush(stdout);
+119                 
+120         }
+121         
+122         cerrar_canal_SSL(&ssl, &ctx, client_sock);
+123         fflush(stdout);
+124         close(client_sock);
+125         close(socket_desc); 
+126 
+127         return 0;
+128 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

@@ -1,0 +1,101 @@
+.TH "src/G-2361-06-P2-echo_client.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/G-2361-06-P2-echo_client.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBUFSIZE\fP   1024"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define BUFSIZE   1024"
+Tam\&. max\&. del buffer que se lee 
+.SH "Function Documentation"
+.PP 
+.SS "int main (int argc, char * argv[])"
+
+.PP
+.nf
+20 {
+21     int sock;
+22     struct sockaddr_in server;
+23     char message[BUFSIZE] , server_reply[BUFSIZE];
+24      
+25     //Create socket
+26     sock = socket(AF_INET , SOCK_STREAM , 0);
+27     if (sock == -1)
+28     {
+29         printf("Could not create socket");
+30     }
+31     puts("Socket created");
+32      
+33     server\&.sin_addr\&.s_addr = inet_addr("127\&.0\&.0\&.1");
+34     server\&.sin_family = AF_INET;
+35     server\&.sin_port = htons( 8888 );
+36  
+37     //Connect to remote server
+38     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
+39     {
+40         perror("connect failed\&. Error");
+41         return 1;
+42     }
+43      
+44     puts("Connected\n");
+45      
+46     //keep communicating with server
+47     while((strcmp(message, "_STOP_") != 0))
+48     {
+49         printf("Enter message : ");
+50         scanf("%s" , message);
+51 
+52         //Send some data
+53         if( send(sock , message , sizeof(message) , 0) < 0)
+54         {
+55             puts("Send failed");
+56             return 1;
+57         }
+58          
+59         //Receive a reply from the server
+60         if( recv(sock , server_reply , BUFSIZE , 0) < 0)
+61         {
+62             puts("recv failed");
+63             break;
+64         }
+65          
+66         puts("Server reply :");
+67         puts(server_reply);
+68     }
+69      
+70     puts("_STOP_ enviado, cerrar conexion");
+71     close(sock);
+72     return 0;
+73 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

@@ -1,0 +1,95 @@
+\hypertarget{_g-2361-06-_p3-echo__client_s_s_l_8c}{}\section{src/\+G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+SL.c File Reference}
+\label{_g-2361-06-_p3-echo__client_s_s_l_8c}\index{src/\+G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c@{src/\+G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/socket.\+h$>$}\\*
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+h\char`\"{}}\\*
+Include dependency graph for G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+SL.c\+:
+% FIG 0
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_g-2361-06-_p3-echo__client_s_s_l_8c_aeca034f67218340ecb2261a22c2f3dcd}{B\+U\+F\+S\+I\+ZE}~1024
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{_g-2361-06-_p3-echo__client_s_s_l_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c@{G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c}!B\+U\+F\+S\+I\+ZE@{B\+U\+F\+S\+I\+ZE}}
+\index{B\+U\+F\+S\+I\+ZE@{B\+U\+F\+S\+I\+ZE}!G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c@{G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c}}
+\subsubsection[{\texorpdfstring{B\+U\+F\+S\+I\+ZE}{BUFSIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+F\+S\+I\+ZE~1024}\hypertarget{_g-2361-06-_p3-echo__client_s_s_l_8c_aeca034f67218340ecb2261a22c2f3dcd}{}\label{_g-2361-06-_p3-echo__client_s_s_l_8c_aeca034f67218340ecb2261a22c2f3dcd}
+Tam. max. del buffer que se lee 
+
+\subsection{Function Documentation}
+\index{G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c@{G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c}!main@{main}}
+\index{main@{main}!G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c@{G-\/2361-\/06-\/\+P3-\/echo\+\_\+client\+S\+S\+L.\+c}}
+\subsubsection[{\texorpdfstring{main(int argc, char $\ast$argv[])}{main(int argc, char *argv[])}}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-echo__client_s_s_l_8c_a0ddf1224851353fc92bfbff6f499fa97}{}\label{_g-2361-06-_p3-echo__client_s_s_l_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+\begin{DoxyCode}
+21 \{
+22     \textcolor{keywordtype}{int} sock;
+23     \textcolor{keyword}{struct }sockaddr\_in server;
+24     \textcolor{keywordtype}{char} message[\hyperlink{_g-2361-06-_p3-echo__client_s_s_l_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE}] , server\_reply[\hyperlink{_g-2361-06-_p3-echo__client_s_s_l_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE}];
+25     SSL\_CTX* ctx=NULL;
+26     SSL * ssl=NULL;
+27 
+28     \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a937108af8fd0832377b084e24172ee41}{inicializar\_nivel\_SSL}();
+29     ctx=\hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a9d58ced0f4bab693b1c8d8b7eabe10a2}{fijar\_contexto\_SSL}(\hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a79e3c0e2a67a84f1df4ce57b575c3a87}{CLIENT\_CERT}, \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a837bedd17d376a9bf479c9ad952ad34e}{CLIENT\_KEY});
+30 
+31     \textcolor{comment}{//Create socket}
+32     sock = socket(AF\_INET , SOCK\_STREAM , 0);
+33     \textcolor{keywordflow}{if} (sock == -1)
+34     \{
+35         \textcolor{keywordflow}{return} 1;
+36     \}
+37      
+38     server.sin\_addr.s\_addr = inet\_addr(\textcolor{stringliteral}{"127.0.0.1"});
+39     server.sin\_family = AF\_INET;
+40     server.sin\_port = htons( 8888 );
+41  
+42     \textcolor{comment}{//Connect to remote server}
+43     \textcolor{keywordflow}{if} (connect(sock , (\textcolor{keyword}{struct} sockaddr *)&server , \textcolor{keyword}{sizeof}(server)) < 0)
+44     \{
+45         \textcolor{keywordflow}{return} 1;
+46     \}
+47     
+48     ssl=\hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a79add582c01289f85c0a81569ee3b73e}{conectar\_canal\_seguro\_SSL}(ctx, sock); 
+49 
+50     \textcolor{comment}{//keep communicating with server}
+51     \textcolor{keywordflow}{while}(strcmp(message, \textcolor{stringliteral}{"exit"}) != 0)
+52     \{
+53         fscanf(stdin, \textcolor{stringliteral}{"%s"} , message);
+54 
+55         \textcolor{keywordflow}{if}( \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a259d64855c617836e2b18975ee98029a}{enviar\_datos\_SSL}(ssl, message) < 0)
+56                 \textcolor{keywordflow}{break};
+57 
+58         \textcolor{keywordflow}{if}( \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_adc12a32e9564947c310da53ed910d66a}{recibir\_datos\_SSL}(ssl, message) < 0)
+59                 \textcolor{keywordflow}{break};
+60 
+61         puts(message);
+62 
+63     \}
+64     
+65     \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_af96fb6c9c2330e21ab617e949acf7a8c}{cerrar\_canal\_SSL}(&ssl, &ctx, sock);
+66     fflush(stdout);
+67     close(sock);
+68     \textcolor{keywordflow}{return} 0;
+69 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
+

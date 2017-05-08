@@ -1,0 +1,35 @@
+digraph "main"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="main",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="daemonizar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$daemon_8h.html#ae983f3eb0ff5cebb14c2ae123043df39",tooltip="Funcion para demonizar a un servicio. "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="servidor",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_server_8h.html#ae168ee6fdf31fd5ed7d49d45b89a65ed"];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="abrir_socketTCP",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_sockets_8h.html#af2f55f83053c8fdebb8da511cd65880c"];
+  Node3 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="acepta_conexion",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_sockets_8h.html#a172e85f036cff044fd5ba218460115c7"];
+  Node3 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="procesar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_server_8c.html#a3053755c82b5168bea9d848b1284f3ca"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="parseCommand",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_server_8c.html#ab7e145be74e8922987621cd01b8d446e"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="funcionUser",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#a210d0586ca040ccaa2104d06e224c108"];
+  Node7 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="funcionNick",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#ad060b5b909c563dc4d6d1737c9bfaaa9"];
+  Node7 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="funcionPing",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#a3280e4bc8a783afb907ef479e98b909e"];
+  Node7 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="liberaLista",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#a5fa63429b3483f20a469c23625c96820"];
+  Node7 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="funcionList",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#ae0239d5f3a7464bbaeb1726cd5bb363f"];
+  Node7 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="funcionPart",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#af6cded1bd771b1ca20653d1f81383a21"];
+  Node7 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="funcionAway",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#a92e862feef3db4374ed9b1b941edfae3"];
+  Node7 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="funcionMotd",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g-2361-06-_p1-_functions_8h.html#a76e61a7cc585c5d49d5609ffbef0bfb1"];
+}

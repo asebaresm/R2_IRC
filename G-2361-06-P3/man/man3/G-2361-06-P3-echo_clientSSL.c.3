@@ -1,0 +1,98 @@
+.TH "src/G-2361-06-P3-echo_clientSSL.c" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/G-2361-06-P3-echo_clientSSL.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/socket\&.h>\fP
+.br
+\fC#include <arpa/inet\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include '\&.\&./includes/G\-2361\-06\-P3\-funciones_ssl\&.h'\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBUFSIZE\fP   1024"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define BUFSIZE   1024"
+Tam\&. max\&. del buffer que se lee 
+.SH "Function Documentation"
+.PP 
+.SS "int main (int argc, char * argv[])"
+
+.PP
+.nf
+21 {
+22     int sock;
+23     struct sockaddr_in server;
+24     char message[BUFSIZE] , server_reply[BUFSIZE];
+25     SSL_CTX* ctx=NULL;
+26     SSL * ssl=NULL;
+27 
+28     inicializar_nivel_SSL();
+29     ctx=fijar_contexto_SSL(CLIENT_CERT, CLIENT_KEY);
+30 
+31     //Create socket
+32     sock = socket(AF_INET , SOCK_STREAM , 0);
+33     if (sock == -1)
+34     {
+35         return 1;
+36     }
+37      
+38     server\&.sin_addr\&.s_addr = inet_addr("127\&.0\&.0\&.1");
+39     server\&.sin_family = AF_INET;
+40     server\&.sin_port = htons( 8888 );
+41  
+42     //Connect to remote server
+43     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
+44     {
+45         return 1;
+46     }
+47     
+48     ssl=conectar_canal_seguro_SSL(ctx, sock); 
+49 
+50     //keep communicating with server
+51     while(strcmp(message, "exit") != 0)
+52     {
+53         fscanf(stdin, "%s" , message);
+54 
+55         if( enviar_datos_SSL(ssl, message) < 0)
+56                 break;
+57 
+58         if( recibir_datos_SSL(ssl, message) < 0)
+59                 break;
+60 
+61         puts(message);
+62 
+63     }
+64     
+65     cerrar_canal_SSL(&ssl, &ctx, sock);
+66     fflush(stdout);
+67     close(sock);
+68     return 0;
+69 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code\&.

@@ -1,0 +1,1253 @@
+\hypertarget{user__commands_8h}{}\section{includes/user\+\_\+commands.h File Reference}
+\label{user__commands_8h}\index{includes/user\+\_\+commands.\+h@{includes/user\+\_\+commands.\+h}}
+
+
+Declaraciones de funciones, definición de tipos\+: implementación de funciones I\+RC de usuario.  
+
+
+{\ttfamily \#include $<$redes2/ircxchat.\+h$>$}\\*
+{\ttfamily \#include $<$redes2/irc.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}conexion\+\_\+tcp.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}aux\+\_\+functions.\+h\char`\"{}}\\*
+Include dependency graph for user\+\_\+commands.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef int($\ast$ \hyperlink{user__commands_8h_af6812f6f50dd2285ed021d5f1bd04b7a}{p\+\_\+funcion}) (char $\ast$)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{user__commands_8h_a4dd6e13bec86782e1c29bc67c6040b95}{punotice} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario N\+O\+T\+I\+CE Send a notice to a user, channel or server.
+\begin{DoxyItemize}
+\item N\+O\+T\+I\+CE $<$nick$>$ $<$text$>$ Send a notice to a user. Ex\+: /\+N\+O\+T\+I\+CE Blah hi, how are you?
+\item N\+O\+T\+I\+CE $<$\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}$>$ $<$text$>$ Send a notice to a channel. Ex\+: /\+N\+O\+T\+I\+CE \#room Hi all, this is annoying. 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a365e633f087eadb08ef23ec8d20abaf6}{pucycle} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario C\+Y\+C\+LE Cycles the given channel(s). This command is equivilent to sending a P\+A\+RT then a J\+O\+IN command.
+\begin{DoxyItemize}
+\item Syntax\+: C\+Y\+C\+LE $<$chan1$>$,$<$chan2$>$,$<$chan3$>$ ... 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a4d9661d482929bb458b85e70c6170d74}{pumotd} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario M\+O\+TD Displays the Message Of The Day of the I\+RC Server you are logged onto.
+\begin{DoxyItemize}
+\item Syntax\+: M\+O\+TD M\+O\+TD $<$server$>$ 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a8e0f94275dfaa1e7bc564d3555b9402e}{pulusers} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario L\+U\+S\+E\+RS Provides Local and Global user information (Such as Current and Maximum user count).
+\begin{DoxyItemize}
+\item Syntax\+: L\+U\+S\+E\+RS \mbox{[}server\mbox{]}. 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a448b3ec98632740523ee7a20c5bc81dd}{pumode} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_a1af5de7d9cb449f78a7f511d28c64ba9}{pupartall} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_ae822b5550f387a177b98ec2c98e26b2d}{puback} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_a8a3e6d36d02bc24a451f806de272c691}{puunaway} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_ab51cd004b9746694fb19829952779c6b}{puoper} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_a8b10f809b49ed8686a693efc87f144e5}{puban} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_a546e9e7086ec6347e0d3dffef5f11694}{pufsend} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_aea754f971df97746d113aaedc41c8cbf}{pufaccept} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_a79c4db4db149aa147f4b508b999febe2}{pufclose} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_a0a15138d8927dd543805edcc035b8132}{putopic} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_ac7817f0890faebb4fb8f13cc6ee5c838}{pukick} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_a856ef0800c85e0f20fad89ff8070b3f9}{puinvite} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario I\+N\+V\+I\+TE Sends a user an Invitation to join a particular channel. If the channel is +i, you must be an Operator to use this command, otherwise any user may use the command. Invite without parameters lists the channels you have been invited to.
+\begin{DoxyItemize}
+\item Syntax\+: I\+N\+V\+I\+TE $<$user$>$ $<$channel$>$ 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a08bd5900f288bfb5712d3f5ca6e624b6}{puwhois} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario W\+H\+O\+IS Shows information about the user in question, such as their \char`\"{}\+Name\char`\"{}, channels they are currently in, their hostmask, etc.
+\begin{DoxyItemize}
+\item Syntax\+: W\+H\+O\+IS $<$user$>$ 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a84e1c4ef3c7307f98a3d2267ae0ce121}{puaway} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario A\+W\+AY. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a93cab9103f7f4815ff20b47dcf0c117c}{punick} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario N\+I\+CK Changes your \char`\"{}\+Online Identity\char`\"{} on a server. All those in the channel you are in will be alerted of your nickname change.
+\begin{DoxyItemize}
+\item Syntax\+: N\+I\+CK $<$new nickname$>$=\char`\"{}\char`\"{}$>$ 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_ad738a7d361fe18d7774bab370a4454a8}{puquit} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario Q\+U\+IT En principio solo se llama con\+: \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a2d0a8c0565fc24fdd54dc68de05e6474}{puleave} (char $\ast$command)
+\item 
+int \hyperlink{user__commands_8h_adc5c5d5b72106761066833022c9bc83d}{pupart} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario P\+A\+RT. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_add059d444d6e29f6e18f67bda6c21878}{pujoin} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario J\+O\+IN. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_aef4e57bf112f9c4a2d51b1a314df0b63}{puwho} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario W\+HO. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_abaae116595df34db33e65e3d9d225103}{punames} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario N\+A\+M\+ES. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a322cdf0baafadcd1784ab6c8f6d48f04}{pumsg} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario M\+SG y P\+R\+I\+V\+M\+SG. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a2da90a4a7474a7a220ab1588dedd7ef4}{pulist} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario L\+I\+ST. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a9b25b9a254568a07285fc068e01d9919}{puhelp} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario H\+E\+LP. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a05216fb56a43c8fa44b5bc726692b064}{pdefault} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando desconocido para el cliente. \end{DoxyCompactList}\item 
+int \hyperlink{user__commands_8h_a8149f7beb37fd789f142acb2113efd1c}{puquery} (char $\ast$command)
+\begin{DoxyCompactList}\small\item\em Comando de usuario Q\+U\+E\+RY Use the \char`\"{}/query $<$user$>$\char`\"{} command to specify that every message you type should be directed to a single user. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{user__commands_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\+\_\+user}
+\item 
+char \hyperlink{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}{nick\+\_\+user} \mbox{[}\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{M\+A\+X\+D\+A\+TA}\mbox{]}
+\item 
+pthread\+\_\+t \hyperlink{user__commands_8h_ab5efd1efa144e252f4c5312ae57bea2e}{recv\+\_\+tid}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Declaraciones de funciones, definición de tipos\+: implementación de funciones I\+RC de usuario. 
+
+\begin{DoxyAuthor}{Author}
+Alfonso Sebares 
+
+Beatriz de Pablo 
+
+Celia Mateos 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+20/03/17 
+\end{DoxyDate}
+
+
+\subsection{Typedef Documentation}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!p\+\_\+funcion@{p\+\_\+funcion}}
+\index{p\+\_\+funcion@{p\+\_\+funcion}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{p\+\_\+funcion}{p_funcion}}]{\setlength{\rightskip}{0pt plus 5cm}typedef int($\ast$ p\+\_\+funcion) (char $\ast$)}\hypertarget{user__commands_8h_af6812f6f50dd2285ed021d5f1bd04b7a}{}\label{user__commands_8h_af6812f6f50dd2285ed021d5f1bd04b7a}
+
+
+\subsection{Function Documentation}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pdefault@{pdefault}}
+\index{pdefault@{pdefault}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pdefault(char $\ast$command)}{pdefault(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pdefault (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a05216fb56a43c8fa44b5bc726692b064}{}\label{user__commands_8h_a05216fb56a43c8fa44b5bc726692b064}
+
+
+Comando desconocido para el cliente. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+379                            \{ 
+380         IRCInterface\_WriteSystem(\hyperlink{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}{nick\_user}, \textcolor{stringliteral}{"No se ha podido ejecutar el comando: "});
+381         IRCInterface\_WriteSystem(\hyperlink{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}{nick\_user}, command);
+382         \textcolor{keywordflow}{return} 0;
+383 \}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puaway@{puaway}}
+\index{puaway@{puaway}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puaway(char $\ast$command)}{puaway(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puaway (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a84e1c4ef3c7307f98a3d2267ae0ce121}{}\label{user__commands_8h_a84e1c4ef3c7307f98a3d2267ae0ce121}
+
+
+Comando de usuario A\+W\+AY. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+409                          \{
+410         \textcolor{keywordtype}{char}* command\_enviar;
+411         \textcolor{keywordtype}{char} *reason;
+412 
+413         IRCUserParse\_Away (command, &reason);
+414         IRCMsg\_Away (&command\_enviar, NULL, reason);
+415         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar command\_enviar en AWAY: %s \(\backslash\)n"},command\_enviar);
+416 
+417         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+418         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+419         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(2, command\_enviar, reason);
+420         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+421 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 2
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puback@{puback}}
+\index{puback@{puback}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puback(char $\ast$command)}{puback(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puback (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_ae822b5550f387a177b98ec2c98e26b2d}{}\label{user__commands_8h_ae822b5550f387a177b98ec2c98e26b2d}
+
+\begin{DoxyCode}
+40 \{ \textcolor{keywordflow}{return} -1; \}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puban@{puban}}
+\index{puban@{puban}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puban(char $\ast$command)}{puban(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puban (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a8b10f809b49ed8686a693efc87f144e5}{}\label{user__commands_8h_a8b10f809b49ed8686a693efc87f144e5}
+
+\begin{DoxyCode}
+43 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{// ya se envia con los botones}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pucycle@{pucycle}}
+\index{pucycle@{pucycle}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pucycle(char $\ast$command)}{pucycle(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pucycle (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a365e633f087eadb08ef23ec8d20abaf6}{}\label{user__commands_8h_a365e633f087eadb08ef23ec8d20abaf6}
+
+
+Comando de usuario C\+Y\+C\+LE Cycles the given channel(s). This command is equivilent to sending a P\+A\+RT then a J\+O\+IN command.
+\begin{DoxyItemize}
+\item Syntax\+: C\+Y\+C\+LE $<$chan1$>$,$<$chan2$>$,$<$chan3$>$ ... 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+608                           \{
+609 
+610         \textcolor{keywordtype}{char}* respuesta = NULL;
+611     \textcolor{keywordtype}{char}** \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target};
+612     \textcolor{keywordtype}{int} numchannels=0;
+613     \textcolor{keywordtype}{int} i ;
+614 
+615     IRCUserParse\_Cycle (command, &target, &numchannels);
+616     \textcolor{keywordflow}{for} (i = 0; i< numchannels; i++)\{
+617         IRCMsg\_Part (&respuesta, NULL, target[i], \textcolor{stringliteral}{"Saliendo"});
+618                 \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, respuesta, strlen(respuesta));
+619         IRCInterface\_PlaneRegisterOutMessage (respuesta);
+620         free(respuesta);
+621         IRCMsg\_Join(&respuesta, NULL, target[i], NULL, NULL);
+622                 \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, respuesta, strlen(respuesta));
+623         IRCInterface\_PlaneRegisterOutMessage (respuesta);
+624         free(respuesta);
+625     \}
+626         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(1, respuesta);
+627     \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};   
+628 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 3
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pufaccept@{pufaccept}}
+\index{pufaccept@{pufaccept}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pufaccept(char $\ast$command)}{pufaccept(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pufaccept (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_aea754f971df97746d113aaedc41c8cbf}{}\label{user__commands_8h_aea754f971df97746d113aaedc41c8cbf}
+
+\begin{DoxyCode}
+45 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{//se envia con los ficheros}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pufclose@{pufclose}}
+\index{pufclose@{pufclose}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pufclose(char $\ast$command)}{pufclose(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pufclose (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a79c4db4db149aa147f4b508b999febe2}{}\label{user__commands_8h_a79c4db4db149aa147f4b508b999febe2}
+
+\begin{DoxyCode}
+46 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{//se envia con los ficheros}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pufsend@{pufsend}}
+\index{pufsend@{pufsend}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pufsend(char $\ast$command)}{pufsend(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pufsend (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a546e9e7086ec6347e0d3dffef5f11694}{}\label{user__commands_8h_a546e9e7086ec6347e0d3dffef5f11694}
+
+\begin{DoxyCode}
+44 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{//se envia con los ficheros}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puhelp@{puhelp}}
+\index{puhelp@{puhelp}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puhelp(char $\ast$command)}{puhelp(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puhelp (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a9b25b9a254568a07285fc068e01d9919}{}\label{user__commands_8h_a9b25b9a254568a07285fc068e01d9919}
+
+
+Comando de usuario H\+E\+LP. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+361                          \{
+362         \textcolor{keywordtype}{char}* comando;
+363         \textcolor{keywordtype}{char} command\_enviar[\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}];
+364 
+365         IRCUserParse\_Help (command, &comando);
+366         sprintf(command\_enviar, \textcolor{stringliteral}{"HELP %s\(\backslash\)r\(\backslash\)n"}, comando?comando:\textcolor{stringliteral}{""});
+367         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar)); 
+368         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+369         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(1, comando);
+370         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+371 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 4
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puinvite@{puinvite}}
+\index{puinvite@{puinvite}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puinvite(char $\ast$command)}{puinvite(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puinvite (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a856ef0800c85e0f20fad89ff8070b3f9}{}\label{user__commands_8h_a856ef0800c85e0f20fad89ff8070b3f9}
+
+
+Comando de usuario I\+N\+V\+I\+TE Sends a user an Invitation to join a particular channel. If the channel is +i, you must be an Operator to use this command, otherwise any user may use the command. Invite without parameters lists the channels you have been invited to.
+\begin{DoxyItemize}
+\item Syntax\+: I\+N\+V\+I\+TE $<$user$>$ $<$channel$>$ 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+458                            \{
+459 
+460         \textcolor{keywordtype}{char}* command\_enviar = NULL, *\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix} = NULL, *\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick} = NULL, *
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel} = NULL;
+461 
+462         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje reciido en UINVITE: %s \(\backslash\)n"},command);
+463 
+464         IRCParse\_Invite (command, &prefix, &nick, &channel); \textcolor{comment}{//la parseo con esta funcion del server porque
+       no hay del user}
+465         g\_print(\textcolor{stringliteral}{"\(\backslash\)t prefix: %s \(\backslash\)n"},prefix);
+466         g\_print(\textcolor{stringliteral}{"\(\backslash\)t nick: %s \(\backslash\)n"},nick);
+467         g\_print(\textcolor{stringliteral}{"\(\backslash\)t channel: %s \(\backslash\)n"},channel);
+468 
+469         IRCMsg\_Invite (&command\_enviar, prefix, nick, channel);
+470         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar en UINVITE: %s \(\backslash\)n"}, command\_enviar);
+471 
+472         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+473         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+474         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(4, command\_enviar, channel, nick, prefix);
+475         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+476 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 5
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pujoin@{pujoin}}
+\index{pujoin@{pujoin}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pujoin(char $\ast$command)}{pujoin(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pujoin (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_add059d444d6e29f6e18f67bda6c21878}{}\label{user__commands_8h_add059d444d6e29f6e18f67bda6c21878}
+
+
+Comando de usuario J\+O\+IN. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+141                          \{ 
+142 
+143         \textcolor{keywordtype}{long} ret = -1;
+144         \textcolor{keywordtype}{int} retorno = -1;
+145 
+146         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key} = NULL;
+147         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg} = NULL;
+148         \textcolor{keywordtype}{char}* channels = NULL;
+149         \textcolor{keywordtype}{char}* passwords = NULL;
+150         \textcolor{keywordtype}{char}* command\_enviar = NULL;
+151         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix} = NULL;
+152         \textcolor{keywordtype}{char} canales\_y\_passwords [\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}] = \{0\};
+153 
+154         g\_print(\hyperlink{types_8h_af54a5a977c0c499323d656315f008ee0}{MAG} \textcolor{stringliteral}{"\(\backslash\)n<< [user command] UJOIN - command = %s\(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET}, command);
+155 
+156         ret = IRCUserParse\_Join(command, &channels, &passwords);
+157         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+158                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In pujoin: IRCUserParse\_Join no devolvio IRC\_OK\(\backslash\)n"} 
+      \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+159                 \textcolor{keywordflow}{return} -1;
+160         \}
+161         g\_print(\textcolor{stringliteral}{"\(\backslash\)t command: %s \(\backslash\)n"},command);
+162         g\_print(\textcolor{stringliteral}{"\(\backslash\)t channels : %s \(\backslash\)n"},channels);
+163         g\_print(\textcolor{stringliteral}{"\(\backslash\)t passwords : %s \(\backslash\)n"},passwords);
+164 
+165         sprintf(canales\_y\_passwords,\textcolor{stringliteral}{"%s %s"},channels,passwords?passwords:\textcolor{stringliteral}{""});
+166 
+167         \textcolor{comment}{//enviar varios canales}
+168         ret = IRCMsg\_Join (&command\_enviar, prefix, canales\_y\_passwords, key, msg);
+169         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+170                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In pujoin: IRCMsg\_Join no devolvio IRC\_OK\(\backslash\)n"} 
+      \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+171                 \textcolor{keywordflow}{return} -1;
+172         \}
+173         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar command\_enviar: %s \(\backslash\)n"},command\_enviar);
+174         
+175         retorno = \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user},command\_enviar, strlen(command\_enviar));
+176         \textcolor{keywordflow}{if}(retorno < 0)\{
+177                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In pujoin: enviarDatos() devolvio error (ver secuencia en .log)\(\backslash\)n\(\backslash\)t
+      \(\backslash\)tEl cliente se cerrará.\(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+178                 exit(1);
+179         \}
+180         \textcolor{keywordflow}{if}(retorno == 0)\{ \textcolor{comment}{//timeout }
+181                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In pujoin: enviarDatos() envió 0 Bytes(ver secuencia en .log)\(\backslash\)n\(\backslash\)t\(\backslash\)t
+      (Timeout de conexión probablemente)\(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+182                 exit(1);
+183         \}
+184 
+185         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);   
+186         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(6, command\_enviar, channels, passwords, prefix, key, msg);
+187         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK}; 
+188 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 6
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pukick@{pukick}}
+\index{pukick@{pukick}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pukick(char $\ast$command)}{pukick(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pukick (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_ac7817f0890faebb4fb8f13cc6ee5c838}{}\label{user__commands_8h_ac7817f0890faebb4fb8f13cc6ee5c838}
+
+\begin{DoxyCode}
+48 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{//se envia con los botones}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puleave@{puleave}}
+\index{puleave@{puleave}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puleave(char $\ast$command)}{puleave(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puleave (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a2d0a8c0565fc24fdd54dc68de05e6474}{}\label{user__commands_8h_a2d0a8c0565fc24fdd54dc68de05e6474}
+
+\begin{DoxyCode}
+49 \{ \textcolor{keywordflow}{return} -1; \}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pulist@{pulist}}
+\index{pulist@{pulist}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pulist(char $\ast$command)}{pulist(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pulist (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a2da90a4a7474a7a220ab1588dedd7ef4}{}\label{user__commands_8h_a2da90a4a7474a7a220ab1588dedd7ef4}
+
+
+Comando de usuario L\+I\+ST. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+319                          \{ 
+320         \textcolor{keywordtype}{long} ret = -1;
+321         \textcolor{keywordtype}{int} retorno = -1;
+322         \textcolor{keywordtype}{char} *\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel} = NULL;
+323         \textcolor{keywordtype}{char} *searchstring = NULL;
+324         \textcolor{keywordtype}{char}* command\_enviar=NULL;
+325         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix} = NULL;
+326 
+327         ret = IRCUserParse\_List (command, &channel, &searchstring);
+328         g\_print(\textcolor{stringliteral}{"\(\backslash\)t command: %s \(\backslash\)n"}, command);
+329         g\_print(\textcolor{stringliteral}{"\(\backslash\)t channel: %s \(\backslash\)n"}, channel);
+330         g\_print(\textcolor{stringliteral}{"\(\backslash\)t searchstring: %s \(\backslash\)n"}, searchstring);
+331         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+332                 g\_print(\textcolor{stringliteral}{"ERROR - pulist - IRCUserParse\_List \(\backslash\)n"});
+333                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+334         \}
+335 
+336         ret = IRCMsg\_List (&command\_enviar, prefix, channel, searchstring);
+337         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+338                 g\_print(\textcolor{stringliteral}{"ERROR - pulist - IRCMsg\_List \(\backslash\)n"});
+339                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+340         \}
+341 
+342         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar command\_enviar: %s \(\backslash\)n"},command\_enviar);
+343         \textcolor{comment}{//sem\_wait(&recepcionTCP);}
+344         retorno = \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user},command\_enviar, strlen(command\_enviar));
+345         \textcolor{keywordflow}{if}(retorno == \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR})\{
+346                 g\_print(\textcolor{stringliteral}{"ERROR: IRCInterface\_NewCommandText - enviarDatos - list\(\backslash\)n"});
+347                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+348         \}
+349 
+350         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+351         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(4, command\_enviar, channel, searchstring, prefix);
+352         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+353 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 7
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pulusers@{pulusers}}
+\index{pulusers@{pulusers}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pulusers(char $\ast$command)}{pulusers(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pulusers (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a8e0f94275dfaa1e7bc564d3555b9402e}{}\label{user__commands_8h_a8e0f94275dfaa1e7bc564d3555b9402e}
+
+
+Comando de usuario L\+U\+S\+E\+RS Provides Local and Global user information (Such as Current and Maximum user count).
+\begin{DoxyItemize}
+\item Syntax\+: L\+U\+S\+E\+RS \mbox{[}server\mbox{]}. 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+513                            \{
+514 
+515         \textcolor{keywordtype}{char} command\_enviar[\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}];
+516         \textcolor{keywordtype}{char}* server;
+517 
+518         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje recibido en ULUSERS: %s \(\backslash\)n"}, command);
+519         IRCUserParse\_Lusers (command, &server);
+520 
+521         g\_print(\textcolor{stringliteral}{"\(\backslash\)t server: %s \(\backslash\)n"}, server);
+522         sprintf(command\_enviar, \textcolor{stringliteral}{"LUSERS %s\(\backslash\)n\(\backslash\)r"}, server );
+523         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar en ULUSERS: %s \(\backslash\)n"}, command\_enviar);
+524 
+525         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+526         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+527         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(1, server);
+528         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+529 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 8
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pumode@{pumode}}
+\index{pumode@{pumode}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pumode(char $\ast$command)}{pumode(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pumode (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a448b3ec98632740523ee7a20c5bc81dd}{}\label{user__commands_8h_a448b3ec98632740523ee7a20c5bc81dd}
+
+\begin{DoxyCode}
+38 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{// ya se envia con los botones}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pumotd@{pumotd}}
+\index{pumotd@{pumotd}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pumotd(char $\ast$command)}{pumotd(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pumotd (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a4d9661d482929bb458b85e70c6170d74}{}\label{user__commands_8h_a4d9661d482929bb458b85e70c6170d74}
+
+
+Comando de usuario M\+O\+TD Displays the Message Of The Day of the I\+RC Server you are logged onto.
+\begin{DoxyItemize}
+\item Syntax\+: M\+O\+TD M\+O\+TD $<$server$>$ 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+541                          \{
+542 
+543         \textcolor{keywordtype}{char} command\_enviar[\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}];
+544         \textcolor{keywordtype}{char}* server;
+545 
+546         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje recibido en UMOTD: %s \(\backslash\)n"}, command);
+547         IRCUserParse\_Motd (command, &server);
+548         g\_print(\textcolor{stringliteral}{"\(\backslash\)t server: %s \(\backslash\)n"}, server);
+549         sprintf(command\_enviar, \textcolor{stringliteral}{"MOTD %s\(\backslash\)n\(\backslash\)r"}, server );
+550         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar en UMOTD: %s \(\backslash\)n"}, command\_enviar);
+551 
+552         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+553         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+554         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(1, server);
+555         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+556 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 9
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pumsg@{pumsg}}
+\index{pumsg@{pumsg}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pumsg(char $\ast$command)}{pumsg(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pumsg (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a322cdf0baafadcd1784ab6c8f6d48f04}{}\label{user__commands_8h_a322cdf0baafadcd1784ab6c8f6d48f04}
+
+
+Comando de usuario M\+SG y P\+R\+I\+V\+M\+SG. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+277                         \{
+278         \textcolor{keywordtype}{char}* nickorchannel;
+279         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg};
+280         \textcolor{keywordtype}{char} *command\_enviar = NULL;
+281         \textcolor{keywordtype}{char} *\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix} = NULL;
+282         \textcolor{keywordtype}{int} ret;
+283 
+284         \textcolor{comment}{//<< privmsg gomupo :probando}
+285         \textcolor{comment}{//>> :gomupo!~gonzalo@119.181.218.87.dynamic.jazztel.es PRIVMSG gomupo :probando}
+286         ret = IRCUserParse\_Msg(command, &nickorchannel, &msg);
+287         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+288                 g\_print(\textcolor{stringliteral}{"ERROR - IRCInterface\_NewCommandText - UMSG - IRCUserParse\_Msg\(\backslash\)n"});
+289                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+290         \}
+291         g\_print(\textcolor{stringliteral}{"\(\backslash\)t command: %s \(\backslash\)n"}, command);
+292         g\_print(\textcolor{stringliteral}{"\(\backslash\)t nickorchannel: %s \(\backslash\)n"}, nickorchannel);
+293         g\_print(\textcolor{stringliteral}{"\(\backslash\)t msg: %s \(\backslash\)n"}, msg);
+294 
+295         ret = IRCMsg\_Privmsg (&command\_enviar, prefix, nickorchannel, msg);
+296         \textcolor{keywordflow}{if}(ret == \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR})\{
+297                 g\_print(\textcolor{stringliteral}{"ERROR: IRCInterface\_NewCommandText - IRCMsg\_Privmsg \(\backslash\)n"});
+298                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+299         \}
+300 
+301         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar command\_enviar en pumsg: %s \(\backslash\)n"},command\_enviar);
+302         ret = \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+303         \textcolor{keywordflow}{if}(ret == \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR})\{
+304                 g\_print(\textcolor{stringliteral}{"ERROR: IRCInterface\_NewCommandText - enviarDatos - Names\(\backslash\)n"});
+305                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+306         \}
+307         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+308         \textcolor{comment}{//No recibimos nada en este comando, los mensajes de otros usuarios los recibimos por otro hilo}
+309         IRCInterface\_WriteChannel (nickorchannel, \hyperlink{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}{nick\_user}, msg);
+310         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(4, command\_enviar, nickorchannel, prefix, msg);
+311         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+312 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 10
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!punames@{punames}}
+\index{punames@{punames}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{punames(char $\ast$command)}{punames(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int punames (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_abaae116595df34db33e65e3d9d225103}{}\label{user__commands_8h_abaae116595df34db33e65e3d9d225103}
+
+
+Comando de usuario N\+A\+M\+ES. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+74                           \{ 
+75         \textcolor{comment}{//<< NAMES #redes2}
+76         \textcolor{comment}{//>> :irc.eps.net 353 gomupo = #redes2 :flowey cgs gomupo Mamo\_1 qwerttyue asdfgh alpeh ArcaFacts
+       BotGram}
+77         \textcolor{keywordtype}{char}* channels;
+78         \textcolor{keywordtype}{char}* passwords;
+79         \textcolor{keywordtype}{char}* command\_enviar;
+80         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix} = NULL;
+81         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target} = NULL;
+82         \textcolor{keywordtype}{char} channels\_passwords [\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}] = \{0\};
+83         \textcolor{keywordtype}{int} ret;
+84 
+85         g\_print(\hyperlink{types_8h_af54a5a977c0c499323d656315f008ee0}{MAG} \textcolor{stringliteral}{"\(\backslash\)n<< [user command] NOTICE - command = %s\(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET}, command);
+86         \textcolor{comment}{/*Comprobar si es un comando names sin argumentos, en caso afirmativo no utilizar la función de
+       Eloy ya que}
+87 \textcolor{comment}{        parece que falla, y mandarlo tal cual*/}
+88         \textcolor{comment}{//Usamos strcasecmp para que den igual minusculas}
+89         \textcolor{keywordflow}{if}((0 == strcasecmp(command,\textcolor{stringliteral}{"/names"})) && (strlen(command) == strlen(\textcolor{stringliteral}{"/names"})))\{
+90                 g\_print(\textcolor{stringliteral}{"\(\backslash\)t Command names sin argumentos: %s \(\backslash\)n"},command);
+91                 ret = IRCMsg\_Names (&command\_enviar, prefix, channels\_passwords, target);
+92                 \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+93                         g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In punames: IRCMsg\_Names no devolvio IRC\_OK\(\backslash\)n"} 
+      \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+94                         \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+95                 \}
+96                 g\_print(\textcolor{stringliteral}{"\(\backslash\)t command\_enviar names sin argumentos: %s \(\backslash\)n"},command\_enviar);
+97                 ret = \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user},command\_enviar, strlen(command\_enviar))
+      ;
+98                 \textcolor{keywordflow}{if}(ret == \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR})\{
+99                         g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In punames: enviarDatos() devolvio error (ver .log)\(\backslash\)n\(\backslash\)t\(\backslash\)tEl
+       cliente se cerrará.\(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+100                         exit(1);
+101                 \}
+102                 \textcolor{keywordflow}{if}(ret == 0)\{ \textcolor{comment}{//timeout seguramente}
+103                         g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In punames: enviarDatos() mandó 0 Bytes(ver .log)\(\backslash\)n\(\backslash\)t\(\backslash\)t
+      (Timeout)El cliente se cerrará.\(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+104                         exit(1);
+105                 \}
+106                 IRCInterface\_PlaneRegisterOutMessage(command);
+107                 free(command\_enviar);
+108                 \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+109         \}
+110 
+111         ret = IRCUserParse\_Names(command, &channels, &passwords);
+112         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+113                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In punames: IRCUserParse\_Names no devolvio IRC\_OK\(\backslash\)n"} 
+      \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+114                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+115         \}
+116         g\_print(\textcolor{stringliteral}{"\(\backslash\)t command: %s \(\backslash\)n"},command);
+117         g\_print(\textcolor{stringliteral}{"\(\backslash\)t channels : %s \(\backslash\)n"},channels);
+118         g\_print(\textcolor{stringliteral}{"\(\backslash\)t passwords : %s \(\backslash\)n"},passwords);
+119 
+120         sprintf(channels\_passwords,\textcolor{stringliteral}{"%s %s"},channels,passwords?passwords:\textcolor{stringliteral}{""});
+121 
+122         ret = IRCMsg\_Names (&command\_enviar, prefix, channels\_passwords, target);
+123         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+124                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - In punames: IRCMsg\_Names no devolvio IRC\_OK\(\backslash\)n"} 
+      \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+125                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+126         \}
+127         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar command\_enviar: %s \(\backslash\)n"},command\_enviar);
+128 
+129         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+130 
+131         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+132         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(5, command\_enviar, channels, passwords, prefix, target);
+133         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+134 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 11
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!punick@{punick}}
+\index{punick@{punick}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{punick(char $\ast$command)}{punick(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int punick (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a93cab9103f7f4815ff20b47dcf0c117c}{}\label{user__commands_8h_a93cab9103f7f4815ff20b47dcf0c117c}
+
+
+Comando de usuario N\+I\+CK Changes your \char`\"{}\+Online Identity\char`\"{} on a server. All those in the channel you are in will be alerted of your nickname change.
+\begin{DoxyItemize}
+\item Syntax\+: N\+I\+CK $<$new nickname$>$=\char`\"{}\char`\"{}$>$ 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+432                          \{
+433 
+434         \textcolor{keywordtype}{char}* command\_enviar;
+435         \textcolor{keywordtype}{char} *newnick;
+436 
+437         IRCUserParse\_Nick (command, &newnick);
+438         IRCMsg\_Nick (&command\_enviar, NULL, newnick, NULL);
+439         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar command\_enviar en NICK: %s \(\backslash\)n"},command\_enviar);
+440 
+441         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+442         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+443         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(2, command\_enviar, newnick);
+444         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+445 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 12
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!punotice@{punotice}}
+\index{punotice@{punotice}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{punotice(char $\ast$command)}{punotice(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int punotice (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a4dd6e13bec86782e1c29bc67c6040b95}{}\label{user__commands_8h_a4dd6e13bec86782e1c29bc67c6040b95}
+
+
+Comando de usuario N\+O\+T\+I\+CE Send a notice to a user, channel or server.
+\begin{DoxyItemize}
+\item N\+O\+T\+I\+CE $<$nick$>$ $<$text$>$ Send a notice to a user. Ex\+: /\+N\+O\+T\+I\+CE Blah hi, how are you?
+\item N\+O\+T\+I\+CE $<$\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}$>$ $<$text$>$ Send a notice to a channel. Ex\+: /\+N\+O\+T\+I\+CE \#room Hi all, this is annoying. 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+573                            \{
+574 
+575         \textcolor{keywordtype}{char} *command\_enviar, mensaje[\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}];
+576         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}, *\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg};
+577 
+578         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje recibido en UNOTICE: %s \(\backslash\)n"}, command);
+579         IRCUserParse\_Notice (command, &target, &msg);
+580 
+581         IRCMsg\_Notice (&command\_enviar, NULL, target, msg);
+582 
+583         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar en UNOTICE: %s \(\backslash\)n"}, command\_enviar);
+584         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+585         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+586 
+587         \textcolor{keywordflow}{if}(target[0] == \textcolor{charliteral}{'#'})\{
+588                 sprintf(mensaje, \textcolor{stringliteral}{">%s/%s<"}, \hyperlink{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}{nick\_user}, target);
+589                 IRCInterface\_WriteChannel (target, mensaje, msg);
+590         \} \textcolor{keywordflow}{else} \{
+591                 sprintf(mensaje, \textcolor{stringliteral}{">%s<"}, \hyperlink{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}{nick\_user});           
+592                 IRCInterface\_AddNewChannel (target, 0);
+593                 IRCInterface\_WriteChannel (target, mensaje, msg);
+594         \}
+595         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(3, command\_enviar, target, msg);
+596         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+597 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 13
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puoper@{puoper}}
+\index{puoper@{puoper}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puoper(char $\ast$command)}{puoper(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puoper (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_ab51cd004b9746694fb19829952779c6b}{}\label{user__commands_8h_ab51cd004b9746694fb19829952779c6b}
+
+\begin{DoxyCode}
+42 \{ \textcolor{keywordflow}{return} -1; \}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pupart@{pupart}}
+\index{pupart@{pupart}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pupart(char $\ast$command)}{pupart(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pupart (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_adc5c5d5b72106761066833022c9bc83d}{}\label{user__commands_8h_adc5c5d5b72106761066833022c9bc83d}
+
+
+Comando de usuario P\+A\+RT. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+391                          \{
+392         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel};
+393         \textcolor{keywordtype}{char} command\_enviar[\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}];
+394 
+395         IRCUserParse\_Part(command, &channel);
+396         sprintf(command\_enviar, \textcolor{stringliteral}{"PART %s :Saliendo\(\backslash\)r\(\backslash\)n"}, channel?channel:IRCInterface\_ActiveChannelName());
+397 
+398         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+399         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+400         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(1, channel);
+401         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+402 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 14
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!pupartall@{pupartall}}
+\index{pupartall@{pupartall}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{pupartall(char $\ast$command)}{pupartall(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int pupartall (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a1af5de7d9cb449f78a7f511d28c64ba9}{}\label{user__commands_8h_a1af5de7d9cb449f78a7f511d28c64ba9}
+
+\begin{DoxyCode}
+39 \{ \textcolor{keywordflow}{return} -1; \}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puquery@{puquery}}
+\index{puquery@{puquery}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puquery(char $\ast$command)}{puquery(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puquery (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a8149f7beb37fd789f142acb2113efd1c}{}\label{user__commands_8h_a8149f7beb37fd789f142acb2113efd1c}
+
+
+Comando de usuario Q\+U\+E\+RY Use the \char`\"{}/query $<$user$>$\char`\"{} command to specify that every message you type should be directed to a single user. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+637                           \{
+638 
+639         \textcolor{keywordtype}{char}* nickorchannel, *\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg};
+640 
+641         IRCUserParse\_Query (command, &nickorchannel, &msg);
+642         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje recibido en UQUERY: %s \(\backslash\)n"}, command);
+643         g\_print(\textcolor{stringliteral}{"\(\backslash\)t nickorchannel: %s \(\backslash\)n"}, nickorchannel);
+644         g\_print(\textcolor{stringliteral}{"\(\backslash\)t msg: %s \(\backslash\)n"}, msg);
+645 
+646         \textcolor{keywordflow}{if}(nickorchannel != NULL)\{
+647                 IRCInterface\_AddNewChannel (nickorchannel, 0);
+648         \}
+649         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(2, nickorchannel, msg);
+650     \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+651 \}\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 15
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puquit@{puquit}}
+\index{puquit@{puquit}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puquit(char $\ast$command)}{puquit(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puquit (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_ad738a7d361fe18d7774bab370a4454a8}{}\label{user__commands_8h_ad738a7d361fe18d7774bab370a4454a8}
+
+
+Comando de usuario Q\+U\+IT En principio solo se llama con\+: 
+
+
+\begin{DoxyItemize}
+\item Callback\+: Boton \textquotesingle{}Desconectar\textquotesingle{} -\/$>$ \hyperlink{xchat2_8c_a8bf0424ef7f845be79a056e9aed56fe2}{I\+R\+C\+Interface\+\_\+\+Disconnect\+Server(char $\ast$server, int port)}
+\item Callback\+: \textquotesingle{}/\+Q\+U\+IT en chat + E\+N\+T\+ER\textquotesingle{} -\/$>$ I\+R\+C\+Interface\+\_\+\+New\+Command\+Text(\char`\"{}/\+Q\+U\+I\+T \char`\"{}) 
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\end{DoxyItemize}
+\begin{DoxyCode}
+198                          \{
+199 
+200         \textcolor{keywordtype}{char}* command\_enviar;
+201         \textcolor{keywordtype}{char}* reason;
+202         \textcolor{comment}{//char command[] = "QUIT :Leaving";}
+203 
+204         \textcolor{keywordtype}{char}** channelsQuit;
+205         \textcolor{keywordtype}{int} numChannelsQuit;
+206         \textcolor{keywordtype}{int} i, ret;
+207 
+208         \textcolor{comment}{//kill hilo 'receive\_messages()'}
+209         ret = pthread\_cancel(\hyperlink{user__commands_8h_ab5efd1efa144e252f4c5312ae57bea2e}{recv\_tid});
+210         \textcolor{keywordflow}{if} (ret != 0)\{
+211                 g\_print(\hyperlink{types_8h_af54a5a977c0c499323d656315f008ee0}{MAG} \textcolor{stringliteral}{"\(\backslash\)npthread\_cancel = %d\(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET}, ret);
+212         \}
+213 
+214         IRCUserParse\_Quit (command, &reason);
+215         IRCMsg\_Quit (&command\_enviar, NULL, reason ? reason : \textcolor{stringliteral}{"Desconectando..."});
+216         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar command\_enviar en QUIT: %s \(\backslash\)n"},command\_enviar);
+217         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+218         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+219         \hyperlink{conexion__tcp_8h_a831321f466f7f9fa60b0f940b7c2d7da}{cerrarConexion}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, NULL);
+220         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(2, command\_enviar, reason);
+221 
+222         \textcolor{comment}{/*IRCInterface\_RemoveAllChannels da segmentation fault por alguna razón*/}
+223         IRCInterface\_ListAllChannels(&channelsQuit, &numChannelsQuit);
+224         \textcolor{keywordflow}{for}(i = 0; i<numChannelsQuit; i++)\{
+225                 \textcolor{comment}{//IRCInterface\_WriteChannelThread(channelsQuit[i],"*", "Desconectado.");}
+226                 IRCInterface\_RemoveChannel(channelsQuit[i]);
+227         \}
+228         \hyperlink{aux__functions_8h_a040868784608606fad914fea56fc65b8}{IRCInterface\_WriteSystem\_Pretty}(\textcolor{stringliteral}{"*"}, \textcolor{stringliteral}{"Desconectado."});
+229 
+230         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+231 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 16
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!putopic@{putopic}}
+\index{putopic@{putopic}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{putopic(char $\ast$command)}{putopic(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int putopic (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a0a15138d8927dd543805edcc035b8132}{}\label{user__commands_8h_a0a15138d8927dd543805edcc035b8132}
+
+\begin{DoxyCode}
+47 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{// se envia con la barra de topic}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puunaway@{puunaway}}
+\index{puunaway@{puunaway}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puunaway(char $\ast$command)}{puunaway(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puunaway (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a8a3e6d36d02bc24a451f806de272c691}{}\label{user__commands_8h_a8a3e6d36d02bc24a451f806de272c691}
+
+\begin{DoxyCode}
+41 \{ \textcolor{keywordflow}{return} -1; \} \textcolor{comment}{//existe UNAWAY??}
+\end{DoxyCode}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puwho@{puwho}}
+\index{puwho@{puwho}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puwho(char $\ast$command)}{puwho(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puwho (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_aef4e57bf112f9c4a2d51b1a314df0b63}{}\label{user__commands_8h_aef4e57bf112f9c4a2d51b1a314df0b63}
+
+
+Comando de usuario W\+HO. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+238                         \{
+239 
+240         \textcolor{keywordtype}{long} ret = -1;
+241 
+242         \textcolor{keywordtype}{char}* command\_enviar=NULL;
+243         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix} = NULL;
+244         \textcolor{keywordtype}{char}* mask;
+245         
+246         ret = IRCUserParse\_Who (command, &mask);
+247         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+248                 g\_print(\textcolor{stringliteral}{"ERROR - IRCInterface\_NewCommandText - UWHO - IRCUserParse\_Who"});
+249                 \textcolor{keywordflow}{return} -1;
+250         \}
+251         g\_print(\textcolor{stringliteral}{"\(\backslash\)t command: %s \(\backslash\)n"},command);
+252         g\_print(\textcolor{stringliteral}{"\(\backslash\)t mask who: %s \(\backslash\)n"},mask);
+253         
+254         ret = IRCMsg\_Who (&command\_enviar, prefix, mask, NULL);
+255         \textcolor{keywordflow}{if}(ret != IRC\_OK)\{
+256                 g\_print(\hyperlink{types_8h_a8d23feea868a983c8c2b661e1e16972f}{RED} \textcolor{stringliteral}{"ERROR - puwho - IRCMsg\_Who \(\backslash\)n"} \hyperlink{types_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET});
+257                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+258         \}
+259 
+260         g\_print(\textcolor{stringliteral}{"\(\backslash\)t command\_enviar: %s \(\backslash\)n"},command\_enviar);
+261 
+262         \textcolor{keywordflow}{if}(\hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user},command\_enviar, strlen(command\_enviar) == 
+      \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR}))\{
+263                 g\_print(\textcolor{stringliteral}{"ERROR: IRCInterface\_NewCommandText - enviarDatos - Who\(\backslash\)n"});
+264                 \textcolor{keywordflow}{return} \hyperlink{types_8h_a735563036dced0b7d6cc98f97ea4978b}{ERR};
+265         \}
+266 
+267         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);   
+268         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(3, command\_enviar, prefix, mask);
+269         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+270 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 17
+
+
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!puwhois@{puwhois}}
+\index{puwhois@{puwhois}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{puwhois(char $\ast$command)}{puwhois(char *command)}}]{\setlength{\rightskip}{0pt plus 5cm}int puwhois (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{command}
+\end{DoxyParamCaption}
+)}\hypertarget{user__commands_8h_a08bd5900f288bfb5712d3f5ca6e624b6}{}\label{user__commands_8h_a08bd5900f288bfb5712d3f5ca6e624b6}
+
+
+Comando de usuario W\+H\+O\+IS Shows information about the user in question, such as their \char`\"{}\+Name\char`\"{}, channels they are currently in, their hostmask, etc.
+\begin{DoxyItemize}
+\item Syntax\+: W\+H\+O\+IS $<$user$>$ 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & cadena introducida por el usuario en el campo de texto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK si todo es correcto, E\+RR si se produce un error 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+487                           \{
+488 
+489         \textcolor{keywordtype}{char} command\_enviar[\hyperlink{types_8h_ae7e715c270481406658bbd2bafa2897f}{MAXDATA}];
+490         \textcolor{keywordtype}{char}* \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick} = NULL;
+491 
+492         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje recibido en UWHOIS: %s \(\backslash\)n"}, command);
+493         IRCUserParse\_Whois (command, &nick);
+494 
+495         g\_print(\textcolor{stringliteral}{"\(\backslash\)t nick: %s \(\backslash\)n"}, nick);
+496         sprintf(command\_enviar, \textcolor{stringliteral}{"WHOIS %s\(\backslash\)n\(\backslash\)r"}, nick );
+497         g\_print(\textcolor{stringliteral}{"\(\backslash\)t Mensaje a enviar en UWHOIS: %s \(\backslash\)n"}, command\_enviar);
+498 
+499         \hyperlink{conexion__tcp_8h_ab9468ce1338cfca5736ab407ba155f55}{enviarDatos}(\hyperlink{aux__functions_8h_acd63fb8dbd9439219e2db08dfc173aa0}{sockfd\_user}, command\_enviar, strlen(command\_enviar));
+500         IRCInterface\_PlaneRegisterOutMessage(command\_enviar);
+501         \hyperlink{aux__functions_8h_a2480cc4793bf25a16cc731dc9d033582}{mfree}(1, nick);
+502         \textcolor{keywordflow}{return} \hyperlink{daemon_8h_aba51915c87d64af47fb1cc59348961c9}{OK};
+503 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 18
+
+
+
+
+\subsection{Variable Documentation}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!nick\+\_\+user@{nick\+\_\+user}}
+\index{nick\+\_\+user@{nick\+\_\+user}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{nick\+\_\+user}{nick_user}}]{\setlength{\rightskip}{0pt plus 5cm}char nick\+\_\+user\mbox{[}{\bf M\+A\+X\+D\+A\+TA}\mbox{]}}\hypertarget{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}{}\label{user__commands_8h_a7e2f32e47f3780a66e19651d8e79bced}
+\index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!recv\+\_\+tid@{recv\+\_\+tid}}
+\index{recv\+\_\+tid@{recv\+\_\+tid}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{recv\+\_\+tid}{recv_tid}}]{\setlength{\rightskip}{0pt plus 5cm}pthread\+\_\+t recv\+\_\+tid}\hypertarget{user__commands_8h_ab5efd1efa144e252f4c5312ae57bea2e}{}\label{user__commands_8h_ab5efd1efa144e252f4c5312ae57bea2e}
+Globales útiles sobre la conexión del cliente con el servidor \index{user\+\_\+commands.\+h@{user\+\_\+commands.\+h}!sockfd\+\_\+user@{sockfd\+\_\+user}}
+\index{sockfd\+\_\+user@{sockfd\+\_\+user}!user\+\_\+commands.\+h@{user\+\_\+commands.\+h}}
+\subsubsection[{\texorpdfstring{sockfd\+\_\+user}{sockfd_user}}]{\setlength{\rightskip}{0pt plus 5cm}int sockfd\+\_\+user}\hypertarget{user__commands_8h_acd63fb8dbd9439219e2db08dfc173aa0}{}\label{user__commands_8h_acd63fb8dbd9439219e2db08dfc173aa0}

@@ -1,0 +1,30 @@
+Función que inicializa el contexto para hacer uso de canales seguros .
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{_g-2361-06-_p3-funciones__ssl_8h}{G-2361-06-P3-funciones\_ssl.h}"}
+SSL\_CTX* \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a9d58ced0f4bab693b1c8d8b7eabe10a2}{fijar\_contexto\_SSL}(\textcolor{keywordtype}{char}* cert, \textcolor{keywordtype}{char}* key);
+\end{DoxyCode}
+
+
+La función se encargar de inicializar el contexto que será utilizado para la creación de canales seguros. Recibe como parámetros las rutas a los certificados y las claves con la que se va a trabajar.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em cert} & certificado del que se utiliza la función \\
+\hline
+\mbox{\tt in}  & {\em key} & certificado llave del que se utiliza la función\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Puntero de la estructura del contexto creado.
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Beatriz de Pablo García (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\+depablo@estudiante.\+uam.\+es}) Celia Mateos del Miguel(\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\+mateos@estudiante.\+uam.\+es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\+sebares@estudiante.\+uam.\+es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+25 de Abril de 2017
+\end{DoxyDate}
+
+
+ 

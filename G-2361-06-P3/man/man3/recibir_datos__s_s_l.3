@@ -1,0 +1,40 @@
+.TH "recibir_datos__s_s_l" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+recibir_datos__s_s_l \- recibir_datos_SSL 
+Función que será el equivalente a la función de lectura de mensajes que se realizó en la práctica 1, pero será utilizada para enviar datos a través del canal seguro\&. Es importante que sea genérica y pueda ser utilizada independientemente de los datos que se vayan a recibir\&.\&.
+.PP
+.PP
+.nf
+#include "G\-2361\-06\-P3\-funciones_ssl\&.h"
+int recibir_datos_SSL(SSL *ssl, char *buffer);
+.fi
+.PP
+.PP
+La función realiza el rcv de los datos\&. Recibe como parámetros contexto SSL, buffer
+.PP
+\fBParameters:\fP
+.RS 4
+\fIssl\fP contexto SSL 
+.br
+\fIbuffer\fP cadena de texto
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Devuelve 0 al no encontrar el certificado en caso contrario\&.\&.\&.
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Beatriz de Pablo García (beatriz.depablo@estudiante.uam.es) Celia Mateos del Miguel(cel.mateos@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+25 de Abril de 2017
+.RE
+.PP
+.PP
+ 

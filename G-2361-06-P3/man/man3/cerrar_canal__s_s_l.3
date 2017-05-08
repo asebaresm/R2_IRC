@@ -1,0 +1,42 @@
+.TH "cerrar_canal__s_s_l" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+cerrar_canal__s_s_l \- cerrar_canal_SSL 
+Función que cierra la comunicación de un canal seguro\&. previamente\&.
+.PP
+.PP
+.nf
+#include "G\-2361\-06\-P3\-funciones_ssl\&.h"
+void cerrar_canal_SSL(SSL **ssl,SSL_CTX **ctx, int sockfd);
+.fi
+.PP
+.PP
+La función libera todos los recursos y cerra el canal de comunicación seguro creado\&. Recibe como parámetros contexto SSL, ctx y el numero del socket\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIssl\fP certificado SSL 
+.br
+\fIctx\fP contexto SSL 
+.br
+\fIsockfd\fP numero del socket
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+No devuelve ningun valor
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Beatriz de Pablo García (beatriz.depablo@estudiante.uam.es) Celia Mateos del Miguel(cel.mateos@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+25 de Abril de 2017
+.RE
+.PP
+.PP
+ 

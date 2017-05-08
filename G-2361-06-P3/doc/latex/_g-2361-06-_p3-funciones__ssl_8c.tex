@@ -1,0 +1,268 @@
+\hypertarget{_g-2361-06-_p3-funciones__ssl_8c}{}\section{srclib/\+G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.c File Reference}
+\label{_g-2361-06-_p3-funciones__ssl_8c}\index{srclib/\+G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{srclib/\+G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+{\ttfamily \#include $<$openssl/ssl.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/bio.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/err.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/rand.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/x509v3.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+h\char`\"{}}\\*
+Include dependency graph for G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.c\+:
+% FIG 0
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_aeca034f67218340ecb2261a22c2f3dcd}{B\+U\+F\+S\+I\+ZE}~2048
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_a937108af8fd0832377b084e24172ee41}{inicializar\+\_\+nivel\+\_\+\+S\+SL} ()
+\item 
+S\+S\+L\+\_\+\+C\+TX $\ast$ \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_a9d58ced0f4bab693b1c8d8b7eabe10a2}{fijar\+\_\+contexto\+\_\+\+S\+SL} (char $\ast$cert, char $\ast$key)
+\item 
+S\+SL $\ast$ \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_a79add582c01289f85c0a81569ee3b73e}{conectar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL} (S\+S\+L\+\_\+\+C\+TX $\ast$ctx, int sockfd)
+\item 
+int \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_ac5f32cf09e3c0efd5cbc25452ed192a9}{evaluar\+\_\+post\+\_\+connectar\+\_\+\+S\+SL} (S\+SL $\ast$ssl)
+\item 
+int \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_a259d64855c617836e2b18975ee98029a}{enviar\+\_\+datos\+\_\+\+S\+SL} (S\+SL $\ast$ssl, char $\ast$buffer)
+\item 
+S\+SL $\ast$ \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_aaeb9457077403f2261ca1a86e3802a1d}{aceptar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL} (S\+S\+L\+\_\+\+C\+TX $\ast$ctx, int sockfd)
+\item 
+int \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_adc12a32e9564947c310da53ed910d66a}{recibir\+\_\+datos\+\_\+\+S\+SL} (S\+SL $\ast$ssl, char $\ast$buffer)
+\item 
+void \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_af96fb6c9c2330e21ab617e949acf7a8c}{cerrar\+\_\+canal\+\_\+\+S\+SL} (S\+SL $\ast$$\ast$ssl, S\+S\+L\+\_\+\+C\+TX $\ast$$\ast$ctx, int sockfd)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!B\+U\+F\+S\+I\+ZE@{B\+U\+F\+S\+I\+ZE}}
+\index{B\+U\+F\+S\+I\+ZE@{B\+U\+F\+S\+I\+ZE}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{B\+U\+F\+S\+I\+ZE}{BUFSIZE}}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+U\+F\+S\+I\+ZE~2048}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_aeca034f67218340ecb2261a22c2f3dcd}{}\label{_g-2361-06-_p3-funciones__ssl_8c_aeca034f67218340ecb2261a22c2f3dcd}
+Tam. max. del buffer que se lee 
+
+\subsection{Function Documentation}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!aceptar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL@{aceptar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL}}
+\index{aceptar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL@{aceptar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{aceptar\+\_\+canal\+\_\+seguro\+\_\+\+S\+S\+L(\+S\+S\+L\+\_\+\+C\+T\+X $\ast$ctx, int sockfd)}{aceptar_canal_seguro_SSL(SSL_CTX *ctx, int sockfd)}}]{\setlength{\rightskip}{0pt plus 5cm}S\+SL$\ast$ aceptar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+\item[{S\+S\+L\+\_\+\+C\+TX $\ast$}]{ctx, }
+\item[{int}]{sockfd}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_aaeb9457077403f2261ca1a86e3802a1d}{}\label{_g-2361-06-_p3-funciones__ssl_8c_aaeb9457077403f2261ca1a86e3802a1d}
+
+\begin{DoxyCode}
+120                                                       \{
+121         SSL * ssl=NULL;
+122         
+123         \textcolor{comment}{/*puntero a la estructura creada será guardado para añadir seguridad al canal*/}
+124         ssl=SSL\_new(ctx);
+125         
+126         \textcolor{keywordflow}{if}(ssl==NULL || ctx==NULL)\{
+127                 \textcolor{keywordflow}{return} NULL;
+128         \}
+129 
+130 
+131         \textcolor{comment}{/*asociar la estructura SSL creada el canal de comunicación*/}
+132         \textcolor{keywordflow}{if}(!SSL\_set\_fd(ssl, sockfd))\{
+133                 \textcolor{keywordflow}{return} NULL;
+134         \}
+135 
+136         
+137 
+138         \textcolor{comment}{/* función bloqueará al servidor y lo pondrá en espera hasta recibir el hand-}
+139 \textcolor{comment}{shake por parte del cliente*/}
+140         \textcolor{keywordflow}{if}(!SSL\_accept(ssl))\{
+141                 \textcolor{keywordflow}{return} NULL;
+142         \}
+143         
+144         \textcolor{keywordflow}{return} ssl;
+145 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!cerrar\+\_\+canal\+\_\+\+S\+SL@{cerrar\+\_\+canal\+\_\+\+S\+SL}}
+\index{cerrar\+\_\+canal\+\_\+\+S\+SL@{cerrar\+\_\+canal\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{cerrar\+\_\+canal\+\_\+\+S\+S\+L(\+S\+S\+L $\ast$$\ast$ssl, S\+S\+L\+\_\+\+C\+T\+X $\ast$$\ast$ctx, int sockfd)}{cerrar_canal_SSL(SSL **ssl, SSL_CTX **ctx, int sockfd)}}]{\setlength{\rightskip}{0pt plus 5cm}void cerrar\+\_\+canal\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+\item[{S\+SL $\ast$$\ast$}]{ssl, }
+\item[{S\+S\+L\+\_\+\+C\+TX $\ast$$\ast$}]{ctx, }
+\item[{int}]{sockfd}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_af96fb6c9c2330e21ab617e949acf7a8c}{}\label{_g-2361-06-_p3-funciones__ssl_8c_af96fb6c9c2330e21ab617e949acf7a8c}
+
+\begin{DoxyCode}
+159                                                           \{
+160         
+161         \textcolor{comment}{/*cierra el canal y libera las estructuras*/}
+162         \textcolor{keywordflow}{if}(*ssl != NULL)\{
+163                 SSL\_shutdown(*ssl);
+164                 SSL\_free(*ssl);
+165                 ssl=NULL;
+166         \}
+167 
+168         \textcolor{keywordflow}{if}(*ctx != NULL)\{
+169                 SSL\_CTX\_free(*ctx);
+170                 ctx=NULL;
+171         \}
+172 
+173         close(sockfd);
+174 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!conectar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL@{conectar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL}}
+\index{conectar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL@{conectar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{conectar\+\_\+canal\+\_\+seguro\+\_\+\+S\+S\+L(\+S\+S\+L\+\_\+\+C\+T\+X $\ast$ctx, int sockfd)}{conectar_canal_seguro_SSL(SSL_CTX *ctx, int sockfd)}}]{\setlength{\rightskip}{0pt plus 5cm}S\+SL$\ast$ conectar\+\_\+canal\+\_\+seguro\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+\item[{S\+S\+L\+\_\+\+C\+TX $\ast$}]{ctx, }
+\item[{int}]{sockfd}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_a79add582c01289f85c0a81569ee3b73e}{}\label{_g-2361-06-_p3-funciones__ssl_8c_a79add582c01289f85c0a81569ee3b73e}
+
+\begin{DoxyCode}
+70                                                        \{
+71         
+72         SSL * ssl=NULL;
+73 
+74         \textcolor{comment}{/*puntero a la estructura creada será guardado para añadir seguridad al canal*/}
+75         ssl=SSL\_new(ctx);
+76 
+77         \textcolor{keywordflow}{if}(ssl==NULL)\{
+78                 \textcolor{keywordflow}{return} NULL;
+79         \}
+80 
+81         \textcolor{comment}{/*asociar la estructura SSL creada el canal de comunicación*/}
+82         \textcolor{keywordflow}{if}(!SSL\_set\_fd(ssl, sockfd))\{
+83                 \textcolor{keywordflow}{return} NULL;
+84         \}
+85 
+86 
+87         \textcolor{comment}{/* inicializará el handshake con el servidor*/}
+88         \textcolor{keywordflow}{if}(!SSL\_connect(ssl))\{
+89                 \textcolor{keywordflow}{return} NULL;
+90         \}
+91 
+92         \textcolor{keywordflow}{return} ssl;
+93 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!enviar\+\_\+datos\+\_\+\+S\+SL@{enviar\+\_\+datos\+\_\+\+S\+SL}}
+\index{enviar\+\_\+datos\+\_\+\+S\+SL@{enviar\+\_\+datos\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{enviar\+\_\+datos\+\_\+\+S\+S\+L(\+S\+S\+L $\ast$ssl, char $\ast$buffer)}{enviar_datos_SSL(SSL *ssl, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}int enviar\+\_\+datos\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+\item[{S\+SL $\ast$}]{ssl, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_a259d64855c617836e2b18975ee98029a}{}\label{_g-2361-06-_p3-funciones__ssl_8c_a259d64855c617836e2b18975ee98029a}
+
+\begin{DoxyCode}
+108                                             \{
+109 
+110         \textcolor{keywordflow}{if}(!buffer || \textcolor{keyword}{sizeof}(buffer) < 0)\{
+111                 \textcolor{keywordflow}{return} -1;
+112         \}
+113 
+114         \textcolor{comment}{/* envia datos */}
+115         \textcolor{keywordflow}{return} SSL\_write(ssl, buffer, \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE});
+116 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!evaluar\+\_\+post\+\_\+connectar\+\_\+\+S\+SL@{evaluar\+\_\+post\+\_\+connectar\+\_\+\+S\+SL}}
+\index{evaluar\+\_\+post\+\_\+connectar\+\_\+\+S\+SL@{evaluar\+\_\+post\+\_\+connectar\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{evaluar\+\_\+post\+\_\+connectar\+\_\+\+S\+S\+L(\+S\+S\+L $\ast$ssl)}{evaluar_post_connectar_SSL(SSL *ssl)}}]{\setlength{\rightskip}{0pt plus 5cm}int evaluar\+\_\+post\+\_\+connectar\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+\item[{S\+SL $\ast$}]{ssl}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_ac5f32cf09e3c0efd5cbc25452ed192a9}{}\label{_g-2361-06-_p3-funciones__ssl_8c_ac5f32cf09e3c0efd5cbc25452ed192a9}
+
+\begin{DoxyCode}
+96                                          \{
+97 
+98         \textcolor{comment}{/* comprobar que de hecho se ha recibido un certificado*/}
+99         \textcolor{keywordflow}{if}(SSL\_get\_peer\_certificate(ssl)==NULL)\{
+100                 \textcolor{keywordflow}{return} 0;
+101         \}
+102 
+103         \textcolor{comment}{/* validar el certificado con algún CA*/}
+104         \textcolor{keywordflow}{return} SSL\_get\_verify\_result(ssl);
+105 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!fijar\+\_\+contexto\+\_\+\+S\+SL@{fijar\+\_\+contexto\+\_\+\+S\+SL}}
+\index{fijar\+\_\+contexto\+\_\+\+S\+SL@{fijar\+\_\+contexto\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{fijar\+\_\+contexto\+\_\+\+S\+S\+L(char $\ast$cert, char $\ast$key)}{fijar_contexto_SSL(char *cert, char *key)}}]{\setlength{\rightskip}{0pt plus 5cm}S\+S\+L\+\_\+\+C\+TX$\ast$ fijar\+\_\+contexto\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{cert, }
+\item[{char $\ast$}]{key}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_a9d58ced0f4bab693b1c8d8b7eabe10a2}{}\label{_g-2361-06-_p3-funciones__ssl_8c_a9d58ced0f4bab693b1c8d8b7eabe10a2}
+
+\begin{DoxyCode}
+32                                                   \{
+33 
+34         SSL\_CTX *ctx;
+35 
+36         \textcolor{comment}{/*crea un nuevo contexto para la utilización de}
+37 \textcolor{comment}{la capa SSL y lo inicializa*/}
+38         ctx=SSL\_CTX\_new(SSLv23\_method());
+39         \textcolor{keywordflow}{if} (ctx==NULL)\{
+40                 \textcolor{keywordflow}{return} NULL;
+41         \}
+42         
+43         \textcolor{comment}{/*validar los certificados recibidos por la aplicación*/}
+44         \textcolor{keywordflow}{if} (!SSL\_CTX\_load\_verify\_locations(ctx,\hyperlink{_g-2361-06-_p3-funciones__ssl_8h_add26aa612dd962e23cf30d6f21f7a341}{CERT\_FILE},\hyperlink{_g-2361-06-_p3-funciones__ssl_8h_a2b3c6e416790f6e89c1b6e282b36d1d9}{CERT\_PATH}))\{
+45                 \textcolor{keywordflow}{return} 0;
+46         \}
+47 
+48         \textcolor{comment}{/*utilizar}
+49 \textcolor{comment}{los certificados de las entidades CA bien conocidas*/}
+50         SSL\_CTX\_set\_default\_verify\_paths(ctx);
+51 
+52         \textcolor{comment}{/*especificar el certificado que utilizará nuestra aplicación*/}
+53         \textcolor{keywordflow}{if}(!SSL\_CTX\_use\_certificate\_chain\_file(ctx, cert))\{
+54                 ERR\_print\_errors\_fp(stdout);
+55                 \textcolor{keywordflow}{return} 0;
+56         \}
+57         
+58         \textcolor{comment}{/*especificar la clave privada de nuestra}
+59 \textcolor{comment}{aplicación*/}
+60         SSL\_CTX\_use\_PrivateKey\_file(ctx, key, SSL\_FILETYPE\_PEM);
+61 
+62         \textcolor{comment}{/*fijará el modo de funcionamiento de nuestra}
+63 \textcolor{comment}{aplicación*/}
+64         SSL\_CTX\_set\_verify(ctx, SSL\_VERIFY\_PEER, NULL);
+65         
+66         \textcolor{keywordflow}{return} ctx;
+67 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!inicializar\+\_\+nivel\+\_\+\+S\+SL@{inicializar\+\_\+nivel\+\_\+\+S\+SL}}
+\index{inicializar\+\_\+nivel\+\_\+\+S\+SL@{inicializar\+\_\+nivel\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{inicializar\+\_\+nivel\+\_\+\+S\+S\+L()}{inicializar_nivel_SSL()}}]{\setlength{\rightskip}{0pt plus 5cm}void inicializar\+\_\+nivel\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_a937108af8fd0832377b084e24172ee41}{}\label{_g-2361-06-_p3-funciones__ssl_8c_a937108af8fd0832377b084e24172ee41}
+
+\begin{DoxyCode}
+22                             \{
+23 
+24         \textcolor{comment}{/* Capturamos los errores que puede dar de SSL*/}
+25         SSL\_load\_error\_strings();
+26         \textcolor{comment}{/* Iniciamos SSL*/}
+27         SSL\_library\_init();
+28 
+29 \}
+\end{DoxyCode}
+\index{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}!recibir\+\_\+datos\+\_\+\+S\+SL@{recibir\+\_\+datos\+\_\+\+S\+SL}}
+\index{recibir\+\_\+datos\+\_\+\+S\+SL@{recibir\+\_\+datos\+\_\+\+S\+SL}!G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c@{G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+c}}
+\subsubsection[{\texorpdfstring{recibir\+\_\+datos\+\_\+\+S\+S\+L(\+S\+S\+L $\ast$ssl, char $\ast$buffer)}{recibir_datos_SSL(SSL *ssl, char *buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}int recibir\+\_\+datos\+\_\+\+S\+SL (
+\begin{DoxyParamCaption}
+\item[{S\+SL $\ast$}]{ssl, }
+\item[{char $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p3-funciones__ssl_8c_adc12a32e9564947c310da53ed910d66a}{}\label{_g-2361-06-_p3-funciones__ssl_8c_adc12a32e9564947c310da53ed910d66a}
+
+\begin{DoxyCode}
+148                                               \{
+149 
+150         \textcolor{keywordflow}{if}(!ssl || \textcolor{keyword}{sizeof}(buffer) < 0)\{
+151                 \textcolor{keywordflow}{return} -1;
+152         \}
+153 
+154         \textcolor{comment}{/* recibe datos */}
+155         \textcolor{keywordflow}{return} SSL\_read(ssl, buffer, \hyperlink{_g-2361-06-_p3-funciones__ssl_8c_aeca034f67218340ecb2261a22c2f3dcd}{BUFSIZE});
+156 \}
+\end{DoxyCode}

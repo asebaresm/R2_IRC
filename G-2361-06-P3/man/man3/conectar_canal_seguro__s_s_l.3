@@ -1,0 +1,40 @@
+.TH "conectar_canal_seguro__s_s_l" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+conectar_canal_seguro__s_s_l \- conectar_canal_seguro_SSL 
+Función que inicia el proceso de handshake para crear un canal seguro\&.
+.PP
+.PP
+.nf
+#include "G\-2361\-06\-P3\-funciones_ssl\&.h"
+SSL* conectar_canal_seguro_SSL(SSL_CTX* ctx,int sockfd);
+.fi
+.PP
+.PP
+La función se encargará de obtener un canal seguro SSL inciando el proceso de handshake con el otro extremo\&. Recibe como parámetros contexto SSL y identificador de socket\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP contexto SSL 
+.br
+\fIsockfd\fP id del socket
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Puntero de la estructura del contexto\&.
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Beatriz de Pablo García (beatriz.depablo@estudiante.uam.es) Celia Mateos del Miguel(cel.mateos@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+25 de Abril de 2017
+.RE
+.PP
+.PP
+ 

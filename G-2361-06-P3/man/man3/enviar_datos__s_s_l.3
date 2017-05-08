@@ -1,0 +1,40 @@
+.TH "enviar_datos__s_s_l" 3 "Mon May 8 2017" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+enviar_datos__s_s_l \- enviar_datos_SSL 
+Función que permite el envío de mensajes a través del canal seguro\&.
+.PP
+.PP
+.nf
+#include "G\-2361\-06\-P3\-funciones_ssl\&.h"
+int enviar_datos_SSL(SSL *ssl, char *buffer);
+.fi
+.PP
+.PP
+La función esequivalente a la función de envío de mensajes que se realizó en la práctica 1, pero será utilizada para enviar datos a través del canal seguro\&. Recibe como parámetros contexto SSL y el buffer
+.PP
+\fBParameters:\fP
+.RS 4
+\fIssl\fP contexto SSL 
+.br
+\fIbuffer\fP cadena de texto
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Devuelve 0 al no encontrar el certificado en caso contrario\&.\&.\&.
+.RE
+.PP
+\fBAuthor:\fP
+.RS 4
+Beatriz de Pablo García (beatriz.depablo@estudiante.uam.es) Celia Mateos del Miguel(cel.mateos@estudiante.uam.es) Alfonso Sebares Mecha (alfonso.sebares@estudiante.uam.es)
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+25 de Abril de 2017
+.RE
+.PP
+.PP
+ 

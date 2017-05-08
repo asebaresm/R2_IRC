@@ -1,0 +1,32 @@
+digraph "includes/logger.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="includes/logger.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="includes/conexion_tcp.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$conexion__tcp_8h.html",tooltip="Prototipos de funcion de la liberia para conexiones TCP. "];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="includes/aux_functions.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$aux__functions_8h.html",tooltip="Declaraciones de funciones, definición de tipos: implementación de funciones auxiliares de xchat2..."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="includes/user_commands.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$user__commands_8h.html",tooltip="Declaraciones de funciones, definición de tipos: implementación de funciones IRC de usuario..."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="includes/xchat2.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$xchat2_8h.html",tooltip="Declaraciones de funciones, definición de tipos: implementación de los callbacks de xchat2..."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="src/xchat2.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$xchat2_8c.html",tooltip="Fichero con principalmente la implementación de los callbacks de xchat2. "];
+  Node4 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="srclib/user_commands.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$user__commands_8c.html",tooltip="Implementacion de las funciones IRC de usuario de xchat2. "];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="srclib/aux_functions.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$aux__functions_8c.html",tooltip="Implementacion de las funciones auxiliares de xchat2. "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="src/conexion_tcp_test.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$conexion__tcp__test_8c.html"];
+  Node2 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="srclib/conexion_tcp.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$conexion__tcp_8c.html",tooltip="Implementacion de la liberia para conexiones TCP. "];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="src/log_test.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$log__test_8c.html",tooltip="Prueba de la libreria de logs. "];
+  Node1 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="srclib/logger.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$logger_8c.html",tooltip="Descripcion de la liberia de log de errores complementaria a /var/log/syslog. "];
+}

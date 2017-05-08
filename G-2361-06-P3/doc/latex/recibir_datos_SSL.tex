@@ -1,0 +1,30 @@
+Función que será el equivalente a la función de lectura de mensajes que se realizó en la práctica 1, pero será utilizada para enviar datos a través del canal seguro. Es importante que sea genérica y pueda ser utilizada independientemente de los datos que se vayan a recibir..
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{_g-2361-06-_p3-funciones__ssl_8h}{G-2361-06-P3-funciones\_ssl.h}"}
+\textcolor{keywordtype}{int} \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_adc12a32e9564947c310da53ed910d66a}{recibir\_datos\_SSL}(SSL *ssl, \textcolor{keywordtype}{char} *buffer);
+\end{DoxyCode}
+
+
+La función realiza el rcv de los datos. Recibe como parámetros contexto S\+SL, buffer
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em ssl} & contexto S\+SL \\
+\hline
+\mbox{\tt in}  & {\em buffer} & cadena de texto\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Devuelve 0 al no encontrar el certificado en caso contrario...
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Beatriz de Pablo García (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\+depablo@estudiante.\+uam.\+es}) Celia Mateos del Miguel(\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\+mateos@estudiante.\+uam.\+es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\+sebares@estudiante.\+uam.\+es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+25 de Abril de 2017
+\end{DoxyDate}
+
+
+ 

@@ -1,0 +1,1272 @@
+\hypertarget{_g-2361-06-_p1-_server_8c}{}\section{srclib/\+G-\/2361-\/06-\/\+P1-\/\+Server.c File Reference}
+\label{_g-2361-06-_p1-_server_8c}\index{srclib/\+G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{srclib/\+G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+
+
+Implementacion de las funciones del Servidor.  
+
+
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P1-\/\+Server.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P1-\/\+Functions.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../includes/\+G-\/2361-\/06-\/\+P3-\/funciones\+\_\+ssl.\+h\char`\"{}}\\*
+Include dependency graph for G-\/2361-\/06-\/\+P1-\/\+Server.c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{_g-2361-06-_p1-_server_8c_a3053755c82b5168bea9d848b1284f3ca}{procesar} (char $\ast$entrada, int I\+Dsocket, fd\+\_\+set readset)
+\item 
+void \hyperlink{_g-2361-06-_p1-_server_8c_ae168ee6fdf31fd5ed7d49d45b89a65ed}{servidor} (int puerto, char $\ast$path)
+\item 
+void \hyperlink{_g-2361-06-_p1-_server_8c_ab7e145be74e8922987621cd01b8d446e}{parse\+Command} (long int query, char $\ast$comando, int I\+Dsocket)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+pthread\+\_\+mutex\+\_\+t \hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\+\_\+mutex} = P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ER
+\item 
+pthread\+\_\+mutex\+\_\+t \hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\+\_\+mutex} = P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ER
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a5666511ca3d4a3dc685c6f14c663aed5}{fich}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_ae6eaaf28b08889a7ec2359f8968d796c}{serverother}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{server1}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}{topic}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{channeluser}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{modo}
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real} = N\+U\+LL
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip} = N\+U\+LL
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away} = N\+U\+LL
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host} = N\+U\+LL
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\+\_\+name} = N\+U\+LL
+\item 
+char $\ast$ \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario} = N\+U\+LL
+\item 
+char \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{lista\+Nicks} \mbox{[}\hyperlink{_g-2361-06-_p1-_sockets_8h_a1c803e4ececfb47d2791c9283c85eb00}{N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}\mbox{]}\mbox{[}10\mbox{]}
+\item 
+long \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion} = 0
+\item 
+long \hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion} = 0
+\item 
+long \hyperlink{_g-2361-06-_p1-_server_8c_a7350fbd6ad10618f3b750b1f99ca5c3c}{id} = 0
+\item 
+int \hyperlink{_g-2361-06-_p1-_server_8c_a882bc4c5a2b02dd85d4716961c4d902f}{socket\+Alrm} = 0
+\item 
+int \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numero\+Usuarios} = 0
+\item 
+int \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets} \mbox{[}\hyperlink{_g-2361-06-_p1-_sockets_8h_a1c803e4ececfb47d2791c9283c85eb00}{N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementacion de las funciones del Servidor. 
+
+\begin{DoxyAuthor}{Author}
+Alfonso Sebares 
+
+Beatriz de Pablo 
+
+Celia Mateos 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+13/02/17 
+\end{DoxyDate}
+
+
+\subsection{Function Documentation}
+\index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!parse\+Command@{parse\+Command}}
+\index{parse\+Command@{parse\+Command}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{parse\+Command(long int query, char $\ast$comando, int I\+Dsocket)}{parseCommand(long int query, char *comando, int IDsocket)}}]{\setlength{\rightskip}{0pt plus 5cm}void parse\+Command (
+\begin{DoxyParamCaption}
+\item[{long int}]{query, }
+\item[{char $\ast$}]{comando, }
+\item[{int}]{I\+Dsocket}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_server_8c_ab7e145be74e8922987621cd01b8d446e}{}\label{_g-2361-06-_p1-_server_8c_ab7e145be74e8922987621cd01b8d446e}
+
+\begin{DoxyCode}
+172                                                               \{
+173         \textcolor{keywordtype}{long} result;
+174 
+175         \textcolor{keywordflow}{switch}(query)\{
+176                 \textcolor{keywordflow}{case} USER:
+177                         result = IRCParse\_User (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost}, &\hyperlink{_g-2361-06-_p1-_server_8c_ae6eaaf28b08889a7ec2359f8968d796c}{serverother}, &\hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname});
+178                         \textcolor{comment}{/*syslog(LOG\_INFO, "%s, %s, %s, %s, %s", prefix, user, modehost, serverother,
+       realname);*/}
+179                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+180                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+181                         \textcolor{comment}{/*syslog (LOG\_INFO, "USER");*/}
+182 
+183                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+184                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"USER: No se ha introducido ninguna cadena para parsear."})
+      ;
+185                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+186                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"USER: No se encuentran todos los parámetros obligatorios.
+      "});
+187                         \}\textcolor{keywordflow}{else}\{
+188                                 \textcolor{comment}{/*Para ver si existe el usuario*/}
+189                                 \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name} = NULL; \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real} = NULL; \textcolor{keywordtype}{id} = 0;
+190                                 result = IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+191 
+192                                 \textcolor{keywordflow}{if}(!\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name})\{ \textcolor{comment}{/*Si el usuario no existe*/}
+193                                         \textcolor{comment}{/*Annadir un nuevo usuario*/}
+194                                         IRCTADUser\_New (\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname}, NULL, \hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost}, \hyperlink{_g-2361-06-_p1-_server_8c_ae6eaaf28b08889a7ec2359f8968d796c}{serverother}, IDsocket);
+195                                         IRCTADUser\_SetAway (\textcolor{keywordtype}{id}, \hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname}, NULL);
+196                                         strcpy(\hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[
+      \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}], \textcolor{stringliteral}{""});
+197                                         strcpy(\hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[
+      \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}], \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick});
+198                                         \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[\hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}] = IDsocket; \textcolor{comment}{/*Numero
+       del socket del usuario*/}
+199                                         \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}++;
+200 
+201                                         \hyperlink{_g-2361-06-_p1-_functions_8h_a210d0586ca040ccaa2104d06e224c108}{funcionUser}(\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname}, \hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost}, IDsocket);
+202 
+203                                 \}\textcolor{keywordflow}{else}\{ \textcolor{comment}{/*Si existe, liberamos memoria*/}
+204                                         free(\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost}); free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_ae6eaaf28b08889a7ec2359f8968d796c}{serverother}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname});
+205                                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+206                                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+207                                         \textcolor{keywordflow}{break};
+208                                 \}
+209                         \}
+210 
+211                         free(\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user});free(\hyperlink{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{modehost});free(\hyperlink{_g-2361-06-_p1-_server_8c_ae6eaaf28b08889a7ec2359f8968d796c}{serverother});free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{realname});
+212                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+213                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+214                         \textcolor{keywordflow}{break};
+215 
+216                 \textcolor{keywordflow}{case} NICK:
+217                         result = IRCParse\_Nick (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+218                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+219                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+220                         \textcolor{comment}{/*syslog (LOG\_INFO, "NICK");*/}
+221 
+222                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+223                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"NICK: No se ha introducido ninguna cadena para parsear."})
+      ;
+224                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+225                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"NICK: No se encuentran todos los parámetros obligatorios.
+      "});
+226                         \}\textcolor{keywordflow}{else}\{
+227 
+228                                 \textcolor{keywordflow}{if}(!\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick})\{
+229                                         syslog(LOG\_INFO, \textcolor{stringliteral}{"NICK: No hay nick."});
+230                                 \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(strlen(\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}) < 10)\{ \textcolor{comment}{/*Longitud maxima de entrada para el nick
+      */}
+231                                         \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL;\textcolor{keywordtype}{id}=0;
+232                                         IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+233                                         \textcolor{keywordflow}{if}(!\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario})\{
+234 
+235                                         \}\textcolor{keywordflow}{else}\{
+236                                                 \hyperlink{_g-2361-06-_p1-_functions_8h_ad060b5b909c563dc4d6d1737c9bfaaa9}{funcionNick}(\textcolor{keywordtype}{id},
+      \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, \hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}, IDsocket);
+237                                                 free(\hyperlink{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{nick}); 
+238                                         \}
+239                                 \}               
+240                         \}
+241                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}); 
+242                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+243                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+244 
+245                         \textcolor{keywordflow}{break};
+246 
+247                 \textcolor{keywordflow}{case} PING:
+248                         result = IRCParse\_Ping (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{server1}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2}, &\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+249                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+250                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+251                         \textcolor{comment}{/*syslog (LOG\_INFO, "PING");*/}
+252 
+253                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+254                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"PING: No se ha introducido ninguna cadena para parsear."})
+      ;
+255                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+256                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"PING: No se encuentran todos los parámetros obligatorios.
+      "});
+257                         \}\textcolor{keywordflow}{else}\{  \textcolor{comment}{/*Si todo ha salido bien*/}
+258                                 \hyperlink{_g-2361-06-_p1-_functions_8h_a3280e4bc8a783afb907ef479e98b909e}{funcionPing}(\hyperlink{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{server1}, \hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2}, IDsocket);
+259                                 free(\hyperlink{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{server1}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{server2}); free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+260                         \}
+261                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+262                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+263                         \textcolor{keywordflow}{break};
+264 
+265                 \textcolor{keywordflow}{case} JOIN:
+266                         result = IRCParse\_Join(comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key}, &\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+267                 pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+268                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+269                 \textcolor{comment}{/*syslog (LOG\_INFO, "Llega join para unirse al canal: %s", channel);*/}
+270 
+271                 \textcolor{comment}{/*Cogemos la informacion del usuario actual*/}
+272                         \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL;\textcolor{keywordtype}{id}=0;
+273                         IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &\hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+274 
+275                 \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+276                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"JOIN: No se ha introducido ninguna cadena para parsear."})
+      ;
+277                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{ \textcolor{comment}{/*JOIN sin argumentos*/}
+278                                 \textcolor{keywordtype}{char} *paramsErr\_msj;
+279                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"JOIN: No se encuentran todos los parámetros obligatorios.
+      "});
+280 
+281                                 IRCMsg\_ErrNeedMoreParams (&paramsErr\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \textcolor{stringliteral}{"JOIN"});
+282                                 send(IDsocket,paramsErr\_msj,strlen(paramsErr\_msj),0);
+283 
+284                                 free(paramsErr\_msj);
+285                                 pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+286                                 pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+287                                 \textcolor{keywordflow}{break};
+288 
+289                         \}\textcolor{keywordflow}{else}\{                          
+290                                 \textcolor{keywordflow}{if}(!\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel})\{
+291 
+292                                 \}\textcolor{keywordflow}{else}\{
+293                                         \textcolor{keywordtype}{char} **lista = NULL, **listaUsuarios = NULL;
+294                                         \textcolor{keywordtype}{long} nChannels = 0, nUsuarios = 0;
+295                                         \textcolor{keywordtype}{char} *join\_msj = NULL, *complex = NULL, *endOfNames\_msj = NULL, 
+      channel\_aux[strlen(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel})+1], *nameMsg = NULL;
+296                                         \textcolor{keywordtype}{int} i, flag = 0;
+297 
+298                                         \textcolor{comment}{/*Obtenemos la lista con los nombres de todos los canales*/}
+299                                         IRCTADChan\_GetList (&lista, &nChannels, NULL);
+300                                         \textcolor{keywordflow}{for}(i = 0; i < nChannels; i++)\{
+301                                                 \textcolor{keywordflow}{if}(strcmp(lista[i], \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}) == 0)\{
+302                                                         flag = 1; \textcolor{comment}{/*El canal existe*/}
+303                                                         IRCTADChan\_FreeList (lista, nChannels);
+304                                                         \textcolor{keywordflow}{break};
+305                                                 \}
+306                                         \}
+307                                         \textcolor{comment}{/*Si no hay canal*/}
+308                                         \textcolor{keywordflow}{if}(flag == 0)\{
+309                                                 \textcolor{comment}{/*Creamos un canal. Es 'o' de operator. key clave del canal
+      */}
+310                                                 result = IRCTAD\_Join (\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \textcolor{stringliteral}{"o"}, \hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key});
+311                                         \}\textcolor{keywordflow}{else}\{\textcolor{comment}{/*Si hay canal*/}
+312                                                 result = IRCTAD\_Join (\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \textcolor{stringliteral}{""}, \hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key});
+313 
+314                                                 \textcolor{keywordflow}{if}(result != IRC\_OK)\{ \textcolor{comment}{/*Canal protegido con clave*/}
+315                                                         IRCMsg\_ErrBadChannelKey (&join\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+316                                                         send(IDsocket,join\_msj,strlen(join\_msj),0);
+317                                                         free(join\_msj); free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}); 
+318                                                         pthread\_mutex\_unlock(&
+      \hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+319                                                         pthread\_mutex\_unlock(&
+      \hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+320                                                         \textcolor{keywordflow}{break};
+321                                                 \}
+322                                         \}
+323 
+324                                         sprintf(channel\_aux, \textcolor{stringliteral}{":%s"}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+325                                         \textcolor{comment}{/*syslog(LOG\_INFO, "COMPLEX USER /JOIN");*/}
+326                                         IRC\_ComplexUser(&complex, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, NULL, NULL);
+327                                         IRCMsg\_Join(&join\_msj, complex, channel\_aux, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key}, \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+328                                         send(IDsocket,join\_msj,strlen(join\_msj),0);
+329                                         \textcolor{comment}{/*Listamos usuarios de un canal*/}
+330                                         IRCTAD\_ListNicksOnChannelArray(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &listaUsuarios, &
+      nUsuarios);
+331 
+332                                         \textcolor{keywordflow}{if}(nUsuarios > 0)\{
+333                                                 \textcolor{keywordflow}{for}(i = 0; i < nUsuarios; i++)\{
+334                                                         \textcolor{keywordflow}{if}((IRCTAD\_GetUserModeOnChannel (
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, listaUsuarios[i]) &IRCUMODE\_OPERATOR)==IRCUMODE\_OPERATOR)\{
+335                                                                 \textcolor{keywordtype}{char} str[20];
+336                                                                 strcpy(str, \textcolor{stringliteral}{"@"});
+337                                                                 strcat(str, listaUsuarios[i]);
+338                                                                 sprintf(listaUsuarios[i],\textcolor{stringliteral}{"%s"},str);
+339                                                         \}
+340                                                         \textcolor{keywordflow}{else}
+341                                                                 sprintf(listaUsuarios[i],\textcolor{stringliteral}{"%s"},listaUsuarios
+      [i]);
+342 
+343                                                         IRCMsg\_RplNamReply(&nameMsg,
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \textcolor{stringliteral}{"="}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, listaUsuarios[i]);
+344                                                         send(IDsocket,nameMsg,strlen(nameMsg),0);
+345                                                         free(nameMsg); 
+346                                                 \}       
+347                                                 \hyperlink{_g-2361-06-_p1-_functions_8h_a5fa63429b3483f20a469c23625c96820}{liberaLista}(listaUsuarios,nUsuarios);                        
+348                                         \}       
+349 
+350                                         IRCMsg\_RplEndOfNames (&endOfNames\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+351                                         send(IDsocket,endOfNames\_msj,strlen(endOfNames\_msj),0);
+352                                         free(join\_msj); free(complex); free(endOfNames\_msj); free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+353                                 \}
+354                         \}
+355                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key});
+356                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+357                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+358                         \textcolor{keywordflow}{break};
+359 
+360                 \textcolor{keywordflow}{case} LIST:
+361                         result = IRCParse\_List(comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+362                 pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+363                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+364                         \textcolor{comment}{/*syslog (LOG\_INFO, "LIST");*/}
+365 
+366                 \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+367                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"LIST: No se ha introducido ninguna cadena para parsear."})
+      ;
+368                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+369                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"LIST: No se encuentran todos los parámetros obligatorios.
+      "});
+370                         \}\textcolor{keywordflow}{else}\{
+371                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+372                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+373                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+374                                 \hyperlink{_g-2361-06-_p1-_functions_8h_ae0239d5f3a7464bbaeb1726cd5bb363f}{funcionList}(\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}, IDsocket);
+375                         \}
+376 
+377                         free(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix});free(\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+378                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+379                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+380                         \textcolor{keywordflow}{break};
+381 
+382                 \textcolor{keywordflow}{case} WHOIS:
+383                         result = IRCParse\_Whois (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray});
+384                 pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+385                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+386                 \textcolor{comment}{/*syslog (LOG\_INFO, "WHOIS");*/}
+387 
+388                         \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL;\textcolor{keywordtype}{id}=0;
+389                         IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &\hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+390                         
+391                         \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray} == NULL)\{
+392                                 \textcolor{keywordtype}{char} *nick\_no;
+393                                 IRCMsg\_ErrNoNickNameGiven (&nick\_no, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+394                                 send(IDsocket,nick\_no,strlen(nick\_no),0);
+395                                 free(nick\_no);
+396                         \}\textcolor{keywordflow}{else}\{
+397 
+398                                 \textcolor{keywordtype}{char} *who\_msj, *serv, *ch, *op, *idl, *end\_who;
+399                                 \textcolor{keywordtype}{char} **listaCh, **listChannel, **uCanales;
+400                                 \textcolor{keywordtype}{long} numberOfChannels;
+401                                 \textcolor{keywordtype}{int} i, nstrings;
+402 
+403                                 IRCMsg\_RplWhoIsUser (&who\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray});
+404                                 send(IDsocket,who\_msj,strlen(who\_msj),0);
+405 
+406 
+407                                 IRCTAD\_ListChannelsOfUserArray(\hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, &listaCh, &numberOfChannels);
+408                                 listChannel = listaCh;
+409 
+410                                 \textcolor{comment}{/*syslog(LOG\_INFO, "Numero de canales %ld", numberOfChannels);*/}
+411                                 \textcolor{keywordflow}{for}(i = 0; i < numberOfChannels; i++)\{
+412                                         \textcolor{keywordtype}{char} aux[strlen(listaCh[i])+1];
+413                                         sprintf(aux,\textcolor{stringliteral}{"@%s"},listaCh[i]);
+414                                         strcpy(listChannel[i],aux);
+415                                 \}
+416 
+417                                 IRCMsg\_RplWhoIsServer(&serv, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, \textcolor{stringliteral}{"info who is"});
+418                                 send(IDsocket,serv,strlen(serv),0);
+419 
+420                                 \textcolor{keywordflow}{if}(numberOfChannels > 0)\{ \textcolor{comment}{/*Si hay algun canal*/}
+421                                         IRC\_BuildStringsFromList(&uCanales, 512, \textcolor{charliteral}{' '}, &nstrings, 
+      listChannel, numberOfChannels);
+422 
+423                                         \textcolor{keywordflow}{for}(i = 0; i < nstrings; i++)\{
+424                                                 IRCMsg\_RplWhoIsChannels(&ch, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, uCanales[i]);
+425                                                 send(IDsocket,ch,strlen(ch),0);
+426                                         \}
+427                                         free(ch); free(uCanales);
+428                                         IRCTADChan\_FreeList (listaCh, numberOfChannels);
+429                                 \}
+430 
+431                                 IRCMsg\_RplWhoIsOperator(&op, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray});
+432                                 send(IDsocket,op,strlen(op),0);
+433 
+434                                 IRCMsg\_RplWhoIsIdle(&idl, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, 0, \textcolor{stringliteral}{":seconds idle, signon time"});
+435                                 send(IDsocket,idl,strlen(idl),0);
+436 
+437                                 \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away} != NULL)\{
+438                                         \textcolor{keywordtype}{char} *away\_msj;
+439                                         IRCMsg\_RplAway (&away\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+440                                         send(IDsocket,away\_msj,strlen(away\_msj),0);
+441                                         free(away\_msj);
+442                                 \}
+443 
+444                                 IRCMsg\_RplEndOfWhoIs (&end\_who, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray}, \hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray});
+445                                 send(IDsocket,end\_who,strlen(end\_who),0);
+446 
+447                                 free(who\_msj); free(serv); free(\hyperlink{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{maskarray});
+448                                 free(op); free(idl); free(end\_who);
+449                                 
+450                         \}
+451                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}); 
+452                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+453                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+454                         \textcolor{keywordflow}{break};
+455 
+456                 \textcolor{keywordflow}{case} NAMES:
+457                         result = IRCParse\_Names (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+458                 pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+459                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+460                \textcolor{comment}{/*syslog (LOG\_INFO, "NAMES");*/}
+461 
+462                 \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+463                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"NAMES: No se ha introducido ninguna cadena para parsear."}
+      );
+464                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+465                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"NAMES: No se encuentran todos los parámetros
+       obligatorios."});
+466                         \}\textcolor{keywordflow}{else}\{
+467                                 \textcolor{keywordtype}{char} **listaUsuarios = NULL;
+468                                 \textcolor{keywordtype}{char} *endOfNames\_msj = NULL, *nameMsg = NULL;\textcolor{comment}{//, *reply = NULL;}
+469                                 \textcolor{keywordtype}{long} nUsuarios = 0;
+470                                 \textcolor{keywordtype}{int} i;
+471 
+472                                 \textcolor{comment}{/*Listamos usuarios de un canal*/}
+473                                 IRCTAD\_ListNicksOnChannelArray(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &listaUsuarios, &nUsuarios);
+474 
+475                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+476                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+477                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+478 
+479                                 \textcolor{comment}{/*syslog(LOG\_INFO, "NUMERO DE USUARIOS %ld", nUsuarios);*/}
+480                                 \textcolor{keywordflow}{if}(nUsuarios > 0)\{ \textcolor{comment}{/*Si no hay usuarios*/}
+481                                         \textcolor{keywordflow}{for}(i = 0; i < nUsuarios; i++)\{
+482                                                 \textcolor{keywordflow}{if}((IRCTAD\_GetUserModeOnChannel (
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, listaUsuarios[i]) &IRCUMODE\_OPERATOR)==IRCUMODE\_OPERATOR)\{
+483                                                         \textcolor{keywordtype}{char} str[20];
+484                                                         strcpy(str, \textcolor{stringliteral}{"@"});
+485                                                         strcat(str, listaUsuarios[i]);
+486                                                         sprintf(listaUsuarios[i],\textcolor{stringliteral}{"%s"},str);
+487                                                 \}
+488                                                 \textcolor{keywordflow}{else}
+489                                                         sprintf(listaUsuarios[i],\textcolor{stringliteral}{"%s"},listaUsuarios[i]);
+490 
+491                                                 IRCMsg\_RplNamReply(&nameMsg,
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \textcolor{stringliteral}{"="}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, listaUsuarios[i]);
+492                                                 send(IDsocket,nameMsg,strlen(nameMsg),0);
+493                                                 free(nameMsg); 
+494                                         \}                                       
+495 
+496                                         \hyperlink{_g-2361-06-_p1-_functions_8h_a5fa63429b3483f20a469c23625c96820}{liberaLista}(listaUsuarios, nUsuarios);
+497                                 \}
+498                                 IRCMsg\_RplEndOfNames (&endOfNames\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+499                                 send(IDsocket,endOfNames\_msj,strlen(endOfNames\_msj),0);
+500                                 free(endOfNames\_msj);
+501                         \}
+502 
+503                         free(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix});free(\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+504                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+505                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+506                         \textcolor{keywordflow}{break};
+507 
+508                 \textcolor{keywordflow}{case} PRIVMSG:
+509                         result = IRCParse\_Privmsg (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}, &\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}); 
+510                 pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+511                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+512                 \textcolor{comment}{/*syslog (LOG\_INFO, "PRIVMSG");*/}
+513 
+514                 \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+515                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"PRIVMSG: No se ha introducido ninguna cadena para
+       parsear."});
+516                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+517                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"PRIVMSG: No se encuentran todos los parámetros
+       obligatorios."});
+518                         \}\textcolor{keywordflow}{else}\{
+519                                 \textcolor{keywordtype}{char} *privmsg\_msj, *complex, *can, *away\_msj;
+520                                 \textcolor{keywordtype}{char} **lista, **listaDeNicks;
+521                                 \textcolor{keywordtype}{int} i, j, socket\_aux, flagCanal = 0, flagNicks = 0;
+522                                 \textcolor{keywordtype}{long} nChannels = 0, nelementsNicks = 0;
+523 
+524                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+525                                 \textcolor{comment}{/*Obtenemos datos del usuario que va a enviar el mensaje*/}
+526                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+527 
+528                                 \textcolor{comment}{/*Obtenemos la lista con los nombres de todos los canales*/}
+529                                 IRCTADChan\_GetList (&lista, &nChannels, NULL);
+530                                 \textcolor{comment}{/*printf("NUMERO CANALES %ld\(\backslash\)n", nChannels);*/}
+531                                 \textcolor{keywordflow}{for}(i = 0; i < nChannels; i++)\{
+532                                         \textcolor{keywordflow}{if}(strcmp(lista[i], \hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}) == 0)\{
+533                                                 flagCanal = 1; \textcolor{comment}{/*El canal existe*/}
+534                                                 can = (\textcolor{keywordtype}{char} *) malloc (strlen(lista[i])+1);
+535                                                 strcpy(can, lista[i]);
+536                                                 IRCTADChan\_FreeList (lista, nChannels);
+537                                                 \textcolor{keywordflow}{break};
+538                                         \}
+539                                 \}
+540                                 
+541                                 IRCTADUser\_GetNickList (&listaDeNicks, &nelementsNicks);
+542                                 \textcolor{keywordflow}{for}(i = 0; i < nelementsNicks; i++)\{
+543                                         \textcolor{keywordflow}{if}(strcmp(listaDeNicks[i], \hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}) == 0)\{
+544                                                 flagNicks = 1; \textcolor{comment}{/*El canal existe*/}
+545                                                 \hyperlink{_g-2361-06-_p1-_functions_8h_a5fa63429b3483f20a469c23625c96820}{liberaLista}(listaDeNicks, nelementsNicks);
+546                                                 \textcolor{keywordflow}{break};
+547                                         \}
+548                                 \}
+549                                 
+550                                 \textcolor{keywordflow}{if}(flagCanal == 1)\{ \textcolor{comment}{/*Si existe el canal*/}
+551                                         \textcolor{keywordtype}{char} **listaUsus;
+552                                         \textcolor{keywordtype}{long} nUsuarios = 0;
+553 
+554                                         \textcolor{comment}{/*syslog(LOG\_INFO, "HAY CANAL");*/}
+555                                         \textcolor{keywordflow}{if}(can != NULL)\{
+556                                                 \textcolor{comment}{/*Listamos usuarios de un canal*/}
+557                                                 IRCTAD\_ListNicksOnChannelArray(can, &listaUsus, &nUsuarios)
+      ;        
+558                                                 \textcolor{keywordflow}{if}(nUsuarios > 0)\{
+559                                                         \textcolor{keywordflow}{for}(i = 0; i < nUsuarios; i++)\{
+560                                                                 \textcolor{keywordflow}{if}(strcmp(
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name},listaUsus[i])!=0)\{
+561                                                                         IRC\_ComplexUser(&complex, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, listaUsus[i], NULL, NULL);
+562                                                                         IRCMsg\_Privmsg(&privmsg\_msj, 
+      complex, can, \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+563 
+564                                                                         \textcolor{keywordflow}{for}(j = 0; j < 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}; j++)\{
+565                                                                                 \textcolor{keywordflow}{if}(strcmp(listaUsus[i], 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[j]) == 0)\{
+566                                                                                         send(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[j], privmsg\_msj, strlen(privmsg\_msj), 0);
+567                                                                                 \}
+568                                                                         \}
+569                                                                         free(complex); free(privmsg\_msj);
+570                                                                 \}
+571                                                         \}
+572 
+573                                                         \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away} != NULL)\{
+574                                                                 IRCMsg\_RplAway (&away\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, \hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+575                                                                 send(IDsocket,away\_msj,strlen(away\_msj),0);
+576                                                                 free(away\_msj);
+577                                                         \}
+578                                                         \hyperlink{_g-2361-06-_p1-_functions_8h_a5fa63429b3483f20a469c23625c96820}{liberaLista}(listaUsus, nUsuarios);                                                   
+579                                                 \}
+580                                                 free(can); free(\hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}); 
+581                                         \}
+582 
+583                                 \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(flagNicks == 1)\{ \textcolor{comment}{/*Si el receptor existe*/}
+584                                         IRC\_ComplexUser(&complex, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, NULL, NULL);
+585                                         IRCMsg\_Privmsg (&privmsg\_msj, complex, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}, \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+586 
+587                                         \textcolor{keywordflow}{for}(i = 0; i < \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}; i++)\{
+588                                                 \textcolor{keywordflow}{if}(strcmp(\hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[i]) == 0)\{
+589                                                         socket\_aux = \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[i];
+590                                                 \}
+591                                         \}
+592 
+593                                         \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away} != NULL)\{
+594                                                 IRCMsg\_RplAway (&away\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, \hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+595                                                 send(IDsocket,away\_msj,strlen(away\_msj),0);
+596                                                 free(away\_msj);
+597                                         \}
+598 
+599                                         send(socket\_aux, privmsg\_msj, strlen(privmsg\_msj), 0);
+600                                         free(privmsg\_msj); free(complex); free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget}); 
+601                                 \}\textcolor{keywordflow}{else}\{
+602                                         \textcolor{keywordtype}{char} *noDest\_msj;
+603                                         IRCMsg\_ErrNoSuchNick(&noDest\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{msgtarget});
+604                                         send(IDsocket,noDest\_msj,strlen(noDest\_msj),0);
+605                                         free(noDest\_msj); 
+606                                 \}
+607                         \}
+608                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+609                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+610                         \textcolor{keywordflow}{break};
+611 
+612                 \textcolor{keywordflow}{case} PART: \textcolor{comment}{/*Usuario abandona correctamente el canal*/}
+613                         result =  IRCParse\_Part (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+614                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+615                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+616                         \textcolor{comment}{/*syslog (LOG\_INFO, "PART");*/}
+617 
+618                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+619                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"PART: No se ha introducido ninguna cadena para parsear."})
+      ;
+620                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+621                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"PART: No se encuentran todos los parámetros obligatorios.
+      "});
+622                         \}\textcolor{keywordflow}{else}\{
+623                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+624                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+625                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+626 
+627                                 \hyperlink{_g-2361-06-_p1-_functions_8h_af6cded1bd771b1ca20653d1f81383a21}{funcionPart}(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}, IDsocket);
+628                         \}
+629 
+630                         free(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}); free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+631                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+632                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+633                         \textcolor{keywordflow}{break};
+634 
+635                 \textcolor{keywordflow}{case} TOPIC: \textcolor{comment}{/*Cambia el nombre de un canal*/}
+636                         result = IRCParse\_Topic (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &\hyperlink{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}{topic});
+637                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+638                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+639                         \textcolor{comment}{/*syslog (LOG\_INFO, "TOPIC");*/}
+640 
+641                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+642                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"TOPIC: No se ha introducido ninguna cadena para parsear."}
+      );
+643                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+644                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"TOPIC: No se encuentran todos los parámetros
+       obligatorios."});
+645                         \}\textcolor{keywordflow}{else}\{
+646                                 \textcolor{keywordtype}{char} *topic\_msj = NULL;
+647                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+648                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+649                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+650 
+651                                 \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}{topic} == NULL)\{ \textcolor{comment}{/*Si no hay topic*/}
+652                                         \textcolor{keywordtype}{char} *tpc = NULL;
+653 
+654                                         \textcolor{comment}{/*Obtenemos el topic del canal*/}
+655                                         IRCTAD\_GetTopic (\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &tpc);
+656 
+657                                         \textcolor{keywordflow}{if}(tpc == NULL)\{
+658                                                 IRCMsg\_RplNoTopic (&topic\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name},\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+659                                         \}\textcolor{keywordflow}{else}\{
+660                                                 IRCMsg\_RplTopic (&topic\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name} , \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, tpc);
+661                                         \}
+662                                         send(IDsocket,topic\_msj,strlen(topic\_msj),0);
+663                                         free(tpc); 
+664 
+665                                 \}\textcolor{keywordflow}{else}\{ \textcolor{comment}{/*Si hay topic*/}
+666                                         \textcolor{keywordtype}{long} modeUsuChannel = 0, modeChannel = 0, modeVal = 0, modeValUsu =
+       0;
+667                                         
+668                                         \textcolor{comment}{/*Modo usuario en un canal*/}
+669                                         modeUsuChannel = IRCTAD\_GetUserModeOnChannel(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+670                                         \textcolor{comment}{/*Modo del canal*/}
+671                                         modeChannel = IRCTADChan\_GetModeInt(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+672 
+673                                         modeVal = modeChannel & IRCMODE\_TOPICOP;
+674                                         modeValUsu = modeUsuChannel & IRCUMODE\_OPERATOR;
+675 
+676                                         \textcolor{keywordflow}{if}(modeVal != IRCMODE\_TOPICOP || modeValUsu == IRCUMODE\_OPERATOR)\{
+677                                                 IRCMsg\_Topic(&topic\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}{topic});
+678                                                 \textcolor{comment}{/*Se cambia el topic del canal y todos los parametros
+       asociados*/}
+679                                                 IRCTAD\_SetTopic (\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}{topic});
+680                                         \}\textcolor{keywordflow}{else}\{
+681                                                 \textcolor{comment}{/*"You're not channel operator"*/}
+682                                                 IRCMsg\_ErrChanOPrivsNeeded(&topic\_msj, 
+      \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+683                                         \}
+684 
+685                                         send(IDsocket,topic\_msj,strlen(topic\_msj),0);
+686                                         free(\hyperlink{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}{topic});
+687                                 \}
+688                                 free(topic\_msj);
+689                         \}
+690 
+691                         free(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}); free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix});
+692                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+693                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+694                         \textcolor{keywordflow}{break};
+695 
+696                 \textcolor{keywordflow}{case} KICK: \textcolor{comment}{/*Expulsion de un usuario*/}
+697                         result =  IRCParse\_Kick (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, &\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, &\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+698                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+699                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+700                         \textcolor{comment}{/*syslog (LOG\_INFO, "KICK");*/}
+701 
+702                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+703                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"KICK: No se ha introducido ninguna cadena para parsear."})
+      ;
+704                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+705                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"KICK: No se encuentran todos los parámetros obligatorios.
+      "});
+706                         \}\textcolor{keywordflow}{else}\{
+707 
+708                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+709                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+710                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+711 
+712                                 \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user} != NULL)\{
+713                                         \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel} != NULL)\{
+714                                                 \textcolor{keywordtype}{int} i, socket\_aux;
+715                                                 \textcolor{keywordtype}{long} modeUsuChannel, modeValUsu;
+716                                                 \textcolor{keywordtype}{char} *complex, *kick\_msj;
+717 
+718                                                 \textcolor{keywordflow}{for}(i = 0; i < \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}; i++)\{
+719                                                         \textcolor{keywordflow}{if}(strcmp(\hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[i]) == 0)\{
+720                                                                 socket\_aux = 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[i];
+721                                                         \}
+722                                                 \}
+723 
+724                                                 \textcolor{comment}{/*Modo usuario en un canal*/}
+725                                                 modeUsuChannel = IRCTAD\_GetUserModeOnChannel(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+726                                                 modeValUsu = modeUsuChannel & IRCUMODE\_OPERATOR;
+727 
+728                                                 IRC\_ComplexUser(&complex,\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario},
+      \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario},NULL,NULL);
+729                                                 \textcolor{keywordflow}{if} (modeValUsu==IRCUMODE\_OPERATOR)\{
+730                                                         IRCTAD\_KickUserFromChannel (
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user});
+731                                                         IRCMsg\_Kick (&kick\_msj, complex, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}, \hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user}, \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+732                                                         send(socket\_aux,kick\_msj,strlen(kick\_msj),0);
+733                                                 \}\textcolor{keywordflow}{else}\{
+734                                                         \textcolor{comment}{/*"You're not channel operator"*/}
+735                                                         IRCMsg\_ErrChanOPrivsNeeded(&kick\_msj, complex, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel});
+736                                                         send(IDsocket,kick\_msj,strlen(kick\_msj),0);
+737                                                 \}
+738                                                 free(kick\_msj); free(complex);
+739                                         \}
+740                                 \}
+741                         \}
+742                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{channel}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{user});
+743                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+744                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+745                         \textcolor{keywordflow}{break};
+746 
+747                 \textcolor{keywordflow}{case} AWAY:
+748                         result = IRCParse\_Away (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+749                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+750                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+751                         \textcolor{comment}{/*syslog (LOG\_INFO, "AWAY");*/}
+752 
+753                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+754                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"AWAY: No se ha introducido ninguna cadena para parsear."})
+      ;
+755                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+756                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"AWAY: No se encuentran todos los parámetros obligatorios.
+      "});
+757                         \}\textcolor{keywordflow}{else}\{
+758                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario} = NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name} = NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real} = NULL; \textcolor{keywordtype}{id} = 0;
+759                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+760                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+761 
+762                                 \hyperlink{_g-2361-06-_p1-_functions_8h_a92e862feef3db4374ed9b1b941edfae3}{funcionAway}(\textcolor{keywordtype}{id}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, \hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away}, \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg}, IDsocket);
+763 
+764                         \}
+765 
+766                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+767                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+768                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+769                         \textcolor{keywordflow}{break};
+770 
+771 
+772                 \textcolor{keywordflow}{case} MODE:
+773                         result = IRCParse\_Mode (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{channeluser}, &\hyperlink{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{modo}, &\hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key});
+774                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+775                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+776                         \textcolor{comment}{/*syslog (LOG\_INFO, "MODE");*/}
+777 
+778                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+779                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"MODE: No se ha introducido ninguna cadena para parsear."})
+      ;
+780                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+781                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"MODE: No se encuentran todos los parámetros obligatorios.
+      "});
+782                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{modo} == NULL)\{
+783                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"MODE: NULL."});
+784                         \}\textcolor{keywordflow}{else} \{
+785                                 \textcolor{keywordtype}{char} *mode\_msj; 
+786                                 \textcolor{keywordtype}{long} modeUsuChannel, modeValUsu; 
+787 
+788                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+789                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+790                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+791                                 \textcolor{comment}{/*Modo usuario en un canal*/}
+792                                 modeUsuChannel = IRCTAD\_GetUserModeOnChannel(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{channeluser}, \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+793                                 modeValUsu = modeUsuChannel & IRCUMODE\_OPERATOR;
+794 
+795                                 \textcolor{keywordflow}{if}(modeValUsu == IRCUMODE\_OPERATOR)\{
+796                                         \textcolor{comment}{/*Cambia modo de un canal*/}
+797                                         IRCTAD\_Mode (\hyperlink{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{channeluser}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, \hyperlink{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{modo});
+798 
+799                                         \textcolor{keywordflow}{if}(strstr(\hyperlink{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{modo},\textcolor{stringliteral}{"k"})!=NULL)\{
+800                                                 IRCTADChan\_SetPassword (
+      \hyperlink{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{channeluser},\hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key});
+801                                                 free(\hyperlink{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{key});
+802                                         \}
+803 
+804                                         IRCMsg\_Mode (&mode\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{channeluser}, \hyperlink{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{modo}, \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario});
+805                                         send(IDsocket,mode\_msj,strlen(mode\_msj),0);
+806                                         free(mode\_msj);
+807                                 \}
+808                         \}
+809                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{channeluser}); free(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{modo});
+810                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+811                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+812                         \textcolor{keywordflow}{break};
+813 
+814                 \textcolor{keywordflow}{case} QUIT:                      
+815                         result = IRCParse\_Quit (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+816                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+817                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+818                         \textcolor{comment}{/*syslog (LOG\_INFO, "QUIT");*/}
+819 
+820                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+821                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"QUIT: No se ha introducido ninguna cadena para parsear."})
+      ;
+822                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+823                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"QUIT: No se encuentran todos los parámetros obligatorios.
+      "});
+824                         \}\textcolor{keywordflow}{else}\{
+825                                 \textcolor{keywordtype}{char} *quit\_msj;
+826 
+827                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+828                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+829 
+830                                 IRCTAD\_Quit(\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name});
+831                                 IRCMsg\_Quit(&quit\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, \hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});
+832                                 send(IDsocket,quit\_msj,strlen(quit\_msj),0);
+833                                 
+834                                 free(quit\_msj);
+835                         \}
+836 
+837                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{msg});       
+838                         \textcolor{comment}{/*Eliminar al usuario*/}
+839                         \textcolor{keywordtype}{int} z, k;
+840                         \textcolor{keywordflow}{for}(z = 0; z < \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}; z++)\{
+841                                 \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[z] == IDsocket)\{
+842                                         \textcolor{keywordflow}{for}(k = z; k < \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}; k++)\{
+843                                                 strcpy(\hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[k], \textcolor{stringliteral}{""});
+844                                                 \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[k] = \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[k+1];
+845                                                 strcpy(\hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[k], 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[k+1]);
+846                                         \}
+847                                         strcpy(\hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[numeroUsuarios], \textcolor{stringliteral}{""});
+848                                         \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[\hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}] = -1;
+849                                         numeroUsuarios--;
+850                                 \}
+851                         \}               
+852                         \textcolor{comment}{/*Se cierra el socket*/}
+853                         shutdown(IDsocket, SHUT\_RDWR);
+854                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+855                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+856                         \textcolor{keywordflow}{break};
+857 
+858                 \textcolor{keywordflow}{case} MOTD:
+859                         result = IRCParse\_Motd (comando, &\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}, &\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+860                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+861                         pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+862                         \textcolor{comment}{/*syslog (LOG\_INFO, "MOTD");*/}
+863 
+864                         \textcolor{keywordflow}{if}(result == IRCERR\_NOSTRING)\{
+865                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"MOTD: No se ha introducido ninguna cadena para parsear."})
+      ;
+866                         \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(result == IRCERR\_ERRONEUSCOMMAND)\{
+867                                 syslog(LOG\_INFO, \textcolor{stringliteral}{"MOTD: No se encuentran todos los parámetros obligatorios.
+      "});
+868                         \}\textcolor{keywordflow}{else}\{
+869                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario} = NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+870                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+871                                 \hyperlink{_g-2361-06-_p1-_functions_8h_a76e61a7cc585c5d49d5609ffbef0bfb1}{funcionMotd}(\hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target}, IDsocket, \hyperlink{_g-2361-06-_p1-_server_8c_a5666511ca3d4a3dc685c6f14c663aed5}{fich});
+872                         \}
+873                         free(\hyperlink{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{prefix}); free(\hyperlink{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{target});
+874                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+875                         pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+876                         \textcolor{keywordflow}{break};
+877 
+878                 \textcolor{keywordflow}{case} IRCERR\_UNKNOWNCOMMAND: \textcolor{comment}{/*Comando desconocido*/}
+879                         \textcolor{keywordflow}{if}(strstr(comando,\textcolor{stringliteral}{"CAP"}) != NULL)\{
+880 
+881                         \}\textcolor{keywordflow}{else}\{
+882                                 \textcolor{keywordtype}{char} *unk\_msj;
+883                                 pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+884                                 pthread\_mutex\_lock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+885 
+886                                 \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}=NULL; \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}=NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}=NULL; \textcolor{keywordtype}{id}=0;
+887                                 \textcolor{comment}{/*Obtenemos datos del usuario*/}
+888                                 IRCTADUser\_GetData (&\textcolor{keywordtype}{id}, &\hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, &\hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real}, &\hyperlink{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{host}, &\hyperlink{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{ip}, &IDsocket, &\hyperlink{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{creacion}, &
+      \hyperlink{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{accion}, &\hyperlink{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{away});
+889 
+890                                 IRCMsg\_ErrUnKnownCommand (&unk\_msj, \hyperlink{_g-2361-06-_p1-_server_8h_a78c658ff923693099f7b621e7c351129}{PREFIJO}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{nick\_name}, comando);
+891                                 send(IDsocket,unk\_msj,strlen(unk\_msj),0);
+892                                 free(unk\_msj);
+893                                 pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{canal\_mutex});
+894                                 pthread\_mutex\_unlock(&\hyperlink{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{user\_mutex});
+895                         \}
+896                         \textcolor{keywordflow}{break};
+897 
+898                 \textcolor{keywordflow}{default}:
+899                         \textcolor{keywordflow}{break};
+900         \}
+901 \}\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
+
+\index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!procesar@{procesar}}
+\index{procesar@{procesar}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{procesar(char $\ast$entrada, int I\+Dsocket, fd\+\_\+set readset)}{procesar(char *entrada, int IDsocket, fd_set readset)}}]{\setlength{\rightskip}{0pt plus 5cm}void procesar (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{entrada, }
+\item[{int}]{I\+Dsocket, }
+\item[{fd\+\_\+set}]{readset}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_server_8c_a3053755c82b5168bea9d848b1284f3ca}{}\label{_g-2361-06-_p1-_server_8c_a3053755c82b5168bea9d848b1284f3ca}
+void \hyperlink{_g-2361-06-_p1-_server_8h_ad27ad83298aac3580deda730e80a62f0}{manejador\+\_\+alarma(int sig)}\{ char $\ast$ping\+\_\+msj = N\+U\+LL; int i;
+
+I\+R\+C\+Msg\+\_\+\+Ping (\&ping\+\_\+msj, P\+R\+E\+F\+I\+JO, \char`\"{}localhost\char`\"{}, N\+U\+LL); syslog(L\+O\+G\+\_\+\+I\+N\+FO, \char`\"{}\+Numero de usuarios \%d\char`\"{}, numero\+Usuarios); for(i = 0; i $<$ numero\+Usuarios; i++)\{ send(sockets\mbox{[}i\mbox{]}, ping\+\_\+msj, strlen(ping\+\_\+msj), 0); \} free(ping\+\_\+msj); alarm(30); \} 
+\begin{DoxyCode}
+64                                                           \{
+65         \textcolor{keywordtype}{char}* next=NULL;
+66         \textcolor{keywordtype}{char}* comando=NULL;
+67         \textcolor{keywordtype}{long} \textcolor{keywordtype}{int} query;
+68 
+69         \textcolor{comment}{/*Coger el primer comando y en next se guarda el resto de la entrada*/}
+70         next = IRC\_UnPipelineCommands(entrada, &comando);
+71 
+72         \textcolor{comment}{/*Identificar comando*/}
+73         query = IRC\_CommandQuery(comando);
+74         \hyperlink{_g-2361-06-_p1-_server_8c_ab7e145be74e8922987621cd01b8d446e}{parseCommand}(query, comando, IDsocket);
+75 
+76         free(comando);
+77         comando = NULL;
+78 
+79         \textcolor{comment}{/*Mientras que siga habiendo comandos*/}
+80         \textcolor{keywordflow}{while}(next != NULL)\{
+81                 next = IRC\_UnPipelineCommands(next, &comando);
+82                 query = IRC\_CommandQuery(comando); \textcolor{comment}{/*Identificar comando*/}
+83                 \hyperlink{_g-2361-06-_p1-_server_8c_ab7e145be74e8922987621cd01b8d446e}{parseCommand}(query, comando, IDsocket); 
+84 
+85                 free(comando);
+86                 comando = NULL;
+87         \}
+88         free(comando);
+89 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 2
+
+
+\index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!servidor@{servidor}}
+\index{servidor@{servidor}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{servidor(int puerto, char $\ast$path)}{servidor(int puerto, char *path)}}]{\setlength{\rightskip}{0pt plus 5cm}void servidor (
+\begin{DoxyParamCaption}
+\item[{int}]{puerto, }
+\item[{char $\ast$}]{path}
+\end{DoxyParamCaption}
+)}\hypertarget{_g-2361-06-_p1-_server_8c_ae168ee6fdf31fd5ed7d49d45b89a65ed}{}\label{_g-2361-06-_p1-_server_8c_ae168ee6fdf31fd5ed7d49d45b89a65ed}
+
+\begin{DoxyCode}
+92                                      \{
+93         \textcolor{keywordtype}{int} IDsocket, maxfd;
+94         fd\_set readset, tempset;
+95         \textcolor{keywordtype}{int} descriptor, j, select\_estado;
+96         \textcolor{keywordtype}{char} entrada[\hyperlink{_g-2361-06-_p1-_server_8h_a70ed59adcb4159ac551058053e649640}{SIZE} + 1];     
+97 
+98         \textcolor{comment}{/*Abrir socket*/}
+99         IDsocket = \hyperlink{_g-2361-06-_p1-_sockets_8h_af2f55f83053c8fdebb8da511cd65880c}{abrir\_socketTCP}(puerto);
+100 
+101         FD\_ZERO(&readset);
+102         FD\_SET(IDsocket, &readset);
+103         maxfd = IDsocket;
+104         \hyperlink{_g-2361-06-_p1-_server_8c_a882bc4c5a2b02dd85d4716961c4d902f}{socketAlrm} = IDsocket;
+105         \hyperlink{_g-2361-06-_p1-_server_8c_a5666511ca3d4a3dc685c6f14c663aed5}{fich} = path;
+106 
+107         \textcolor{comment}{/*signal(SIGALRM, manejador\_alarma);}
+108 \textcolor{comment}{        alarm(30);*/} \textcolor{comment}{/*Cada 30 segundos se muestra*/}
+109         \textcolor{keywordflow}{do}\{
+110                 memcpy(&tempset, &readset, \textcolor{keyword}{sizeof}(tempset));
+111           
+112                 select\_estado = select(maxfd + 1, &tempset, NULL, NULL, NULL);
+113                 \textcolor{comment}{/*syslog(LOG\_INFO, "SELECT");*/}
+114                 \textcolor{keywordflow}{if} (select\_estado == 0) \{
+115                         
+116                 \}\textcolor{keywordflow}{else}\{
+117                         \textcolor{comment}{/*Accept*/}
+118                         \textcolor{keywordflow}{if} (FD\_ISSET(IDsocket, &tempset)) \{
+119                          descriptor = \hyperlink{_g-2361-06-_p1-_sockets_8h_a172e85f036cff044fd5ba218460115c7}{acepta\_conexion}(IDsocket);
+120                          \textcolor{comment}{/*syslog(LOG\_INFO, "ACEPTAR CONEXION");*/}
+121                          \textcolor{keywordflow}{if} (descriptor < 0) \{
+122 
+123                          \}\textcolor{keywordflow}{else} \{
+124                             FD\_SET(descriptor, &readset);
+125                             maxfd = (maxfd < descriptor)?descriptor:maxfd;
+126                          \}
+127                 \}
+128                 \textcolor{comment}{/*Read and process*/}
+129                 \textcolor{keywordflow}{for} (j = 0; j < maxfd+1; j++) \{
+130                         \textcolor{keywordflow}{if} (FD\_ISSET(j, &tempset) && j != IDsocket ) \{
+131                             \textcolor{keywordflow}{do} \{
+132                                bzero(entrada, \textcolor{keyword}{sizeof}(entrada));
+133                                puts(entrada);
+134                                \textcolor{keywordflow}{if}(select\_estado ==-1)\{
+135                                         close(j);
+136                                         FD\_CLR(j, &readset);
+137                                \}
+138                             \} \textcolor{keywordflow}{while} (select\_estado == -1 && errno == EINTR);
+139 
+140                             \textcolor{keywordflow}{if} (select\_estado > 0) \{                            
+141                                     entrada[select\_estado] = 0;
+142                                     \hyperlink{_g-2361-06-_p1-_server_8c_a3053755c82b5168bea9d848b1284f3ca}{procesar}(entrada,j,readset);
+143                             \}\textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (select\_estado == 0) \{
+144                                 \textcolor{keywordtype}{int} z, k;
+145                                                 \textcolor{keywordflow}{for}(z = 0; z < \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}; z++)\{
+146                                                         \textcolor{keywordflow}{if}(\hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[z] == j)\{ \textcolor{comment}{/*Se elimina al usuario
+      */}
+147                                                                 \textcolor{keywordtype}{id} = 0; \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario} = NULL; 
+      \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real} = NULL;
+148                                                                 IRCTADUser\_Delete (\textcolor{keywordtype}{id}, 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{usuario}, \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[z], \hyperlink{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{real});
+149 
+150                                                                 \textcolor{keywordflow}{for}(k = z; k < 
+      \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}; k++)\{
+151                                                                         strcpy(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[k], \textcolor{stringliteral}{""});
+152                                                                         \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[k] = 
+      \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[k+1];
+153                                                                         strcpy(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[k], \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[k+1]);
+154                                                                 \}
+155                                                                 strcpy(
+      \hyperlink{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{listaNicks}[numeroUsuarios], \textcolor{stringliteral}{""});
+156                                                                 \hyperlink{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{sockets}[
+      \hyperlink{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{numeroUsuarios}] = -1;
+157                                                                 numeroUsuarios--;
+158                                                         \}
+159                                                 \}
+160                                                 close(j);
+161                                 FD\_CLR(j, &readset);
+162                             \}\textcolor{keywordflow}{else} \{ \textcolor{comment}{/*Error*/}
+163 
+164                             \}
+165                         \}      
+166                 \}     
+167                 \}
+168         \}\textcolor{keywordflow}{while}(1);
+169 \}
+\end{DoxyCode}
+
+
+Here is the call graph for this function\+:
+% FIG 3
+
+
+
+
+\subsection{Variable Documentation}
+\index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!accion@{accion}}
+\index{accion@{accion}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{accion}{accion}}]{\setlength{\rightskip}{0pt plus 5cm}long accion = 0}\hypertarget{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}{}\label{_g-2361-06-_p1-_server_8c_a93e785c991445d8b8ee99c2e51242d5a}
+Variable que almacena la accion de un usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!away@{away}}
+\index{away@{away}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{away}{away}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ away = N\+U\+LL}\hypertarget{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}{}\label{_g-2361-06-_p1-_server_8c_adf86742e21384f58f8999d8317e6a370}
+Variable donde se almacena el estado del usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!canal\+\_\+mutex@{canal\+\_\+mutex}}
+\index{canal\+\_\+mutex@{canal\+\_\+mutex}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{canal\+\_\+mutex}{canal_mutex}}]{\setlength{\rightskip}{0pt plus 5cm}pthread\+\_\+mutex\+\_\+t canal\+\_\+mutex = P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ER}\hypertarget{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}{}\label{_g-2361-06-_p1-_server_8c_ab86a544a49de18195048bac54dd3ac3e}
+Se crea e inicializa el mutex para los canales \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!channel@{channel}}
+\index{channel@{channel}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{channel}{channel}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ channel}\hypertarget{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}{}\label{_g-2361-06-_p1-_server_8c_a842ca2f026578e5c479c095ff3335969}
+Variable donde se almacena el nombre del canal \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!channeluser@{channeluser}}
+\index{channeluser@{channeluser}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{channeluser}{channeluser}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ channeluser}\hypertarget{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}{}\label{_g-2361-06-_p1-_server_8c_a55a7bd8f3229706c5917445aba995c5b}
+Variable donde se almacena el canal del usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!creacion@{creacion}}
+\index{creacion@{creacion}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{creacion}{creacion}}]{\setlength{\rightskip}{0pt plus 5cm}long creacion = 0}\hypertarget{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}{}\label{_g-2361-06-_p1-_server_8c_a26292066ca0d17922eadee4161542ab9}
+Variable que almacena la creacion de un usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!fich@{fich}}
+\index{fich@{fich}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{fich}{fich}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ fich}\hypertarget{_g-2361-06-_p1-_server_8c_a5666511ca3d4a3dc685c6f14c663aed5}{}\label{_g-2361-06-_p1-_server_8c_a5666511ca3d4a3dc685c6f14c663aed5}
+Variable donde se almacena la ruta del fichero motd.\+txt \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!host@{host}}
+\index{host@{host}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{host}{host}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ host = N\+U\+LL}\hypertarget{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}{}\label{_g-2361-06-_p1-_server_8c_a1c2046dcb30a629d6d9f45ff8f403f12}
+Variable donde se almacena el host de un usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!id@{id}}
+\index{id@{id}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{id}{id}}]{\setlength{\rightskip}{0pt plus 5cm}long id = 0}\hypertarget{_g-2361-06-_p1-_server_8c_a7350fbd6ad10618f3b750b1f99ca5c3c}{}\label{_g-2361-06-_p1-_server_8c_a7350fbd6ad10618f3b750b1f99ca5c3c}
+Variable que almacena el id del usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!ip@{ip}}
+\index{ip@{ip}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{ip}{ip}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ ip = N\+U\+LL}\hypertarget{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}{}\label{_g-2361-06-_p1-_server_8c_afbc356cd0e25d1dbbece7c10fd025fa6}
+Variable donde se almacena la ip de un usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!key@{key}}
+\index{key@{key}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{key}{key}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ key}\hypertarget{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}{}\label{_g-2361-06-_p1-_server_8c_a5892a9181e6a332f84d27aecd41dcd12}
+Variable donde se almacena la clave de un canal \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!lista\+Nicks@{lista\+Nicks}}
+\index{lista\+Nicks@{lista\+Nicks}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{lista\+Nicks}{listaNicks}}]{\setlength{\rightskip}{0pt plus 5cm}char lista\+Nicks\mbox{[}{\bf N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}\mbox{]}\mbox{[}10\mbox{]}}\hypertarget{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}{}\label{_g-2361-06-_p1-_server_8c_a713172366a6be2fbf8456a4b43702603}
+Variable donde se almacenan los nicks de los usuarios \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!maskarray@{maskarray}}
+\index{maskarray@{maskarray}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{maskarray}{maskarray}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ maskarray}\hypertarget{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}{}\label{_g-2361-06-_p1-_server_8c_ad51a4303b7c769561b12bf04a68bc042}
+Variable donde se almacena la mascara de un usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!modehost@{modehost}}
+\index{modehost@{modehost}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{modehost}{modehost}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ modehost}\hypertarget{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}{}\label{_g-2361-06-_p1-_server_8c_a4f28f55d19ac069eabc38c224c3a4225}
+Variable donde se almacena el modo del host \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!modo@{modo}}
+\index{modo@{modo}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{modo}{modo}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ modo}\hypertarget{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}{}\label{_g-2361-06-_p1-_server_8c_a7451f0d59207b53af6178219fcf62677}
+Variable donde se almacena el modo de un canal \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!msg@{msg}}
+\index{msg@{msg}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{msg}{msg}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ msg}\hypertarget{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}{}\label{_g-2361-06-_p1-_server_8c_a32d2f5216cddb59c7cc8fb2806a7e727}
+Variable donde se almacena el mensaje al realizar el parseo de algunos comandos \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!msgtarget@{msgtarget}}
+\index{msgtarget@{msgtarget}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{msgtarget}{msgtarget}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ msgtarget}\hypertarget{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}{}\label{_g-2361-06-_p1-_server_8c_a968dcc7e43caeca7959f3c069dcccc6a}
+Variable donde se almacena el nick del receptor de un mensaje o el nombre de un canal \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!nick@{nick}}
+\index{nick@{nick}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{nick}{nick}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ nick}\hypertarget{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}{}\label{_g-2361-06-_p1-_server_8c_a89f27568c92a418413e6b37b41f07e21}
+Variable donde se almacena el nick del usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!nick\+\_\+name@{nick\+\_\+name}}
+\index{nick\+\_\+name@{nick\+\_\+name}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{nick\+\_\+name}{nick_name}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ nick\+\_\+name = N\+U\+LL}\hypertarget{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}{}\label{_g-2361-06-_p1-_server_8c_aabbf66718cda228b924a4a9441eadf62}
+Variable donde se almacena el nick del usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!numero\+Usuarios@{numero\+Usuarios}}
+\index{numero\+Usuarios@{numero\+Usuarios}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{numero\+Usuarios}{numeroUsuarios}}]{\setlength{\rightskip}{0pt plus 5cm}int numero\+Usuarios = 0}\hypertarget{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}{}\label{_g-2361-06-_p1-_server_8c_ac9a5ec6f534d2a8e2a870179807d32dc}
+Variable que almacena el numero de usuarios \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!prefix@{prefix}}
+\index{prefix@{prefix}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{prefix}{prefix}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ prefix}\hypertarget{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}{}\label{_g-2361-06-_p1-_server_8c_ad2849cf781a4db22cc1b31eaaee50a4f}
+Variable donde se almacena el prefijo \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!real@{real}}
+\index{real@{real}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{real}{real}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ real = N\+U\+LL}\hypertarget{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}{}\label{_g-2361-06-_p1-_server_8c_af832f551e1c343666c3d2a55834139a0}
+Variable donde se almacena el nombre real de un usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!realname@{realname}}
+\index{realname@{realname}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{realname}{realname}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ realname}\hypertarget{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}{}\label{_g-2361-06-_p1-_server_8c_a980ab011cd3d327b370c042833f1dc08}
+Variable donde se almacena el realname del usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!server1@{server1}}
+\index{server1@{server1}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{server1}{server1}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ server1}\hypertarget{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}{}\label{_g-2361-06-_p1-_server_8c_a9045e9ee0087b60273244cd6c2f91a5f}
+Variable donde se almacena el nombre del servidor 1 \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!server2@{server2}}
+\index{server2@{server2}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{server2}{server2}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ server2}\hypertarget{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}{}\label{_g-2361-06-_p1-_server_8c_a70dd311bef3d0b4160a7ce0706f8f4cc}
+Variable donde se almacena el nombre del servidor 2 \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!serverother@{serverother}}
+\index{serverother@{serverother}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{serverother}{serverother}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ serverother}\hypertarget{_g-2361-06-_p1-_server_8c_ae6eaaf28b08889a7ec2359f8968d796c}{}\label{_g-2361-06-_p1-_server_8c_ae6eaaf28b08889a7ec2359f8968d796c}
+Variable donde se almacena el nombre del servidor \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!socket\+Alrm@{socket\+Alrm}}
+\index{socket\+Alrm@{socket\+Alrm}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{socket\+Alrm}{socketAlrm}}]{\setlength{\rightskip}{0pt plus 5cm}int socket\+Alrm = 0}\hypertarget{_g-2361-06-_p1-_server_8c_a882bc4c5a2b02dd85d4716961c4d902f}{}\label{_g-2361-06-_p1-_server_8c_a882bc4c5a2b02dd85d4716961c4d902f}
+Variable que almacena el id del socket \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!sockets@{sockets}}
+\index{sockets@{sockets}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{sockets}{sockets}}]{\setlength{\rightskip}{0pt plus 5cm}int sockets\mbox{[}{\bf N\+U\+M\+\_\+\+S\+O\+C\+K\+E\+TS}\mbox{]}}\hypertarget{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}{}\label{_g-2361-06-_p1-_server_8c_a7724e53f22e431d1ecb6516951a172e1}
+Variable que almacena el numero de socket de cada usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!target@{target}}
+\index{target@{target}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{target}{target}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ target}\hypertarget{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}{}\label{_g-2361-06-_p1-_server_8c_a23b26cdb3a71f525caf03b57f68d47fa}
+Variable donde se almacena la mascara \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!topic@{topic}}
+\index{topic@{topic}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{topic}{topic}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ topic}\hypertarget{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}{}\label{_g-2361-06-_p1-_server_8c_affecb48e716753e10b44feac31f12529}
+Variable donde se almacena el topic de un canal \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!user@{user}}
+\index{user@{user}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{user}{user}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ user}\hypertarget{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}{}\label{_g-2361-06-_p1-_server_8c_a14871705f45ccdc5bb9f4549efd8e119}
+Variable donde se almacena el nombre del usuario \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!user\+\_\+mutex@{user\+\_\+mutex}}
+\index{user\+\_\+mutex@{user\+\_\+mutex}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{user\+\_\+mutex}{user_mutex}}]{\setlength{\rightskip}{0pt plus 5cm}pthread\+\_\+mutex\+\_\+t user\+\_\+mutex = P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ER}\hypertarget{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}{}\label{_g-2361-06-_p1-_server_8c_a5dedd07a1144d2ab70b74a8e64b6a7c0}
+Se crea e inicializa el mutex para los usuarios \index{G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}!usuario@{usuario}}
+\index{usuario@{usuario}!G-\/2361-\/06-\/\+P1-\/\+Server.\+c@{G-\/2361-\/06-\/\+P1-\/\+Server.\+c}}
+\subsubsection[{\texorpdfstring{usuario}{usuario}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ usuario = N\+U\+LL}\hypertarget{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}{}\label{_g-2361-06-_p1-_server_8c_a0147a5b81499984f9cb00379a8cb84af}
+Variable donde se almacena el nombre del usuario 

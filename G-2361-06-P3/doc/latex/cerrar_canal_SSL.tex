@@ -1,0 +1,32 @@
+Función que cierra la comunicación de un canal seguro. previamente.
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "\hyperlink{_g-2361-06-_p3-funciones__ssl_8h}{G-2361-06-P3-funciones\_ssl.h}"}
+\textcolor{keywordtype}{void} \hyperlink{_g-2361-06-_p3-funciones__ssl_8h_af96fb6c9c2330e21ab617e949acf7a8c}{cerrar\_canal\_SSL}(SSL **ssl,SSL\_CTX **ctx, \textcolor{keywordtype}{int} sockfd);
+\end{DoxyCode}
+
+
+La función libera todos los recursos y cerra el canal de comunicación seguro creado. Recibe como parámetros contexto S\+SL, ctx y el numero del socket.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em ssl} & certificado S\+SL \\
+\hline
+\mbox{\tt in}  & {\em ctx} & contexto S\+SL \\
+\hline
+\mbox{\tt in}  & {\em sockfd} & numero del socket\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No devuelve ningun valor
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Beatriz de Pablo García (\href{mailto:beatriz.depablo@estudiante.uam.es}{\tt beatriz.\+depablo@estudiante.\+uam.\+es}) Celia Mateos del Miguel(\href{mailto:cel.mateos@estudiante.uam.es}{\tt cel.\+mateos@estudiante.\+uam.\+es}) Alfonso Sebares Mecha (\href{mailto:alfonso.sebares@estudiante.uam.es}{\tt alfonso.\+sebares@estudiante.\+uam.\+es})
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+25 de Abril de 2017
+\end{DoxyDate}
+
+
+ 
